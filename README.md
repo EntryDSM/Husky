@@ -57,9 +57,9 @@ Spring Rest Docs
 ref) [Spring Rest Docs(우아한 형제들 기술 블로그)](https://woowabros.github.io/experience/2018/12/28/spring-rest-docs.html)
 
 ## Part
-	- @임용성
+    - @황신우(Team Leader)
+	    : 학생 정보 처리, 학교 검색 처리
+	- @김재훈(Dev ops)
+    		: 성적계산(부동소수점), 인프라 구축
+	- @임용성(프로세스 위험 관리자)
 		: 인증, PDF 생성(Apache POI)
-	- @김재훈
-		: 성적계산(부동소수점), 인프라 구축
-	- @황신우(불참) - 저장, 최종제출 관련
-
