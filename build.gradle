@@ -1,0 +1,164 @@
+buildscript {
+    ext {
+        set('snippetsDir', file("build/generated-snippets"))
+        dependencyManagementVersion = '1.0.8.RELEASE'
+        springBootVersion = '2.2.1.RELEASE'
+    }
+
+    repositories {
+        maven { url "https://plugins.gradle.org/m2/" }
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath("io.spring.gradle:dependency-management-plugin:${dependencyManagementVersion}")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+subprojects {
+
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'java'
+
+    group = 'kr.hs.entrydsm'
+    version = '0.0.1-SNAPSHOT'
+    sourceCompatibility = '11'
+
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+
+    repositories {
+        maven { url "https://repo.spring.io/libs-release" }
+        maven { url "https://repo.spring.io/milestone" }
+        mavenCentral()
+    }
+
+    dependencies {
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+        implementation 'org.springframework.boot:spring-boot-starter-actuator'
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    }
+
+    task initSourceFolders {
+        sourceSets*.java.srcDirs*.each {
+            if (!it.exists()) {
+                it.mkdirs()
+            }
+        }
+        sourceSets*.resources.srcDirs*.each {
+            if (!it.exists()) {
+                it.mkdirs()
+            }
+        }
+    }
+
+    test {
+        outputs.dir snippetsDir
+        useJUnitPlatform()
+    }
+
+}
+
+
+project(':core') {
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-security'
+        runtimeOnly 'mysql:mysql-connector-java'
+    }
+
+    bootJar {
+        enabled = false
+    }
+
+    jar {
+        enabled = false
+    }
+
+}
+
+project(':auth') {
+    dependencies {
+        compile project(':core')
+
+        implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        testImplementation('org.springframework.boot:spring-boot-starter-test') {
+            exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+        }
+        testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+        testImplementation 'org.springframework.security:spring-security-test'
+    }
+    jar {
+        enabled = false
+    }
+}
+
+project(':info') {
+    dependencies {
+        compile project(':core')
+
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        testImplementation('org.springframework.boot:spring-boot-starter-test') {
+            exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+        }
+        testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+        testImplementation 'org.springframework.security:spring-security-test'
+    }
+    jar {
+        enabled = false
+    }
+}
+
+project(':grade') {
+    dependencies {
+        compile project(':core')
+
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        testImplementation('org.springframework.boot:spring-boot-starter-test') {
+            exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+        }
+        testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+        testImplementation 'org.springframework.security:spring-security-test'
+    }
+    jar {
+        enabled = false
+    }
+}
+
+project(':school') {
+    dependencies {
+        compile project(':core')
+
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        testImplementation('org.springframework.boot:spring-boot-starter-test') {
+            exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+        }
+        testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+        testImplementation 'org.springframework.security:spring-security-test'
+    }
+    jar {
+        enabled = false
+    }
+}
+
+project(':husky') {
+    dependencies {
+        compile project(':auth')
+        compile project(':info')
+        compile project(':grade')
+        compile project(':school')
+
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        testImplementation('org.springframework.boot:spring-boot-starter-test') {
+            exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+        }
+        testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+        testImplementation 'org.springframework.security:spring-security-test'
+    }
+}

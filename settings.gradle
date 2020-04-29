@@ -1,0 +1,8 @@
+rootProject.name = 'husky'
+
+include 'core'
+include 'auth'
+include 'info'
+include 'school'
+include 'grade'
+include 'husky'
