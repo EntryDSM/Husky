@@ -1,9 +1,9 @@
 pipeline {
-  agent any
+  agent none
   stages {
     stage('Gradle Build') {
       steps {
-        sh './gradlew build'
+        sh 'sudo ./gradlew build'
       }
     }
 
