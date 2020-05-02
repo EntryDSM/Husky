@@ -1,5 +1,12 @@
-package kr.hs.entrydsm.husky.entities.user;
+package kr.hs.entrydsm.husky.entities.users;
 
+import kr.hs.entrydsm.husky.entities.applications.Application;
+import kr.hs.entrydsm.husky.entities.applications.GEDApplication;
+import kr.hs.entrydsm.husky.entities.applications.GraduatedApplication;
+import kr.hs.entrydsm.husky.entities.applications.UnGraduatedApplication;
+import kr.hs.entrydsm.husky.entities.users.enums.AdditionalType;
+import kr.hs.entrydsm.husky.entities.users.enums.ApplyType;
+import kr.hs.entrydsm.husky.entities.users.enums.GradeType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -44,7 +51,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Sex sex;
 
-    @Column(columnDefinition = "DATE")
+    @Column
     private Date birthDate;
 
     @Column(length = 15)
@@ -76,5 +83,30 @@ public class User {
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
+
+    @OneToOne(mappedBy = "user")
+    private Status status;
+
+    @OneToOne(mappedBy = "user")
+    private GEDApplication gedApplication;
+
+    @OneToOne(mappedBy = "user")
+    private GraduatedApplication graduatedApplication;
+
+    @OneToOne(mappedBy = "user")
+    private UnGraduatedApplication unGraduatedApplication;
+
+    public Application getApplication() {
+        switch (gradeType) {
+            case GED:
+                return this.gedApplication;
+            case GRADUATED:
+                return this.graduatedApplication;
+            case UN_GRADUATED:
+                return this.unGraduatedApplication;
+            default:
+                return null;
+        }
+    }
 
 }

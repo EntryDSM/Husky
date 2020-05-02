@@ -1,4 +1,4 @@
-package kr.hs.entrydsm.husky.entities.user;
+package kr.hs.entrydsm.husky.entities.users.enums;
 
 public enum ApplyType {
     COMMON, MEISTER, SOCIAL_ONE_PARENT, SOCIAL_FROM_NORTH,SOCIAL_MULTICULTURAL,
