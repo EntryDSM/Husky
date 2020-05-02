@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -22,9 +23,10 @@ public class User {
     @Column(length = 100, nullable = false)
     private String password;
 
-    @Column(columnDefinition = "INT", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
     private Integer receiptNumber;
+    // GeneratedValue 빼야할 듯
+    // 문서 보면 수험번호 정책 써져 있음
 
     @Enumerated(EnumType.STRING)
     private ApplyType applyType;
@@ -35,7 +37,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private GradeType gradeType;
 
-    @Column(columnDefinition = "tinyint(2)")
+    @Column
     private boolean isDaejeon;
 
     @Column(length = 15)
@@ -74,7 +76,7 @@ public class User {
     @Column(length = 1600)
     private String studyPlan;
 
-    @Column(columnDefinition = "DATETIME")
-    private Date createdAt;
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
 
 }
