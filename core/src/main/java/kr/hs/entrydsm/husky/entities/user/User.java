@@ -25,8 +25,6 @@ public class User {
 
     @Column(nullable = false)
     private Integer receiptNumber;
-    // GeneratedValue 빼야할 듯
-    // 문서 보면 수험번호 정책 써져 있음
 
     @Enumerated(EnumType.STRING)
     private ApplyType applyType;
