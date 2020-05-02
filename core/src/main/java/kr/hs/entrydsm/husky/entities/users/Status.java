@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
@@ -14,12 +13,11 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Status implements Serializable {
+public class Status {
 
     @Id
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_email")
-    private User user;
+    @Column(name = "user_email")
+    private String email;
 
     @Column
     private boolean isPaid;                         // 전형료 납부 여부
@@ -41,5 +39,9 @@ public class Status implements Serializable {
 
     @Column(length = 6)
     private String examCore;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private User user;
 
 }

@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Data
@@ -14,7 +13,7 @@ import java.math.BigDecimal;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class CalculatedScore extends Application implements Serializable {
+public class CalculatedScore extends Application {
 
     private BigDecimal volunteerScore;
 

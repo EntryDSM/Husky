@@ -7,6 +7,7 @@ import kr.hs.entrydsm.husky.entities.applications.UnGraduatedApplication;
 import kr.hs.entrydsm.husky.entities.users.enums.AdditionalType;
 import kr.hs.entrydsm.husky.entities.users.enums.ApplyType;
 import kr.hs.entrydsm.husky.entities.users.enums.GradeType;
+import kr.hs.entrydsm.husky.entities.users.enums.Sex;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
