@@ -2,7 +2,7 @@ pipeline {
   agent {
     docker {
       image 'gradle:jdk11'
-      args '--user root -v gradle-cache:/home/gradle/.gradle -v "$PWD":/home/gradle/project'
+      args '-v gradle-cache:/home/gradle/.gradle -v "$PWD":/home/gradle/project'
     }
 
   }
