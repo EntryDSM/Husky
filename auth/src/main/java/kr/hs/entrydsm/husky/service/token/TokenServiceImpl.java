@@ -1,6 +1,9 @@
 package kr.hs.entrydsm.husky.service.token;
 
 import io.jsonwebtoken.*;
+import kr.hs.entrydsm.husky.exceptions.ExpiredTokenException;
+import kr.hs.entrydsm.husky.exceptions.InvalidTokenException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -9,9 +12,10 @@ import java.util.UUID;
 @Service
 public class TokenServiceImpl implements TokenService {
 
-    private static String SECURITY_KEY = "";
+    @Value("${auth.jwt.secret}")
+    private String SECURITY_KEY;
 
-    private static String generateToken(Object data, Long expire, String type) {
+    private String generateToken(String data, Long expire, String type) {
         long nowMillis = System.currentTimeMillis();
 
         JwtBuilder builder = Jwts.builder()
@@ -27,21 +31,22 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public String generateAccessToken(Object data) {
-        return generateToken(data, 1000L * 3600, "access_token");
+    public String generateAccessToken(String data) {
+        return generateToken(data, 1000L * 3600 * 2, "access_token");
     }
 
     @Override
-    public String generateRefreshToken(Object data) {
+    public String generateRefreshToken(String data) {
         return generateToken(data, 1000L * 3600 * 24 * 30, "refresh_token");
     }
 
+    @Override
     public String parseToken(String token) {
-        String email = Jwts.parser().setSigningKey(SECURITY_KEY.getBytes()).parseClaimsJws(token).getBody().get("email").toString();
         String result;
         try {
-            result = email;
-            if (!Jwts.parser().setSigningKey(SECURITY_KEY.getBytes()).parseClaimsJws(token).getBody().get("type").equals("access_token")) throw new InvalidTokenException();
+            Claims body = Jwts.parser().setSigningKey(SECURITY_KEY.getBytes()).parseClaimsJws(token).getBody();
+            result = body.get("email").toString();
+            if (!body.get("type").equals("access_token")) throw new InvalidTokenException();
         } catch (ExpiredJwtException e) {
             throw new ExpiredTokenException();
         } catch (MalformedJwtException e) {
@@ -50,16 +55,19 @@ public class TokenServiceImpl implements TokenService {
         return result;
     }
 
+    @Override
     public String parseRefreshToken(String token) {
+        String result;
         try {
-            if(!Jwts.parser().setSigningKey(SECURITY_KEY.getBytes()).parseClaimsJws(token).getBody().get("type").equals("refresh_token")) throw new InvalidTokenException();
-            token = Jwts.parser().setSigningKey(SECURITY_KEY.getBytes()).parseClaimsJws(token).getBody().get("user_id").toString();
+            Claims body = Jwts.parser().setSigningKey(SECURITY_KEY.getBytes()).parseClaimsJws(token).getBody();
+            if(!body.get("type").equals("refresh_token")) throw new InvalidTokenException();
+            result = body.get("email").toString();
         } catch (ExpiredJwtException e) {
             throw new ExpiredTokenException();
         } catch (MalformedJwtException e) {
             throw new InvalidTokenException();
         }
-        return Integer.parseInt(token);
+        return result;
     }
 
 }

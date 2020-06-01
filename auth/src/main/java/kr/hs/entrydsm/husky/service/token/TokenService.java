@@ -1,6 +1,8 @@
 package kr.hs.entrydsm.husky.service.token;
 
 public interface TokenService {
-    String generateAccessToken(Object data);
-    String generateRefreshToken(Object data);
+    String generateAccessToken(String data);
+    String generateRefreshToken(String data);
+    String parseToken(String token);
+    String parseRefreshToken(String token);
 }
