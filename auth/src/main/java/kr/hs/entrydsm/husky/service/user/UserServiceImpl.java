@@ -1,10 +1,10 @@
 package kr.hs.entrydsm.husky.service.user;
 
-import kr.hs.entrydsm.husky.domains.request.TokenRequest;
-import kr.hs.entrydsm.husky.domains.request.AccountRequest;
-import kr.hs.entrydsm.husky.domains.response.TokenResponse;
+import kr.hs.entrydsm.husky.domains.request.AuthCodeRequest;
+import kr.hs.entrydsm.husky.domains.request.PasswordRequest;
+import kr.hs.entrydsm.husky.domains.request.SignUpRequest;
 import kr.hs.entrydsm.husky.entities.users.repositories.UserRepository;
-import kr.hs.entrydsm.husky.service.token.TokenServiceImpl;
+import kr.hs.entrydsm.husky.service.email.EmailServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,23 +14,26 @@ public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
 
-    private TokenServiceImpl tokenService;
+    private EmailServiceImpl emailService;
 
     @Override
-    public TokenResponse signIn(AccountRequest accountRequest) {
+    public void signUp(SignUpRequest signUpRequest) {
 
-        return responseToken("");
     }
 
     @Override
-    public TokenResponse refreshToken(TokenRequest tokenRequest) {
-        return responseToken("");
+    public void sendEmail(String email) {
+        emailService.sendEmail(email);
     }
 
-    private TokenResponse responseToken(Object data) {
-        return TokenResponse.builder()
-                .accessToken(tokenService.generateAccessToken(""))
-                .refreshToken(tokenService.generateRefreshToken(""))
-                .build();
+    @Override
+    public void authEmail(AuthCodeRequest authCodeRequest) {
+
     }
+
+    @Override
+    public void changePassword(String token, Integer userId, PasswordRequest passwordRequest) {
+
+    }
+
 }

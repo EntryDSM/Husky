@@ -1,10 +1,12 @@
 package kr.hs.entrydsm.husky.service.user;
 
-import kr.hs.entrydsm.husky.domains.request.TokenRequest;
-import kr.hs.entrydsm.husky.domains.request.AccountRequest;
-import kr.hs.entrydsm.husky.domains.response.TokenResponse;
+import kr.hs.entrydsm.husky.domains.request.AuthCodeRequest;
+import kr.hs.entrydsm.husky.domains.request.PasswordRequest;
+import kr.hs.entrydsm.husky.domains.request.SignUpRequest;
 
 public interface UserService {
-    TokenResponse signIn(AccountRequest accountRequest);
-    TokenResponse refreshToken(TokenRequest tokenRequest);
+    void signUp(SignUpRequest signUpRequest);
+    void sendEmail(String email);
+    void authEmail(AuthCodeRequest authCodeRequest);
+    void changePassword(String token, Integer userId, PasswordRequest passwordRequest);
 }
