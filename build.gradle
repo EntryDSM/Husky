@@ -78,7 +78,7 @@ project(':core') {
     }
 
     jar {
-        enabled = false
+        enabled = true
     }
 
 }
@@ -155,6 +155,7 @@ project(':husky') {
         compile project(':info')
         compile project(':grade')
         compile project(':school')
+        compile project(':core')
 
         implementation 'org.springframework.boot:spring-boot-starter-web'
         testImplementation('org.springframework.boot:spring-boot-starter-test') {
