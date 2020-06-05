@@ -32,16 +32,17 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public String generateAccessToken(String data) {
-        return generateToken(data, 1000L * 3600 * 2, "access_token");
+        return "Bearer " + generateToken(data, 1000L * 3600 * 2, "access_token");
     }
 
     @Override
     public String generateRefreshToken(String data) {
-        return generateToken(data, 1000L * 3600 * 24 * 30, "refresh_token");
+        return "Bearer " + generateToken(data, 1000L * 3600 * 24 * 30, "refresh_token");
     }
 
     @Override
     public String parseToken(String token) {
+        token = token.substring(7);
         String result;
         try {
             Claims body = Jwts.parser().setSigningKey(SECURITY_KEY.getBytes()).parseClaimsJws(token).getBody();
@@ -57,6 +58,7 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public String parseRefreshToken(String token) {
+        token = token.substring(7);
         String result;
         try {
             Claims body = Jwts.parser().setSigningKey(SECURITY_KEY.getBytes()).parseClaimsJws(token).getBody();
