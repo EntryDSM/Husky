@@ -7,20 +7,22 @@ import kr.hs.entrydsm.husky.service.auth.AuthServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
-    private AuthServiceImpl authService;
+    private final AuthServiceImpl authService;
 
     @PostMapping
-    public TokenResponse signIn(@RequestBody AccountRequest accountRequest) {
+    public TokenResponse signIn(@RequestBody @Valid AccountRequest accountRequest) {
         return authService.signIn(accountRequest);
     }
 
     @PutMapping
-    public TokenResponse refreshToken(@RequestBody TokenRequest tokenRequest) {
+    public TokenResponse refreshToken(@RequestBody @Valid TokenRequest tokenRequest) {
         return authService.refreshToken(tokenRequest);
     }
 

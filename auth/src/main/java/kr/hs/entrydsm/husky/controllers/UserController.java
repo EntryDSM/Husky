@@ -7,24 +7,26 @@ import kr.hs.entrydsm.husky.service.user.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
 
-    private UserServiceImpl signUpService;
+    private final UserServiceImpl signUpService;
 
     @PostMapping
-    public void signIn(@RequestBody SignUpRequest signUpRequest) {
+    public void signIn(@RequestBody @Valid SignUpRequest signUpRequest) {
         signUpService.signUp(signUpRequest);
     }
 
-    @PostMapping("/email")
-    public void sendEmail(@RequestParam String email) {
+    @PostMapping("/email/verify")
+    public void sendEmail(@RequestParam @Valid String email) {
         signUpService.sendEmail(email);
     }
 
-    @PostMapping("/valid-email")
+    @PutMapping("/email/verify")
     public void authEmail(AuthCodeRequest authCodeRequest) {
         signUpService.authEmail(authCodeRequest);
     }

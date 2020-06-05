@@ -12,9 +12,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    private EmailServiceImpl emailService;
+    private final EmailServiceImpl emailService;
 
     @Override
     public void signUp(SignUpRequest signUpRequest) {
