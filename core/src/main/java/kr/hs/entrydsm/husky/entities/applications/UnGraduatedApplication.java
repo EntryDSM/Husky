@@ -1,12 +1,12 @@
 package kr.hs.entrydsm.husky.entities.applications;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 
-@Data
+@Getter
 @Builder
 @Entity(name = "ungraduated_application")
 @NoArgsConstructor

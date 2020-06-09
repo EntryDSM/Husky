@@ -8,16 +8,13 @@ import kr.hs.entrydsm.husky.entities.users.enums.AdditionalType;
 import kr.hs.entrydsm.husky.entities.users.enums.ApplyType;
 import kr.hs.entrydsm.husky.entities.users.enums.GradeType;
 import kr.hs.entrydsm.husky.entities.users.enums.Sex;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Date;
 
-@Data
+@Getter
 @Builder
 @Entity(name = "user")
 @NoArgsConstructor
@@ -108,6 +105,10 @@ public class User {
             default:
                 return null;
         }
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
 }
