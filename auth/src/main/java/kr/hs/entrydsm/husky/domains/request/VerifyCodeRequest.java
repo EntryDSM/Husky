@@ -6,7 +6,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 @Data
-public class AuthCodeRequest {
+public class VerifyCodeRequest {
 
     @Email
     private String email;
