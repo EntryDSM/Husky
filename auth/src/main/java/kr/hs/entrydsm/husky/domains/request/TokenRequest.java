@@ -1,10 +1,13 @@
 package kr.hs.entrydsm.husky.domains.request;
 
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+import javax.validation.constraints.NotBlank;
+
+@Getter
 public class TokenRequest {
 
+    @NotBlank
     private String refreshToken;
 
 }
