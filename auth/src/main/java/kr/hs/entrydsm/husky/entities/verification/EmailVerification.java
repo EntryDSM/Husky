@@ -29,7 +29,7 @@ public class EmailVerification {
         this.ttl = 3 * MINUTE;
     }
 
-    public boolean isVerify() {
+    public boolean isVerified() {
         return status.equals(EmailVerificationStatus.VERIFIED);
     }
 
