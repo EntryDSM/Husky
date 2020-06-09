@@ -1,15 +1,13 @@
 package kr.hs.entrydsm.husky.service.email;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
 
-
     @Override
-    public void sendEmail(String email) {
+    public void sendEmail(String email, String code) {
+        // 인증 메일 보내는 로직
     }
 
 }
