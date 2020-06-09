@@ -27,13 +27,14 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findById(accountRequest.getEmail())
                 .filter(u -> passwordEncoder.matches(accountRequest.getPassword(), u.getPassword()))
                 .orElseThrow(UserNotFoundException::new);
+        // Refresh Token을 레디스에 저장? 아직 잘 모르겠음
 
         return responseToken(user.getEmail());
     }
 
     @Override
-    public TokenResponse refreshToken(TokenRequest tokenRequest) {
-        String email = tokenService.parseRefreshToken(tokenRequest.getRefreshToken());
+    public TokenResponse refreshToken(String refreshToken) {
+        String email = tokenService.parseRefreshToken(refreshToken);
 
         return responseToken(email);
     }
