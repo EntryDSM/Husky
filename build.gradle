@@ -43,6 +43,7 @@ subprojects {
         annotationProcessor 'org.projectlombok:lombok'
         implementation 'org.springframework.boot:spring-boot-starter-actuator'
         implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        implementation 'org.springframework.boot:spring-boot-starter-security'
     }
 
     task initSourceFolders {
@@ -77,7 +78,7 @@ project(':core') {
     }
 
     jar {
-        enabled = false
+        enabled = true
     }
 
 }
@@ -88,6 +89,7 @@ project(':auth') {
 
         implementation 'org.springframework.boot:spring-boot-starter-data-redis'
         implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'io.jsonwebtoken:jjwt:0.9.1'
         testImplementation('org.springframework.boot:spring-boot-starter-test') {
             exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
         }
@@ -153,6 +155,7 @@ project(':husky') {
         compile project(':info')
         compile project(':grade')
         compile project(':school')
+        compile project(':core')
 
         implementation 'org.springframework.boot:spring-boot-starter-web'
         testImplementation('org.springframework.boot:spring-boot-starter-test') {
