@@ -55,7 +55,6 @@ public class UserServiceImpl implements UserService {
                 .status(EmailVerificationStatus.UNVERIFIED)
                 .build()
         );
-        // 3분뒤 만료 상태로 변경 해야함. 근데 어떤 방식을 사용해야 잘했다 소문이 날지 모르겠음
     }
 
     @Override
