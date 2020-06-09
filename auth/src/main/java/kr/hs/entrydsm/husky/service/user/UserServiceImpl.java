@@ -2,7 +2,7 @@ package kr.hs.entrydsm.husky.service.user;
 
 import kr.hs.entrydsm.husky.domains.request.AccountRequest;
 import kr.hs.entrydsm.husky.domains.request.AuthCodeRequest;
-import kr.hs.entrydsm.husky.domains.request.PasswordRequest;
+import kr.hs.entrydsm.husky.domains.request.ChangePasswordRequest;
 import kr.hs.entrydsm.husky.entities.verification.EmailVerification;
 import kr.hs.entrydsm.husky.entities.verification.EmailVerificationStatus;
 import kr.hs.entrydsm.husky.entities.verification.EmailVerificationRepository;
@@ -71,14 +71,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changePassword(String token, PasswordRequest passwordRequest) {
+    public void changePassword(String token, ChangePasswordRequest changePasswordRequest) {
         User user = userRepository.findById(tokenService.parseToken(token)).orElseThrow(UserNotFoundException::new);
 
-        if (passwordEncoder.matches(passwordRequest.getPassword(), user.getPassword())) {
+        if (passwordEncoder.matches(changePasswordRequest.getPassword(), user.getPassword())) {
             throw new PasswordSameException();
         }
 
-        user.setPassword(passwordEncoder.encode(passwordRequest.getPassword()));
+        user.setPassword(passwordEncoder.encode(changePasswordRequest.getPassword()));
         userRepository.save(user);
     }
 
