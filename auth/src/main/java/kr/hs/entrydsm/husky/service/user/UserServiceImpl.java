@@ -3,8 +3,8 @@ package kr.hs.entrydsm.husky.service.user;
 import kr.hs.entrydsm.husky.domains.request.AccountRequest;
 import kr.hs.entrydsm.husky.domains.request.AuthCodeRequest;
 import kr.hs.entrydsm.husky.domains.request.PasswordRequest;
-import kr.hs.entrydsm.husky.entities.redis.AuthEmail;
-import kr.hs.entrydsm.husky.entities.redis.RedisRepository;
+import kr.hs.entrydsm.husky.entities.verification.EmailVerification;
+import kr.hs.entrydsm.husky.entities.verification.RedisRepository;
 import kr.hs.entrydsm.husky.entities.users.User;
 import kr.hs.entrydsm.husky.entities.users.repositories.UserRepository;
 import kr.hs.entrydsm.husky.exceptions.*;
@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
         String code = randomCode();
         emailService.sendEmail(email, code);
         redisRepository.save(
-                AuthEmail.builder()
+                EmailVerification.builder()
                 .email(email)
                 .authCode(code)
                 .status("UnAuthorized")
@@ -61,13 +61,13 @@ public class UserServiceImpl implements UserService {
     public void authEmail(AuthCodeRequest authCodeRequest) {
         String email = authCodeRequest.getEmail();
         String code = authCodeRequest.getAuthCode();
-        AuthEmail authEmail = redisRepository.findById(email).orElseThrow(InvalidAuthEmailException::new);
+        EmailVerification emailVerification = redisRepository.findById(email).orElseThrow(InvalidAuthEmailException::new);
 
-        if (!authEmail.getAuthCode().equals(code)) throw new InvalidAuthCodeException();
-        if (authEmail.getStatus().equals("Expired")) throw new ExpiredAuthCodeException();
+        if (!emailVerification.getAuthCode().equals(code)) throw new InvalidAuthCodeException();
+        if (emailVerification.getStatus().equals("Expired")) throw new ExpiredAuthCodeException();
 
-        authEmail.setStatus("Authorized");
-        redisRepository.save(authEmail);
+        emailVerification.setStatus("Authorized");
+        redisRepository.save(emailVerification);
     }
 
     @Override
