@@ -38,7 +38,7 @@ public class Status {
     private LocalDateTime submittedAt;              // 최종 제출 시각
 
     @Column(length = 6)
-    private String examCore;
+    private String examCode;
 
     @OneToOne(cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
