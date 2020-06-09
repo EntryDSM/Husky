@@ -1,7 +1,7 @@
 package kr.hs.entrydsm.husky.controllers;
 
 import kr.hs.entrydsm.husky.domains.request.AccountRequest;
-import kr.hs.entrydsm.husky.domains.request.AuthCodeRequest;
+import kr.hs.entrydsm.husky.domains.request.VerifyCodeRequest;
 import kr.hs.entrydsm.husky.domains.request.ChangePasswordRequest;
 import kr.hs.entrydsm.husky.service.user.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public class UserController {
     private final UserServiceImpl userService;
 
     @PostMapping
-    public void signIn(@RequestBody @Valid AccountRequest accountRequest) {
+    public void signUp(@RequestBody @Valid AccountRequest accountRequest) {
         userService.signUp(accountRequest);
     }
 
@@ -28,8 +28,8 @@ public class UserController {
     }
 
     @PutMapping("/email/verify")
-    public void authEmail(@RequestBody @Valid AuthCodeRequest authCodeRequest) {
-        userService.authEmail(authCodeRequest);
+    public void verifyEmail(@RequestBody @Valid VerifyCodeRequest verifyCodeRequest) {
+        userService.authEmail(verifyCodeRequest);
     }
 
     @PutMapping("/password")

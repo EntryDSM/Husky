@@ -1,7 +1,7 @@
 package kr.hs.entrydsm.husky.service.user;
 
 import kr.hs.entrydsm.husky.domains.request.AccountRequest;
-import kr.hs.entrydsm.husky.domains.request.AuthCodeRequest;
+import kr.hs.entrydsm.husky.domains.request.VerifyCodeRequest;
 import kr.hs.entrydsm.husky.domains.request.ChangePasswordRequest;
 import kr.hs.entrydsm.husky.entities.verification.EmailVerification;
 import kr.hs.entrydsm.husky.entities.verification.EmailVerificationStatus;
@@ -58,9 +58,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void authEmail(AuthCodeRequest authCodeRequest) {
-        String email = authCodeRequest.getEmail();
-        String code = authCodeRequest.getAuthCode();
+    public void authEmail(VerifyCodeRequest verifyCodeRequest) {
+        String email = verifyCodeRequest.getEmail();
+        String code = verifyCodeRequest.getAuthCode();
         EmailVerification emailVerification = emailVerificationRepository.findById(email).orElseThrow(InvalidAuthEmailException::new);
 
         if (!emailVerification.getAuthCode().equals(code)) throw new InvalidAuthCodeException();
