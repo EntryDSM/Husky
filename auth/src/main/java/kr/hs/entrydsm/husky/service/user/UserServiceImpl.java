@@ -4,7 +4,8 @@ import kr.hs.entrydsm.husky.domains.request.AccountRequest;
 import kr.hs.entrydsm.husky.domains.request.AuthCodeRequest;
 import kr.hs.entrydsm.husky.domains.request.PasswordRequest;
 import kr.hs.entrydsm.husky.entities.verification.EmailVerification;
-import kr.hs.entrydsm.husky.entities.verification.RedisRepository;
+import kr.hs.entrydsm.husky.entities.verification.EmailVerificationStatus;
+import kr.hs.entrydsm.husky.entities.verification.EmailVerificationRepository;
 import kr.hs.entrydsm.husky.entities.users.User;
 import kr.hs.entrydsm.husky.entities.users.repositories.UserRepository;
 import kr.hs.entrydsm.husky.exceptions.*;
@@ -19,7 +20,7 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final RedisRepository redisRepository;
+    private final EmailVerificationRepository emailVerificationRepository;
 
     private final EmailServiceImpl emailService;
     private final TokenServiceImpl tokenService;
@@ -47,11 +48,11 @@ public class UserServiceImpl implements UserService {
 
         String code = randomCode();
         emailService.sendEmail(email, code);
-        redisRepository.save(
+        emailVerificationRepository.save(
                 EmailVerification.builder()
                 .email(email)
                 .authCode(code)
-                .status("UnAuthorized")
+                .status(EmailVerificationStatus.UNVERIFIED)
                 .build()
         );
         // 3분뒤 만료 상태로 변경 해야함. 근데 어떤 방식을 사용해야 잘했다 소문이 날지 모르겠음
@@ -61,20 +62,22 @@ public class UserServiceImpl implements UserService {
     public void authEmail(AuthCodeRequest authCodeRequest) {
         String email = authCodeRequest.getEmail();
         String code = authCodeRequest.getAuthCode();
-        EmailVerification emailVerification = redisRepository.findById(email).orElseThrow(InvalidAuthEmailException::new);
+        EmailVerification emailVerification = emailVerificationRepository.findById(email).orElseThrow(InvalidAuthEmailException::new);
 
         if (!emailVerification.getAuthCode().equals(code)) throw new InvalidAuthCodeException();
-        if (emailVerification.getStatus().equals("Expired")) throw new ExpiredAuthCodeException();
+        if (!emailVerification.isVerify()) throw new ExpiredAuthCodeException();
 
-        emailVerification.setStatus("Authorized");
-        redisRepository.save(emailVerification);
+        emailVerification.verify();
+        emailVerificationRepository.save(emailVerification);
     }
 
     @Override
-    public void changePassword(String token, String userId, PasswordRequest passwordRequest) {
+    public void changePassword(String token, PasswordRequest passwordRequest) {
         User user = userRepository.findById(tokenService.parseToken(token)).orElseThrow(UserNotFoundException::new);
-        if (!user.getEmail().equals(userId)) throw new PermissionDeniedException();
-        if (passwordEncoder.matches(passwordRequest.getPassword(), user.getPassword())) throw new PasswordSameException();
+
+        if (passwordEncoder.matches(passwordRequest.getPassword(), user.getPassword())) {
+            throw new PasswordSameException();
+        }
 
         user.setPassword(passwordEncoder.encode(passwordRequest.getPassword()));
         userRepository.save(user);

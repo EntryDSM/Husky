@@ -32,11 +32,10 @@ public class UserController {
         signUpService.authEmail(authCodeRequest);
     }
 
-    @PutMapping("/{userId}/password")
+    @PutMapping("/password")
     public void changePassword(@RequestHeader("Authorization") String token,
-                               @PathVariable String userId,
                                @RequestBody @Valid PasswordRequest passwordRequest) {
-        signUpService.changePassword(token, userId, passwordRequest);
+        signUpService.changePassword(token, passwordRequest);
     }
 
 }

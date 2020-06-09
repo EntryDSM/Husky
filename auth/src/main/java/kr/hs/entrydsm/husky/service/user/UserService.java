@@ -8,5 +8,5 @@ public interface UserService {
     void signUp(AccountRequest accountRequest);
     void sendEmail(String email);
     void authEmail(AuthCodeRequest authCodeRequest);
-    void changePassword(String token, String userId, PasswordRequest passwordRequest);
+    void changePassword(String token, PasswordRequest passwordRequest);
 }

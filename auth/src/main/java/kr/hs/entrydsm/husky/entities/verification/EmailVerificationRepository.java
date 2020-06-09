@@ -4,5 +4,5 @@ import org.springframework.data.keyvalue.repository.KeyValueRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RedisRepository extends KeyValueRepository<EmailVerification, String> {
+public interface EmailVerificationRepository extends KeyValueRepository<EmailVerification, String> {
 }
