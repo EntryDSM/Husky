@@ -35,7 +35,7 @@ public class UserController {
     @PutMapping("/{userId}/password")
     public void changePassword(@RequestHeader("Authorization") String token,
                                @PathVariable String userId,
-                               @RequestParam @Valid PasswordRequest passwordRequest) {
+                               @RequestBody @Valid PasswordRequest passwordRequest) {
         signUpService.changePassword(token, userId, passwordRequest);
     }
 
