@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void changePassword(String token, ChangePasswordRequest changePasswordRequest) {
-        User user = userRepository.findById(jwtTokenProvider.parseToken(token)).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findById(jwtTokenProvider.getUserEmail(token)).orElseThrow(UserNotFoundException::new);
 
         if (passwordEncoder.matches(changePasswordRequest.getPassword(), user.getPassword())) {
             throw new PasswordSameException();

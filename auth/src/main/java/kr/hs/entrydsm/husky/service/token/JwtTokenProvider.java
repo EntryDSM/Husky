@@ -3,69 +3,87 @@ package kr.hs.entrydsm.husky.service.token;
 import io.jsonwebtoken.*;
 import kr.hs.entrydsm.husky.exceptions.ExpiredTokenException;
 import kr.hs.entrydsm.husky.exceptions.InvalidTokenException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
-import java.util.UUID;
 
-@Service
+@Component
+@RequiredArgsConstructor
 public class JwtTokenProvider {
 
     @Value("${auth.jwt.secret}")
-    private String SECURITY_KEY;
+    private String secretKey;
 
-    private String generateToken(String data, Long expire, String type) {
-        long nowMillis = System.currentTimeMillis();
+    @Value("${auth.jwt.exp.access}")
+    private int accessTokenExpiration;
 
-        JwtBuilder builder = Jwts.builder()
-                .setId(UUID.randomUUID().toString())
-                .setIssuedAt(new Date(nowMillis))
-                .setHeaderParam("typ", "JWT")
-                .claim("email", data)
-                .claim("type", type)
-                .setExpiration(new Date(nowMillis + expire))
-                .signWith(SignatureAlgorithm.HS256, SECURITY_KEY.getBytes());
+    @Value("${auth.jwt.exp.refresh}")
+    private int refreshTokenExpiration;
 
-        return builder.compact();
-    }
+    @Value("${auth.jwt.header}")
+    private String header;
+
+    @Value("${auth.jwt.prefix}")
+    private String prefix;
+
+    private final UserDetailsService userDetailsService;
 
     public String generateAccessToken(String data) {
-        return "Bearer " + generateToken(data, 1000L * 3600 * 2, "access_token");
+        return Jwts.builder()
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + accessTokenExpiration))
+                .setSubject(data)
+                .claim("type", "access_token")
+                .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
+                .compact();
     }
 
     public String generateRefreshToken(String data) {
-        return "Bearer " + generateToken(data, 1000L * 3600 * 24 * 30, "refresh_token");
+        return Jwts.builder()
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpiration))
+                .setSubject(data)
+                .claim("type", "refresh_token")
+                .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
+                .compact();
     }
 
-    public String parseToken(String token) {
-        token = token.substring(7);
-        String result;
-        try {
-            Claims body = Jwts.parser().setSigningKey(SECURITY_KEY.getBytes()).parseClaimsJws(token).getBody();
-            result = body.get("email").toString();
-            if (!body.get("type").equals("access_token")) throw new InvalidTokenException();
-        } catch (ExpiredJwtException e) {
-            throw new ExpiredTokenException();
-        } catch (MalformedJwtException e) {
-            throw new InvalidTokenException();
+    public String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader(header);
+        if (bearerToken != null && bearerToken.startsWith(prefix)) {
+            return bearerToken.substring(7);
         }
-        return result;
+        return null;
     }
 
-    public String parseRefreshToken(String token) {
-        token = token.substring(7);
-        String result;
+    public boolean validateToken(String token) {
         try {
-            Claims body = Jwts.parser().setSigningKey(SECURITY_KEY.getBytes()).parseClaimsJws(token).getBody();
-            if(!body.get("type").equals("refresh_token")) throw new InvalidTokenException();
-            result = body.get("email").toString();
-        } catch (ExpiredJwtException e) {
-            throw new ExpiredTokenException();
-        } catch (MalformedJwtException e) {
-            throw new InvalidTokenException();
+            Jwts.parser().setSigningKey(secretKey.getBytes()).parseClaimsJws(token).getBody().getSubject();
+            return true;
+        } catch (Exception e) {
+            return false;
         }
-        return result;
+    }
+
+    public Authentication getAuthentication(String token) {
+        UserDetails userDetails =  userDetailsService.loadUserByUsername(getUserEmail(token));
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+    }
+
+    public String getUserEmail(String token) {
+        return Jwts.parser().setSigningKey(secretKey.getBytes()).parseClaimsJws(token).getBody().getSubject();
+    }
+
+    public boolean isRefreshToken(String token) {
+        return Jwts.parser().setSigningKey(secretKey.getBytes()).parseClaimsJws(token).getBody().get("type").equals("refresh_token");
     }
 
 }
