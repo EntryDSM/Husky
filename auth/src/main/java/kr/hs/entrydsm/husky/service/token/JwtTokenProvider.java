@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @Service
-public class TokenServiceImpl implements TokenService {
+public class JwtTokenProvider {
 
     @Value("${auth.jwt.secret}")
     private String SECURITY_KEY;
@@ -30,17 +30,14 @@ public class TokenServiceImpl implements TokenService {
         return builder.compact();
     }
 
-    @Override
     public String generateAccessToken(String data) {
         return "Bearer " + generateToken(data, 1000L * 3600 * 2, "access_token");
     }
 
-    @Override
     public String generateRefreshToken(String data) {
         return "Bearer " + generateToken(data, 1000L * 3600 * 24 * 30, "refresh_token");
     }
 
-    @Override
     public String parseToken(String token) {
         token = token.substring(7);
         String result;
@@ -56,7 +53,6 @@ public class TokenServiceImpl implements TokenService {
         return result;
     }
 
-    @Override
     public String parseRefreshToken(String token) {
         token = token.substring(7);
         String result;

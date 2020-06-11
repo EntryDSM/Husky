@@ -5,7 +5,7 @@ import kr.hs.entrydsm.husky.domains.response.TokenResponse;
 import kr.hs.entrydsm.husky.entities.users.User;
 import kr.hs.entrydsm.husky.entities.users.repositories.UserRepository;
 import kr.hs.entrydsm.husky.exceptions.UserNotFoundException;
-import kr.hs.entrydsm.husky.service.token.TokenServiceImpl;
+import kr.hs.entrydsm.husky.service.token.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
 
-    private final TokenServiceImpl tokenService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -33,15 +33,15 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public TokenResponse refreshToken(String refreshToken) {
-        String email = tokenService.parseRefreshToken(refreshToken);
+        String email = jwtTokenProvider.parseRefreshToken(refreshToken);
 
         return responseToken(email);
     }
 
     private TokenResponse responseToken(String email) {
         return TokenResponse.builder()
-                .accessToken(tokenService.generateAccessToken(email))
-                .refreshToken(tokenService.generateRefreshToken(email))
+                .accessToken(jwtTokenProvider.generateAccessToken(email))
+                .refreshToken(jwtTokenProvider.generateRefreshToken(email))
                 .build();
     }
 }
