@@ -5,6 +5,8 @@ import kr.hs.entrydsm.husky.domains.request.VerifyCodeRequest;
 import kr.hs.entrydsm.husky.domains.request.ChangePasswordRequest;
 import kr.hs.entrydsm.husky.service.user.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -14,6 +16,8 @@ import javax.validation.constraints.Email;
 @RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
+
+    private final Authentication authentication;
 
     private final UserServiceImpl userService;
 
@@ -33,9 +37,8 @@ public class UserController {
     }
 
     @PutMapping("/password")
-    public void changePassword(@RequestHeader("Authorization") String token,
-                               @RequestBody @Valid ChangePasswordRequest changePasswordRequest) {
-        userService.changePassword(token, changePasswordRequest);
+    public void changePassword(@RequestBody @Valid ChangePasswordRequest changePasswordRequest) {
+        userService.changePassword(authentication.getName(), changePasswordRequest);
     }
 
 }
