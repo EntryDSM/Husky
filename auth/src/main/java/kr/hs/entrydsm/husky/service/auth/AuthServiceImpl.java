@@ -43,6 +43,7 @@ public class AuthServiceImpl implements AuthService {
         return TokenResponse.builder()
                 .accessToken(jwtTokenProvider.generateAccessToken(email))
                 .refreshToken(jwtTokenProvider.generateRefreshToken(email))
+                .tokenType("Bearer")
                 .build();
     }
 }
