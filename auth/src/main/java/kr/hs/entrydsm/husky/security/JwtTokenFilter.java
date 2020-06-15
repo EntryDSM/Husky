@@ -1,4 +1,4 @@
-package kr.hs.entrydsm.husky.config;
+package kr.hs.entrydsm.husky.security;
 
 import kr.hs.entrydsm.husky.service.token.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
