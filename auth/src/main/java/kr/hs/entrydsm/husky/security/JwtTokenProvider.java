@@ -66,7 +66,8 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parser().setSigningKey(secretKey.getBytes()).parseClaimsJws(token).getBody().getSubject();
+            Jwts.parser().setSigningKey(secretKey.getBytes())
+                    .parseClaimsJws(token).getBody().getSubject();
             return true;
         } catch (Exception e) {
             return false;
@@ -83,7 +84,8 @@ public class JwtTokenProvider {
     }
 
     public boolean isRefreshToken(String token) {
-        return Jwts.parser().setSigningKey(secretKey.getBytes()).parseClaimsJws(token).getBody().get("type").equals("refresh_token");
+        return Jwts.parser().setSigningKey(secretKey.getBytes())
+                .parseClaimsJws(token).getBody().get("type").equals("refresh_token");
     }
 
 }
