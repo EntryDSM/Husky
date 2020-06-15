@@ -1,6 +1,5 @@
 package kr.hs.entrydsm.husky.security;
 
-import kr.hs.entrydsm.husky.service.token.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

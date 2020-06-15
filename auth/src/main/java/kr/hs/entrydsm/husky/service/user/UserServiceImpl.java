@@ -10,7 +10,7 @@ import kr.hs.entrydsm.husky.entities.users.User;
 import kr.hs.entrydsm.husky.entities.users.repositories.UserRepository;
 import kr.hs.entrydsm.husky.exceptions.*;
 import kr.hs.entrydsm.husky.service.email.EmailServiceImpl;
-import kr.hs.entrydsm.husky.service.token.JwtTokenProvider;
+import kr.hs.entrydsm.husky.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

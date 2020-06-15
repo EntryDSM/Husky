@@ -1,4 +1,4 @@
-package kr.hs.entrydsm.husky.service.token;
+package kr.hs.entrydsm.husky.security;
 
 import io.jsonwebtoken.*;
 import kr.hs.entrydsm.husky.exceptions.ExpiredTokenException;
