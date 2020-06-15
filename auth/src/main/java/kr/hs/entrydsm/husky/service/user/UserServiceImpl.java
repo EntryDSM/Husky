@@ -10,7 +10,7 @@ import kr.hs.entrydsm.husky.entities.users.User;
 import kr.hs.entrydsm.husky.entities.users.repositories.UserRepository;
 import kr.hs.entrydsm.husky.exceptions.*;
 import kr.hs.entrydsm.husky.service.email.EmailServiceImpl;
-import kr.hs.entrydsm.husky.service.token.TokenServiceImpl;
+import kr.hs.entrydsm.husky.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
     private final EmailVerificationRepository emailVerificationRepository;
 
     private final EmailServiceImpl emailService;
-    private final TokenServiceImpl tokenService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -71,8 +71,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changePassword(String token, ChangePasswordRequest changePasswordRequest) {
-        User user = userRepository.findById(tokenService.parseToken(token)).orElseThrow(UserNotFoundException::new);
+    public void changePassword(String userEmail, ChangePasswordRequest changePasswordRequest) {
+        User user = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
 
         if (passwordEncoder.matches(changePasswordRequest.getPassword(), user.getPassword())) {
             throw new PasswordSameException();
