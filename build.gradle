@@ -127,6 +127,8 @@ project(':grade') {
         }
         testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
         testImplementation 'org.springframework.security:spring-security-test'
+
+        compile group: 'fr.opensagres.xdocreport', name: 'org.apache.poi.xwpf.converter.pdf', version: '1.0.6'
     }
     jar {
         enabled = false
