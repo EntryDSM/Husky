@@ -25,7 +25,7 @@ public class GradeController {
         return gradeService.getTmpPdf(authentication.getName());
     }
 
-    @GetMapping("/pdf-final")
+    @GetMapping(value = "/pdf-final", produces = MediaType.APPLICATION_PDF_VALUE)
     public InputStreamResource getFinalPdf() {
         return gradeService.getFinalPdf(authentication.getName());
     }
