@@ -1,9 +1,9 @@
 package kr.hs.entrydsm.husky.service.pdf;
 
-import java.io.File;
+import java.io.FileInputStream;
 
 public interface PdfService {
     void load();
-    File save();
+    FileInputStream save();
     void replace(String key, String value);
 }

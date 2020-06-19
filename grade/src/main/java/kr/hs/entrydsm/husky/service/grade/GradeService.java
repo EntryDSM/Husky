@@ -1,8 +1,9 @@
 package kr.hs.entrydsm.husky.service.grade;
 
-import java.io.File;
+import org.springframework.core.io.InputStreamResource;
+
 
 public interface GradeService {
-    File getTmpPdf(String userEmail);
-    File getFinalPdf(String userEmail);
+    InputStreamResource getTmpPdf(String userEmail);
+    InputStreamResource getFinalPdf(String userEmail);
 }

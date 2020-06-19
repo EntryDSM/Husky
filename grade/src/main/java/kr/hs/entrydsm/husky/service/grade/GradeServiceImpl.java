@@ -5,9 +5,9 @@ import kr.hs.entrydsm.husky.entities.users.repositories.UserRepository;
 import kr.hs.entrydsm.husky.exceptions.UserNotFoundException;
 import kr.hs.entrydsm.husky.service.pdf.PdfServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 
 @Service
 @RequiredArgsConstructor
@@ -18,18 +18,24 @@ public class GradeServiceImpl implements GradeService {
     private final PdfServiceImpl pdfService;
 
     @Override
-    public File getTmpPdf(String userEmail) {
+    public InputStreamResource getTmpPdf(String userEmail) {
         User user = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
         pdfService.load();
 
         pdfService.replace("{userName}", user.getName());
         // 이런식으로 docx 수정
 
-        return pdfService.save();
+        return new InputStreamResource(pdfService.save());
     }
 
     @Override
-    public File getFinalPdf(String userEmail) {
-        return null;
+    public InputStreamResource getFinalPdf(String userEmail) {
+        User user = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
+        pdfService.load();
+
+        pdfService.replace("{userName}", user.getName());
+        // 이런식으로 docx 수정
+
+        return new InputStreamResource(pdfService.save());
     }
 }

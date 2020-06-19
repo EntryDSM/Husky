@@ -29,17 +29,19 @@ public class PdfServiceImpl implements PdfService {
     }
 
     @Override
-    public File save() {
+    public FileInputStream save() {
         PdfOptions options = PdfOptions.create();
         options.fontEncoding("UTF-8");
+        FileInputStream fileInputStream = null;
         try {
             OutputStream out = new FileOutputStream(new File(tmpPdfFilePath));
             PdfConverter.getInstance().convert(docx, out, options);
+            fileInputStream = new FileInputStream(tmpPdfFilePath);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return new File(tmpPdfFilePath);
+        return fileInputStream;
     }
 
     @Override
