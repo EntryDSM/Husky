@@ -19,13 +19,13 @@ public class GradeController {
 
     private final GradeServiceImpl gradeService;
 
-    @GetMapping(value = "/pdf-tmp", produces = MediaType.APPLICATION_PDF_VALUE)
+    @GetMapping(value = "/application/temp", produces = MediaType.APPLICATION_PDF_VALUE)
     public InputStreamResource getTmpPdf() {
 
         return gradeService.getTmpPdf(authentication.getName());
     }
 
-    @GetMapping(value = "/pdf-final", produces = MediaType.APPLICATION_PDF_VALUE)
+    @GetMapping(value = "/application", produces = MediaType.APPLICATION_PDF_VALUE)
     public InputStreamResource getFinalPdf() {
         return gradeService.getFinalPdf(authentication.getName());
     }
