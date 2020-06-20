@@ -122,13 +122,12 @@ project(':grade') {
         compile project(':core')
 
         implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'fr.opensagres.xdocreport:org.apache.poi.xwpf.converter.pdf:1.0.6'
         testImplementation('org.springframework.boot:spring-boot-starter-test') {
             exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
         }
         testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
         testImplementation 'org.springframework.security:spring-security-test'
-
-        compile group: 'fr.opensagres.xdocreport', name: 'org.apache.poi.xwpf.converter.pdf', version: '1.0.6'
     }
     jar {
         enabled = false
