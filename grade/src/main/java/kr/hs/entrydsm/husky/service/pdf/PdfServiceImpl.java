@@ -21,7 +21,7 @@ public class PdfServiceImpl implements PdfService {
     @Override
     public void load() {
         try {
-            File originDocxFile = new ClassPathResource("static/originDocx.docx").getFile();
+            File originDocxFile = new ClassPathResource("static/application_template.docx").getFile();
             docx = new XWPFDocument(OPCPackage.open(originDocxFile));
         } catch (IOException | InvalidFormatException e) {
             e.printStackTrace();
