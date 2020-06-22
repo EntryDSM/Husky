@@ -26,7 +26,7 @@ public class SchoolController {
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public @ResponseBody
-    AppError vaildRequestError(MissingServletRequestParameterException e) {
+    AppError RequestInvalidError(MissingServletRequestParameterException e) {
         AppError appError = new AppError(HttpStatus.BAD_REQUEST, "invalid parameter");
         return appError;
     }
