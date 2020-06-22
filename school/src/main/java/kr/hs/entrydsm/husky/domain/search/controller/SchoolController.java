@@ -1,13 +1,14 @@
 package kr.hs.entrydsm.husky.domain.search.controller;
 
+import kr.hs.entrydsm.husky.domain.search.exception.AppError;
 import kr.hs.entrydsm.husky.domain.search.service.SchoolService;
 import kr.hs.entrydsm.husky.entities.schools.School;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
 
@@ -21,5 +22,12 @@ public class SchoolController {
                                @RequestParam @NotBlank String name,
                                Pageable pageable) {
         return schoolService.search(eduOffice, name, pageable);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public @ResponseBody
+    AppError vaildRequestError(MissingServletRequestParameterException e) {
+        AppError appError = new AppError(HttpStatus.BAD_REQUEST, "invalid parameter");
+        return appError;
     }
 }
