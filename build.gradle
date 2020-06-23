@@ -43,7 +43,7 @@ subprojects {
         annotationProcessor 'org.projectlombok:lombok'
         implementation 'org.springframework.boot:spring-boot-starter-actuator'
         implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-        implementation 'org.springframework.boot:spring-boot-starter-security'
+        testImplementation 'com.h2database:h2'
     }
 
     task initSourceFolders {
@@ -69,7 +69,6 @@ subprojects {
 
 project(':core') {
     dependencies {
-        implementation 'org.springframework.boot:spring-boot-starter-security'
         runtimeOnly 'mysql:mysql-connector-java'
     }
 
@@ -89,12 +88,12 @@ project(':auth') {
 
         implementation 'org.springframework.boot:spring-boot-starter-data-redis'
         implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.boot:spring-boot-starter-security'
         implementation 'io.jsonwebtoken:jjwt:0.9.1'
         testImplementation('org.springframework.boot:spring-boot-starter-test') {
             exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
         }
         testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-        testImplementation 'org.springframework.security:spring-security-test'
     }
     jar {
         enabled = false
@@ -110,7 +109,6 @@ project(':info') {
             exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
         }
         testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-        testImplementation 'org.springframework.security:spring-security-test'
     }
     jar {
         enabled = false
@@ -126,7 +124,6 @@ project(':grade') {
             exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
         }
         testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-        testImplementation 'org.springframework.security:spring-security-test'
     }
     jar {
         enabled = false
@@ -142,7 +139,6 @@ project(':school') {
             exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
         }
         testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-        testImplementation 'org.springframework.security:spring-security-test'
     }
     jar {
         enabled = false
@@ -158,6 +154,7 @@ project(':husky') {
         compile project(':core')
 
         implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.boot:spring-boot-starter-security'
         testImplementation('org.springframework.boot:spring-boot-starter-test') {
             exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
         }
