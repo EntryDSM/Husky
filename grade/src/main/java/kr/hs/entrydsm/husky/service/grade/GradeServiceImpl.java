@@ -6,6 +6,7 @@ import kr.hs.entrydsm.husky.exceptions.UserNotFoundException;
 import kr.hs.entrydsm.husky.service.pdf.PdfServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 
@@ -18,7 +19,8 @@ public class GradeServiceImpl implements GradeService {
     private final PdfServiceImpl pdfService;
 
     @Override
-    public InputStreamResource getTmpPdf(String userEmail) {
+    public InputStreamResource getTmpPdf() {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
         pdfService.load();
 
@@ -29,7 +31,8 @@ public class GradeServiceImpl implements GradeService {
     }
 
     @Override
-    public InputStreamResource getFinalPdf(String userEmail) {
+    public InputStreamResource getFinalPdf() {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
         pdfService.load();
 
