@@ -30,22 +30,23 @@ class SchoolApiTest {
 
     private MockMvc mvc;
 
+    @Autowired
+    private SchoolRepository schoolRepository;
+
     @BeforeEach
     public void setup() {
         mvc = MockMvcBuilders
                 .webAppContextSetup(context)
                 .build();
-    }
 
-    @Autowired
-    private SchoolRepository schoolRepository;
-
-    @Test
-    public void return_schools_page() throws Exception {
         schoolRepository.save(new School("1234",
                 "대마고",
                 "대전교육청 대마고",
                 "유성구"));
+    }
+
+    @Test
+    public void return_schools_page() throws Exception {
 
         String url = "http://localhost:" + port;
 
@@ -56,5 +57,17 @@ class SchoolApiTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("content[0].schoolCode").value("1234"));
+    }
+
+    @Test
+    public void invalid_parameter() throws Exception{
+        String url = "http://localhost:" + port;
+
+        mvc.perform(get(url + "/schools")
+                .param("eduOffice", "대")
+                .param("page", "0")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("message").value("invalid parameter"));
     }
 }
