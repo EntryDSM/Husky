@@ -1,10 +1,9 @@
 package kr.hs.entrydsm.husky.controllers;
 
-import kr.hs.entrydsm.husky.service.grade.GradeServiceImpl;
+import kr.hs.entrydsm.husky.service.grade.GradeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,18 +14,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class GradeController {
 
-    private final Authentication authentication;
-
-    private final GradeServiceImpl gradeService;
+    private final GradeService gradeService;
 
     @GetMapping(value = "/application/temp", produces = MediaType.APPLICATION_PDF_VALUE)
     public InputStreamResource getTmpPdf() {
 
-        return gradeService.getTmpPdf(authentication.getName());
+        return gradeService.getTmpPdf();
     }
 
     @GetMapping(value = "/application", produces = MediaType.APPLICATION_PDF_VALUE)
     public InputStreamResource getFinalPdf() {
-        return gradeService.getFinalPdf(authentication.getName());
+        return gradeService.getFinalPdf();
     }
 }
