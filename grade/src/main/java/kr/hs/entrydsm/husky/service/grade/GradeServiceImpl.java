@@ -22,7 +22,6 @@ public class GradeServiceImpl implements GradeService {
     public InputStreamResource getTmpPdf() {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
-        pdfService.load();
 
         pdfService.replace("{userName}", user.getName());
         // 이런식으로 docx 수정
@@ -34,7 +33,6 @@ public class GradeServiceImpl implements GradeService {
     public InputStreamResource getFinalPdf() {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
-        pdfService.load();
 
         pdfService.replace("{userName}", user.getName());
         // 이런식으로 docx 수정

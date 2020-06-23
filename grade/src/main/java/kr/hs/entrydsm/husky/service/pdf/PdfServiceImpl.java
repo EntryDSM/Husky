@@ -1,5 +1,6 @@
 package kr.hs.entrydsm.husky.service.pdf;
 
+import kr.hs.entrydsm.husky.exceptions.PdfLoadException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xwpf.converter.pdf.PdfConverter;
@@ -7,10 +8,14 @@ import org.apache.poi.xwpf.converter.pdf.PdfOptions;
 import org.apache.poi.xwpf.usermodel.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.io.*;
 import java.util.List;
 
+@Service
 public class PdfServiceImpl implements PdfService {
 
     @Value("${grade.pdf.tmp-path}")
@@ -19,13 +24,20 @@ public class PdfServiceImpl implements PdfService {
     private XWPFDocument docx;
 
     @Override
-    public void load() {
+    @PostConstruct
+    public void pdfOpen() {
         try {
             File originDocxFile = new ClassPathResource("static/application_template.docx").getFile();
             docx = new XWPFDocument(OPCPackage.open(originDocxFile));
-        } catch (IOException | InvalidFormatException e) {
-            e.printStackTrace();
+        } catch (InvalidFormatException | IOException e) {
+            throw new PdfLoadException();
         }
+    }
+
+    @Override
+    @PreDestroy
+    public void pdfClose() {
+
     }
 
     @Override
