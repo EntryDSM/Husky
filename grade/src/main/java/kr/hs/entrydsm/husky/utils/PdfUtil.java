@@ -5,11 +5,9 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xwpf.converter.pdf.PdfConverter;
 import org.apache.poi.xwpf.converter.pdf.PdfOptions;
-import org.apache.poi.xwpf.usermodel.*;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.core.io.ClassPathResource;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import java.io.*;
 import java.util.UUID;
 
@@ -19,7 +17,6 @@ public class PdfUtil {
 
     private XWPFDocument docx;
 
-    @PostConstruct
     public void pdfOpen() {
         try {
             File originDocxFile = new ClassPathResource("static/application_template.docx").getFile();
@@ -29,21 +26,21 @@ public class PdfUtil {
         }
     }
 
-    @PreDestroy
-    public void pdfClose() {
-        new File(tmpPdfFilePath).deleteOnExit();
-    }
-
     public FileInputStream save() {
         PdfOptions options = PdfOptions.create();
         options.fontEncoding("UTF-8");
+        File file = null;
         FileInputStream fileInputStream = null;
         try {
-            OutputStream out = new FileOutputStream(new File(tmpPdfFilePath));
+            file = new File(tmpPdfFilePath);
+            OutputStream out = new FileOutputStream(file);
             PdfConverter.getInstance().convert(docx, out, options);
             fileInputStream = new FileInputStream(tmpPdfFilePath);
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            assert file != null;
+            file.deleteOnExit();
         }
 
         return fileInputStream;
@@ -56,12 +53,12 @@ public class PdfUtil {
                 .forEach(run -> run.setText(run.getText(0).replace(key, value), 0));
 
         docx.getTables().parallelStream()
-                .flatMap(xwpfTable -> xwpfTable.getRows().parallelStream())
-                .flatMap(xwpfTableRow -> xwpfTableRow.getTableCells().parallelStream())
-                .flatMap(xwpfTableCell -> xwpfTableCell.getParagraphs().parallelStream())
-                .flatMap(xwpfParagraph -> xwpfParagraph.getRuns().parallelStream())
-                .filter(xwpfRun -> !xwpfRun.getText(0).isBlank() && xwpfRun.getText(0).contains(key))
-                .forEach(xwpfRun -> xwpfRun.setText(xwpfRun.getText(0).replace(key, value), 0));
+                .flatMap(Table -> Table.getRows().parallelStream())
+                .flatMap(TableRow -> TableRow.getTableCells().parallelStream())
+                .flatMap(TableCell -> TableCell.getParagraphs().parallelStream())
+                .flatMap(Paragraph -> Paragraph.getRuns().parallelStream())
+                .filter(Run -> !Run.getText(0).isBlank() && Run.getText(0).contains(key))
+                .forEach(Run -> Run.setText(Run.getText(0).replace(key, value), 0));
     }
 
 }
