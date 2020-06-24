@@ -1,4 +1,4 @@
-package kr.hs.entrydsm.husky.service.pdf;
+package kr.hs.entrydsm.husky.utils;
 
 import kr.hs.entrydsm.husky.exceptions.PdfLoadException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -13,17 +13,17 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.io.*;
+import java.util.Collection;
 import java.util.List;
 
 @Service
-public class PdfServiceImpl implements PdfService {
+public class PdfUtil {
 
     @Value("${grade.pdf.tmp-path}")
     private String tmpPdfFilePath;
 
     private XWPFDocument docx;
 
-    @Override
     @PostConstruct
     public void pdfOpen() {
         try {
@@ -34,13 +34,11 @@ public class PdfServiceImpl implements PdfService {
         }
     }
 
-    @Override
     @PreDestroy
     public void pdfClose() {
 
     }
 
-    @Override
     public FileInputStream save() {
         PdfOptions options = PdfOptions.create();
         options.fontEncoding("UTF-8");
@@ -56,7 +54,6 @@ public class PdfServiceImpl implements PdfService {
         return fileInputStream;
     }
 
-    @Override
     public void replace(String key, String value) {
         for (XWPFParagraph p : docx.getParagraphs()) {
             List<XWPFRun> runs = p.getRuns();
@@ -70,6 +67,8 @@ public class PdfServiceImpl implements PdfService {
                 }
             }
         }
+        docx.getTables()
+                .forEach(XWPFTable::getRows);
         for (XWPFTable tbl : docx.getTables()) {
             for (XWPFTableRow row : tbl.getRows()) {
                 for (XWPFTableCell cell : row.getTableCells()) {
