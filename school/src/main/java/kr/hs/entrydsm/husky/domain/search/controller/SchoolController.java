@@ -15,6 +15,7 @@ import javax.validation.constraints.NotBlank;
 @RequiredArgsConstructor
 @RestController
 public class SchoolController {
+
     private final SchoolService schoolService;
 
     @GetMapping("/schools")
@@ -31,4 +32,5 @@ public class SchoolController {
         AppError appError = new AppError(HttpStatus.BAD_REQUEST, "invalid parameter");
         return appError;
     }
+
 }

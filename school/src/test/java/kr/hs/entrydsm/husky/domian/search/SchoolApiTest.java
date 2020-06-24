@@ -35,6 +35,7 @@ class SchoolApiTest {
 
     @BeforeEach
     public void setup() {
+
         mvc = MockMvcBuilders
                 .webAppContextSetup(context)
                 .build();
@@ -60,7 +61,8 @@ class SchoolApiTest {
     }
 
     @Test
-    public void invalid_parameter() throws Exception{
+    public void invalid_parameter_error() throws Exception{
+
         String url = "http://localhost:" + port;
 
         mvc.perform(get(url + "/schools")
@@ -70,4 +72,5 @@ class SchoolApiTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("message").value("invalid parameter"));
     }
+
 }

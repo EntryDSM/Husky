@@ -10,9 +10,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class SchoolService {
+
     private final SchoolRepository schoolRepository;
 
     public Page<School> search(String eduOffice, String name, Pageable pageable) {
         return schoolRepository.findBySchoolFullNameContainsAndSchoolNameContains(eduOffice, name, pageable);
     }
+
 }
