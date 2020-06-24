@@ -7,15 +7,12 @@ import org.apache.poi.xwpf.converter.pdf.PdfConverter;
 import org.apache.poi.xwpf.converter.pdf.PdfOptions;
 import org.apache.poi.xwpf.usermodel.*;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.io.*;
-import java.util.List;
 import java.util.UUID;
 
-@Service
 public class PdfUtil {
 
     private String tmpPdfFilePath = UUID.randomUUID().toString();
