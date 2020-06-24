@@ -53,35 +53,18 @@ public class PdfUtil {
     }
 
     public void replace(String key, String value) {
-        for (XWPFParagraph p : docx.getParagraphs()) {
-            List<XWPFRun> runs = p.getRuns();
-            if (runs != null) {
-                for (XWPFRun r : runs) {
-                    String text = r.getText(0);
-                    if (text != null && text.contains(key)) {
-                        text = text.replace(key, value);
-                        r.setText(text, 0);
-                    }
-                }
-            }
-        }
-        docx.getTables()
-                .forEach(XWPFTable::getRows);
-        for (XWPFTable tbl : docx.getTables()) {
-            for (XWPFTableRow row : tbl.getRows()) {
-                for (XWPFTableCell cell : row.getTableCells()) {
-                    for (XWPFParagraph p : cell.getParagraphs()) {
-                        for (XWPFRun r : p.getRuns()) {
-                            String text = r.getText(0);
-                            if (text != null && text.contains(key)) {
-                                text = text.replace(key, value);
-                                r.setText(text,0);
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        docx.getParagraphs().parallelStream()
+                .flatMap(paragraph -> paragraph.getRuns().parallelStream())
+                .filter(run -> !run.getText(0).isBlank() && run.getText(0).contains(key))
+                .forEach(run -> run.setText(run.getText(0).replace(key, value), 0));
+
+        docx.getTables().parallelStream()
+                .flatMap(xwpfTable -> xwpfTable.getRows().parallelStream())
+                .flatMap(xwpfTableRow -> xwpfTableRow.getTableCells().parallelStream())
+                .flatMap(xwpfTableCell -> xwpfTableCell.getParagraphs().parallelStream())
+                .flatMap(xwpfParagraph -> xwpfParagraph.getRuns().parallelStream())
+                .filter(xwpfRun -> !xwpfRun.getText(0).isBlank() && xwpfRun.getText(0).contains(key))
+                .forEach(xwpfRun -> xwpfRun.setText(xwpfRun.getText(0).replace(key, value), 0));
     }
 
 }
