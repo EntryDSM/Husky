@@ -44,6 +44,7 @@ class SchoolApiTest {
                 "대마고",
                 "대전교육청 대마고",
                 "유성구"));
+
     }
 
     @Test
@@ -58,6 +59,7 @@ class SchoolApiTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("content[0].schoolCode").value("1234"));
+
     }
 
     @Test
@@ -71,6 +73,7 @@ class SchoolApiTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("message").value("invalid parameter"));
+        
     }
 
 }
