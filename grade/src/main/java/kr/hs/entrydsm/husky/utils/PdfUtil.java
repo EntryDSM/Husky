@@ -6,21 +6,19 @@ import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xwpf.converter.pdf.PdfConverter;
 import org.apache.poi.xwpf.converter.pdf.PdfOptions;
 import org.apache.poi.xwpf.usermodel.*;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.io.*;
-import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class PdfUtil {
 
-    @Value("${grade.pdf.tmp-path}")
-    private String tmpPdfFilePath;
+    private String tmpPdfFilePath = UUID.randomUUID().toString();
 
     private XWPFDocument docx;
 
@@ -36,7 +34,7 @@ public class PdfUtil {
 
     @PreDestroy
     public void pdfClose() {
-
+        new File(tmpPdfFilePath).deleteOnExit();
     }
 
     public FileInputStream save() {
