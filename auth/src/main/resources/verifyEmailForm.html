@@ -1,10 +1,161 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Email Form</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+            rel="stylesheet"
+            type="text/css"
+            href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css"
+    />
 </head>
-<body>
-    <p>{code}</p>
+<body style="margin: 0; padding: 0;">
+<table cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+        <td>
+            <table
+                    align="center"
+                    cellpadding="0"
+                    cellspacing="0"
+                    width="644"
+                    height="374"
+                    style="border-collapse: collapse;"
+            >
+                <tr height="121">
+                    <td style="padding: 40px 44px;">
+                        <div style="border-bottom: 1px solid #62d3e8;">
+                            <img
+                                    src="data:image/png;base64,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"
+                                    style="margin-bottom: 8px;"
+                            />
+                        </div>
+                    </td>
+                </tr>
+                <tr height="105">
+                    <td style="padding: 0 56px 0 56px;">
+                        <div>
+                            <h2
+                                    style="
+                      width: 100%;
+                      height: 22px;
+                      font-family: NanumSquare;
+                      font-size: 20px;
+                      font-weight: normal;
+                      font-stretch: normal;
+                      font-style: normal;
+                      letter-spacing: normal;
+                      text-align: left;
+                      color: #000000;
+                      margin: 0 0 44px;
+                    "
+                            >
+                                원서접수를 위해 이메일 주소를 인증해주세요
+                            </h2>
+                            <div style="height: 39px;">
+                                <p
+                                        style="
+                        margin: 0;
+                        width: 100%;
+
+                        font-family: NanumSquare;
+                        font-size: 12px;
+                        font-weight: normal;
+                        font-stretch: normal;
+                        font-style: normal;
+                        letter-spacing: normal;
+                        text-align: left;
+                        color: #000000;
+                      "
+                                >
+                                    이메일을 인증하시면 대덕 소프트웨어 마이스터고등학교
+                                    원서접수를 하실 수 있습니다.
+                                </p>
+                                <p
+                                        style="
+                        margin: 13px 0 0;
+                        width: 100%;
+                        height: 12px;
+                        line-height: 13px;
+                        font-family: NanumSquare;
+                        font-size: 12px;
+                        font-weight: normal;
+                        font-stretch: normal;
+                        font-style: normal;
+                        letter-spacing: normal;
+                        text-align: left;
+                        color: #000000;
+                      "
+                                >
+                                    본 메일은 3분만 유효하오니 시간 내에 코드를 입력해주세요.
+                                </p>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr height="148">
+                    <td style="padding: 52px 56px 56px;">
+                        <div
+                                style="
+                    display: inline-block;
+                    border-bottom: 2px solid #62d3e8;
+                    width: 240px;
+                    height: 38px;
+                    text-align: center;
+                    float: left;
+                  "
+                        >
+                  <span
+                          style="
+                      width: 78px;
+                      height: 22px;
+                      font-family: NanumSquareB;
+                      font-size: 20px;
+                      font-weight: normal;
+                      font-stretch: normal;
+                      font-style: normal;
+                      line-height: 1.15;
+                      letter-spacing: 0.48px;
+                      text-align: center;
+                      color: #62d3e8;
+                    "
+                  >{code}</span
+                  >
+                        </div>
+                        <div style="display: inline-block; float: right;">
+                            <a
+                                    href="https://entrydsm.hs.kr"
+                                    style="text-decoration: none;"
+                                    cursor: pointer;
+                            >
+                                <button
+                                        style="
+                        outline: none;
+                        cursor: pointer;
+                        width: 227px;
+                        height: 40px;
+                        border-radius: 4px;
+                        background-color: #62d3e8;
+                        font-family: NanumSquareB;
+                        font-size: 14px;
+                        font-weight: normal;
+                        font-stretch: normal;
+                        font-style: normal;
+                        line-height: 1.14;
+                        letter-spacing: normal;
+                        text-align: center;
+                        color: #ffffff;
+                      "
+                                >
+                                    입학전형시스템 홈페이지로 이동
+                                </button>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
 </body>
 </html>
