@@ -6,6 +6,7 @@ import kr.hs.entrydsm.husky.entities.refresh_token.RefreshToken;
 import kr.hs.entrydsm.husky.entities.refresh_token.RefreshTokenRepository;
 import kr.hs.entrydsm.husky.entities.users.User;
 import kr.hs.entrydsm.husky.entities.users.repositories.UserRepository;
+import kr.hs.entrydsm.husky.exceptions.ExpiredTokenException;
 import kr.hs.entrydsm.husky.exceptions.InvalidTokenException;
 import kr.hs.entrydsm.husky.exceptions.UserNotFoundException;
 import kr.hs.entrydsm.husky.security.JwtTokenProvider;
@@ -32,8 +33,10 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(UserNotFoundException::new);
 
         TokenResponse response = responseToken(user.getEmail());
+        refreshTokenRepository.deleteById(user.getEmail());
         refreshTokenRepository.save(
                 RefreshToken.builder()
+                .userEmail(user.getEmail())
                 .refreshToken(response.getRefreshToken())
                 .build()
         );
@@ -42,16 +45,17 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public TokenResponse refreshToken(String refreshToken) {
-        if (!jwtTokenProvider.isRefreshToken(refreshToken)) throw new InvalidTokenException();
-        refreshTokenRepository.findById(refreshToken).orElseThrow(InvalidTokenException::new);
-        refreshTokenRepository.deleteById(refreshToken);
-
         String email = jwtTokenProvider.getUserEmail(refreshToken);
+        if (!jwtTokenProvider.isRefreshToken(refreshToken)) throw new InvalidTokenException();
+        refreshTokenRepository.findById(email).orElseThrow(ExpiredTokenException::new);
+
         TokenResponse response = responseToken(email);
+        refreshTokenRepository.deleteById(email);
         refreshTokenRepository.save(
                 RefreshToken.builder()
-                        .refreshToken(response.getRefreshToken())
-                        .build()
+                .userEmail(email)
+                .refreshToken(response.getRefreshToken())
+                .build()
         );
         return response;
     }
