@@ -90,6 +90,7 @@ project(':auth') {
         implementation 'org.springframework.boot:spring-boot-starter-web'
         implementation 'org.springframework.boot:spring-boot-starter-security'
         implementation 'io.jsonwebtoken:jjwt:0.9.1'
+        implementation 'com.amazonaws:aws-java-sdk-ses:1.11.807'
         testImplementation('org.springframework.boot:spring-boot-starter-test') {
             exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
         }
