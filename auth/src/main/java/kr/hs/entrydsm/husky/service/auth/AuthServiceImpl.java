@@ -2,6 +2,8 @@ package kr.hs.entrydsm.husky.service.auth;
 
 import kr.hs.entrydsm.husky.domains.request.AccountRequest;
 import kr.hs.entrydsm.husky.domains.response.TokenResponse;
+import kr.hs.entrydsm.husky.entities.refresh_token.RefreshToken;
+import kr.hs.entrydsm.husky.entities.refresh_token.RefreshTokenRepository;
 import kr.hs.entrydsm.husky.entities.users.User;
 import kr.hs.entrydsm.husky.entities.users.repositories.UserRepository;
 import kr.hs.entrydsm.husky.exceptions.InvalidTokenException;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -28,15 +31,29 @@ public class AuthServiceImpl implements AuthService {
                 .filter(u -> passwordEncoder.matches(accountRequest.getPassword(), u.getPassword()))
                 .orElseThrow(UserNotFoundException::new);
 
-        return responseToken(user.getEmail());
+        TokenResponse response = responseToken(user.getEmail());
+        refreshTokenRepository.save(
+                RefreshToken.builder()
+                .refreshToken(response.getRefreshToken())
+                .build()
+        );
+        return response;
     }
 
     @Override
     public TokenResponse refreshToken(String refreshToken) {
         if (!jwtTokenProvider.isRefreshToken(refreshToken)) throw new InvalidTokenException();
-        String email = jwtTokenProvider.getUserEmail(refreshToken);
+        refreshTokenRepository.findById(refreshToken).orElseThrow(InvalidTokenException::new);
+        refreshTokenRepository.deleteById(refreshToken);
 
-        return responseToken(email);
+        String email = jwtTokenProvider.getUserEmail(refreshToken);
+        TokenResponse response = responseToken(email);
+        refreshTokenRepository.save(
+                RefreshToken.builder()
+                        .refreshToken(response.getRefreshToken())
+                        .build()
+        );
+        return response;
     }
 
     private TokenResponse responseToken(String email) {
