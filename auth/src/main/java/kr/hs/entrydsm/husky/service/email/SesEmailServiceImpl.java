@@ -23,7 +23,7 @@ public class SesEmailServiceImpl implements EmailService {
 
     @Override
     public void sendEmail(String receiveEmail, String code) {
-        String emailSubject = "Amazon SES test (AWS SDK for Java)";
+        String emailSubject = "2021학년도 신입생 입학원서 지원 시스템 - Entry 인증 메일";
         String emailContent = createContent(code);
 
 
