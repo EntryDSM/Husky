@@ -15,6 +15,8 @@ public class RefreshToken {
     private static final Long MINUTE = 60L;
 
     @Id
+    private String userEmail;
+
     private String refreshToken;
 
     @TimeToLive
