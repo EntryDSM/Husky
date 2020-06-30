@@ -9,10 +9,10 @@ import javax.persistence.Id;
 
 @Getter
 @Builder
-@RedisHash(timeToLive = 3600 * 36)
+@RedisHash
 public class RefreshToken {
 
-    private static final Long MINUTE = 60L;
+    private static final Long HOUR = 3600L;
 
     @Id
     private String userEmail;
@@ -20,5 +20,6 @@ public class RefreshToken {
     private String refreshToken;
 
     @TimeToLive
-    private Long ttl;
+    private final Long ttl = HOUR * 36;
+    
 }
