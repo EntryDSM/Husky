@@ -2,6 +2,7 @@ package kr.hs.entrydsm.husky.entities.refresh_token;
 
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
 
@@ -12,6 +13,8 @@ import javax.persistence.Id;
 @RedisHash
 public class RefreshToken {
 
+    @Value("${auth.refresh-token.expiration}")
+    private final int expirationTime;
     private static final Long HOUR = 3600L;
 
     @Id
@@ -20,6 +23,6 @@ public class RefreshToken {
     private String refreshToken;
 
     @TimeToLive
-    private final Long ttl = HOUR * 36;
+    private final Long ttl = HOUR * expirationTime;
     
 }
