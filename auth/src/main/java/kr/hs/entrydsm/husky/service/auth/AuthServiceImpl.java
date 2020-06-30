@@ -36,9 +36,9 @@ public class AuthServiceImpl implements AuthService {
         refreshTokenRepository.deleteById(user.getEmail());
         refreshTokenRepository.save(
                 RefreshToken.builder()
-                .userEmail(user.getEmail())
-                .refreshToken(response.getRefreshToken())
-                .build()
+                        .userEmail(user.getEmail())
+                        .refreshToken(response.getRefreshToken())
+                        .build()
         );
         return response;
     }
@@ -53,9 +53,9 @@ public class AuthServiceImpl implements AuthService {
         refreshTokenRepository.deleteById(email);
         refreshTokenRepository.save(
                 RefreshToken.builder()
-                .userEmail(email)
-                .refreshToken(response.getRefreshToken())
-                .build()
+                        .userEmail(email)
+                        .refreshToken(response.getRefreshToken())
+                        .build()
         );
         return response;
     }
