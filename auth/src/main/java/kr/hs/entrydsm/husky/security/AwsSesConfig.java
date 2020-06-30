@@ -12,11 +12,14 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AwsSesConfig {
 
-    @Value("${auth.email.AWS_ACCESS_KEY_ID}")
+    @Value("${aws.credential.access_key_id}")
     private String AWS_ACCESS_KEY_ID;
 
-    @Value("${auth.email.AWS_SECRET_KEY}")
+    @Value("${aws.credential.secret_key}")
     private String AWS_SECRET_KEY;
+
+    @Value("${aws.credential.region}")
+    private String region;
 
     @Bean
     public AmazonSimpleEmailServiceAsync amazonSimpleEmailService() {
@@ -24,7 +27,7 @@ public class AwsSesConfig {
 
         return AmazonSimpleEmailServiceAsyncClient.asyncBuilder()
                 .withCredentials(new AWSStaticCredentialsProvider(basicAWSCredentials))
-                .withRegion(Regions.US_EAST_1)
+                .withRegion(Regions.fromName(region))
                 .build();
     }
 }
