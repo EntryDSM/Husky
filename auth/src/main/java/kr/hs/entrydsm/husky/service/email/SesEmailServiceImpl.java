@@ -2,15 +2,8 @@ package kr.hs.entrydsm.husky.service.email;
 
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceAsync;
 import com.amazonaws.services.simpleemail.model.*;
-import kr.hs.entrydsm.husky.exceptions.VerifyEmailGenerateException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 
 @Service
 @RequiredArgsConstructor
