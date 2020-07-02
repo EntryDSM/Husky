@@ -14,9 +14,7 @@ import javax.persistence.Id;
 public class RefreshToken {
 
     @Value("${auth.jwt.exp.refresh}")
-    private final int expirationTime;
-
-    private static final Long HOUR = 3600L;
+    private final Long expirationTime;
 
     @Id
     private String userEmail;
@@ -24,6 +22,6 @@ public class RefreshToken {
     private String refreshToken;
 
     @TimeToLive
-    private final Long ttl = HOUR * expirationTime;
+    private final Long ttl = expirationTime;
     
 }
