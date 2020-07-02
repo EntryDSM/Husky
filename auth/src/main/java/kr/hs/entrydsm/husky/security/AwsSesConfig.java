@@ -23,11 +23,12 @@ public class AwsSesConfig {
 
     @Bean
     public AmazonSimpleEmailServiceAsync amazonSimpleEmailService() {
-        BasicAWSCredentials basicAWSCredentials = new BasicAWSCredentials(AWS_ACCESS_KEY_ID, AWS_SECRET_KEY);
+        BasicAWSCredentials credentials = new BasicAWSCredentials(AWS_ACCESS_KEY_ID, AWS_SECRET_KEY);
 
         return AmazonSimpleEmailServiceAsyncClient.asyncBuilder()
-                .withCredentials(new AWSStaticCredentialsProvider(basicAWSCredentials))
+                .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withRegion(Regions.fromName(region))
                 .build();
     }
+
 }
