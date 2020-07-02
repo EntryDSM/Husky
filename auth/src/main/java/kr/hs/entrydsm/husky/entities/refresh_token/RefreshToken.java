@@ -13,8 +13,9 @@ import javax.persistence.Id;
 @RedisHash
 public class RefreshToken {
 
-    @Value("${auth.refresh-token.expiration}")
+    @Value("${auth.jwt.exp.refresh}")
     private final int expirationTime;
+
     private static final Long HOUR = 3600L;
 
     @Id
