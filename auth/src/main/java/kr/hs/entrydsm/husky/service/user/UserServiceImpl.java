@@ -42,9 +42,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void sendEmail(String email) {
-        userRepository.findById(email).ifPresent(user -> {
-            throw new UserAlreadyExistsException();
-        });
+        userRepository.findById(email).ifPresent(user -> userRepository.deleteById(email));
 
         String code = randomCode();
         emailService.sendEmail(email, code);
