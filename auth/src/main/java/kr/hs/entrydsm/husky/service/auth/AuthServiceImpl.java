@@ -37,7 +37,7 @@ public class AuthServiceImpl implements AuthService {
                 .filter(u -> passwordEncoder.matches(accountRequest.getPassword(), u.getPassword()))
                 .orElseThrow(UserNotFoundException::new);
 
-        TokenResponse response = responseToken(user.getEmail());
+        TokenResponse response = this.responseToken(user.getEmail());
         refreshTokenRepository.deleteById(user.getEmail());
         refreshTokenRepository.save(
                 RefreshToken.builder()
@@ -52,10 +52,12 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public TokenResponse refreshToken(String refreshToken) {
         String email = jwtTokenProvider.getUserEmail(refreshToken);
-        if (!jwtTokenProvider.isRefreshToken(refreshToken)) throw new InvalidTokenException();
+        if (!jwtTokenProvider.isRefreshToken(refreshToken))
+            throw new InvalidTokenException();
+
         refreshTokenRepository.findById(email).orElseThrow(ExpiredTokenException::new);
 
-        TokenResponse response = responseToken(email);
+        TokenResponse response = this.responseToken(email);
         refreshTokenRepository.deleteById(email);
         refreshTokenRepository.save(
                 RefreshToken.builder()
