@@ -61,8 +61,11 @@ public class User {
     @Column(length = 20)
     private String applicantTel;
 
-    @Column(length = 500)
+    @Column(length = 250)
     private String address;
+
+    @Column(length = 250)
+    private String detailAddress;
 
     @Column(length = 5)
     private String postCode;
