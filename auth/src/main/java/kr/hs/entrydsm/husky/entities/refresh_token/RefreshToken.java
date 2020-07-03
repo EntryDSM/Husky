@@ -13,7 +13,6 @@ import javax.persistence.Id;
 @RedisHash
 public class RefreshToken {
 
-
     @Id
     private String userEmail;
 
