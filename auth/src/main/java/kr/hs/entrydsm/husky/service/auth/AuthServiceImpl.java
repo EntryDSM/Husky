@@ -23,13 +23,10 @@ public class AuthServiceImpl implements AuthService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     private final JwtTokenProvider jwtTokenProvider;
-
     private final PasswordEncoder passwordEncoder;
-
 
     @Value("${auth.jwt.exp.refresh}")
     private final Long expirationTime;
-
 
     @Override
     public TokenResponse signIn(AccountRequest accountRequest) {
@@ -76,4 +73,5 @@ public class AuthServiceImpl implements AuthService {
                 .tokenType("Bearer")
                 .build();
     }
+
 }
