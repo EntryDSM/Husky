@@ -11,6 +11,7 @@ import kr.hs.entrydsm.husky.exceptions.InvalidTokenException;
 import kr.hs.entrydsm.husky.exceptions.UserNotFoundException;
 import kr.hs.entrydsm.husky.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,10 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
 
 
+    @Value("${auth.jwt.exp.refresh}")
+    private final Long expirationTime;
+
+
     @Override
     public TokenResponse signIn(AccountRequest accountRequest) {
         User user = userRepository.findById(accountRequest.getEmail())
@@ -38,6 +43,7 @@ public class AuthServiceImpl implements AuthService {
                 RefreshToken.builder()
                         .userEmail(user.getEmail())
                         .refreshToken(response.getRefreshToken())
+                        .ttl(expirationTime)
                         .build()
         );
         return response;
@@ -55,6 +61,7 @@ public class AuthServiceImpl implements AuthService {
                 RefreshToken.builder()
                         .userEmail(email)
                         .refreshToken(response.getRefreshToken())
+                        .ttl(expirationTime)
                         .build()
         );
         return response;

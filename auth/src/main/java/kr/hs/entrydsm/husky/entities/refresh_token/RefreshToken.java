@@ -13,8 +13,6 @@ import javax.persistence.Id;
 @RedisHash
 public class RefreshToken {
 
-    @Value("${auth.jwt.exp.refresh}")
-    private final Long expirationTime;
 
     @Id
     private String userEmail;
@@ -22,6 +20,6 @@ public class RefreshToken {
     private String refreshToken;
 
     @TimeToLive
-    private final Long ttl = expirationTime;
+    private final Long ttl;
     
 }
