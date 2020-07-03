@@ -1,4 +1,4 @@
-package kr.hs.entrydsm.husky.security;
+package kr.hs.entrydsm.husky.config;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
