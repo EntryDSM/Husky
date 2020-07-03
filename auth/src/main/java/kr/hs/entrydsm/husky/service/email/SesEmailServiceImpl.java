@@ -20,7 +20,7 @@ public class SesEmailServiceImpl implements EmailService {
                 .withDestination(new Destination().withToAddresses(receiveEmail))
                 .withTemplate("EntryEmailConfirmTemplate")
                 .withSource(UTF_8_ENCODED_SOURCE_NAME + " <noreply@entrydsm.hs.kr>")
-                .withTemplateData("{\"code\": \""+code+"\", \"email\": \""+receiveEmail+"\"}");
+                .withTemplateData("{\"code\": \"" + code + "\", \"email\": \"" + receiveEmail + "\"}");
 
         amazonSimpleEmailServiceAsync.sendTemplatedEmailAsync(request);
     }
