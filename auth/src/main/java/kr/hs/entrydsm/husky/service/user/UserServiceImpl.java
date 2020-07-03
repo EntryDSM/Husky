@@ -75,9 +75,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void changePassword(String userEmail, ChangePasswordRequest changePasswordRequest) {
-        User user = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(UserNotFoundException::new);
 
-        if (isPasswordSame(changePasswordRequest.getPassword(), user.getPassword())) {
+        if (!isSamePassword(changePasswordRequest.getPassword(), user.getPassword())) {
             throw new PasswordSameException();
         }
 
@@ -94,7 +95,7 @@ public class UserServiceImpl implements UserService {
         return result.toString();
     }
 
-    private boolean isPasswordSame(String password, String encodedPassword) {
+    private boolean isSamePassword(String password, String encodedPassword) {
         return passwordEncoder.matches(password, encodedPassword);
     }
 
