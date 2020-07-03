@@ -9,7 +9,7 @@ import kr.hs.entrydsm.husky.entities.verification.EmailVerificationRepository;
 import kr.hs.entrydsm.husky.entities.users.User;
 import kr.hs.entrydsm.husky.entities.users.repositories.UserRepository;
 import kr.hs.entrydsm.husky.exceptions.*;
-import kr.hs.entrydsm.husky.service.email.SesEmailServiceImpl;
+import kr.hs.entrydsm.husky.service.email.EmailService;
 import kr.hs.entrydsm.husky.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final EmailVerificationRepository emailVerificationRepository;
 
-    private final SesEmailServiceImpl emailService;
+    private final EmailService emailService;
     private final JwtTokenProvider jwtTokenProvider;
 
     private final PasswordEncoder passwordEncoder;
