@@ -1,7 +1,7 @@
 package kr.hs.entrydsm.husky.security;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import kr.hs.entrydsm.husky.error.exception.BusinessException;
+import kr.hs.entrydsm.husky.error.exception.ErrorCode;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -17,9 +17,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
         try {
             filterChain.doFilter(request, response);
         } catch (ServletException | IOException e) {
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            response.getWriter().write("{\"message\": \"Authentication is required and has failed or has not yet been provided.\"}");
+            throw new BusinessException(ErrorCode.UNAUTHORIZED);
         }
     }
 
