@@ -9,6 +9,7 @@ import kr.hs.entrydsm.husky.entities.verification.EmailVerificationRepository;
 import kr.hs.entrydsm.husky.entities.users.User;
 import kr.hs.entrydsm.husky.entities.users.repositories.UserRepository;
 import kr.hs.entrydsm.husky.exceptions.*;
+import kr.hs.entrydsm.husky.security.AuthenticationFacade;
 import kr.hs.entrydsm.husky.service.email.EmailService;
 import kr.hs.entrydsm.husky.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class UserServiceImpl implements UserService {
     private final EmailService emailService;
     private final JwtTokenProvider jwtTokenProvider;
 
+    private final AuthenticationFacade authenticationFacade;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -74,9 +76,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changePassword(String userEmail, ChangePasswordRequest changePasswordRequest) {
-        User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(UserNotFoundException::new);
+    public void changePassword(ChangePasswordRequest changePasswordRequest) {
+        User user = userRepository.findByEmail(authenticationFacade.getUserEmail()).orElseThrow(UserNotFoundException::new);
 
         if (!isSamePassword(changePasswordRequest.getPassword(), user.getPassword())) {
             throw new PasswordSameException();
