@@ -1,12 +1,12 @@
 package kr.hs.entrydsm.husky.security;
 
 import io.jsonwebtoken.*;
+import kr.hs.entrydsm.husky.service.auth.AuthDetails;
+import kr.hs.entrydsm.husky.service.auth.AuthDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,7 +31,7 @@ public class JwtTokenProvider {
     @Value("${auth.jwt.prefix}")
     private String prefix;
 
-    private final UserDetailsService userDetailsService;
+    private final AuthDetailsService authDetailsService;
 
     public String generateAccessToken(String data) {
         return Jwts.builder()
@@ -72,8 +72,8 @@ public class JwtTokenProvider {
     }
 
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails =  userDetailsService.loadUserByUsername(getUserEmail(token));
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        AuthDetails authDetails = authDetailsService.loadUserByUsername(getUserEmail(token));
+        return new UsernamePasswordAuthenticationToken(authDetails, "", authDetails.getAuthorities());
     }
 
     public String getUserEmail(String token) {
