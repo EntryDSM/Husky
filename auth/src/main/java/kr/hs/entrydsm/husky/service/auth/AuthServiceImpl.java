@@ -19,60 +19,51 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
+    @Value("${auth.jwt.exp.refresh}")
+    private Long refreshExp;
+
+    @Value("${auth.jwt.prefix}")
+    private String tokenType;
+
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenProvider tokenProvider;
     private final PasswordEncoder passwordEncoder;
 
-    @Value("${auth.jwt.exp.refresh}")
-    private Long expirationTime;
-
     @Override
-    public TokenResponse signIn(AccountRequest accountRequest) {
-        User user = userRepository.findById(accountRequest.getEmail())
-                .filter(u -> passwordEncoder.matches(accountRequest.getPassword(), u.getPassword()))
+    public TokenResponse signIn(AccountRequest request) {
+        return userRepository.findByEmail(request.getEmail())
+                .filter(user -> passwordEncoder.matches(request.getPassword(), user.getPassword()))
+                    .map(User::getEmail)
+                    .map(email -> {
+                        String refreshToken = tokenProvider.generateRefreshToken(email);
+                        return new RefreshToken(email, refreshToken, refreshExp);
+                    })
+                    .map(refreshTokenRepository::save)
+                    .map(refresh -> {
+                        String accessToken = tokenProvider.generateAccessToken(refresh.getEmail());
+                        return new TokenResponse(accessToken, refresh.getRefreshToken(), tokenType);
+                    })
                 .orElseThrow(UserNotFoundException::new);
-
-        TokenResponse response = this.responseToken(user.getEmail());
-        refreshTokenRepository.save(
-                RefreshToken.builder()
-                        .id(user.getEmail())
-                        .refreshToken(response.getRefreshToken())
-                        .ttl(expirationTime)
-                        .build()
-        );
-        return response;
     }
 
     @Override
-    public TokenResponse refreshToken(String refreshToken) {
-        String email = jwtTokenProvider.getUserEmail(refreshToken);
-
-        if (!jwtTokenProvider.isRefreshToken(refreshToken))
+    public TokenResponse refreshToken(String receivedToken) {
+        if (!tokenProvider.isRefreshToken(receivedToken))
             throw new InvalidTokenException();
-
-        refreshTokenRepository.findById(email)
+        
+        return refreshTokenRepository.findByRefreshToken(receivedToken)
+                .map(refreshToken -> {
+                    String generatedRefreshToken = tokenProvider.generateRefreshToken(refreshToken.getEmail());
+                    return refreshToken.update(generatedRefreshToken, refreshExp);
+                })
+                .map(refreshTokenRepository::save)
+                .map(refreshToken -> {
+                    String generatedAccessToken = tokenProvider.generateAccessToken(refreshToken.getEmail());
+                    return new TokenResponse(generatedAccessToken, refreshToken.getRefreshToken(), tokenType);
+                })
                 .orElseThrow(ExpiredTokenException::new);
-
-        TokenResponse response = this.responseToken(email);
-        refreshTokenRepository.deleteById(email);
-        refreshTokenRepository.save(
-                RefreshToken.builder()
-                        .id(email)
-                        .refreshToken(response.getRefreshToken())
-                        .ttl(expirationTime)
-                        .build()
-        );
-        return response;
-    }
-
-    private TokenResponse responseToken(String email) {
-        return TokenResponse.builder()
-                .accessToken(jwtTokenProvider.generateAccessToken(email))
-                .refreshToken(jwtTokenProvider.generateRefreshToken(email))
-                .tokenType("Bearer")
-                .build();
     }
 
 }
