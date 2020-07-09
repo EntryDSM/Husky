@@ -1,5 +1,6 @@
 package kr.hs.entrydsm.husky.entities.refresh_token;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
@@ -8,17 +9,23 @@ import org.springframework.data.redis.core.TimeToLive;
 import org.springframework.data.redis.core.index.Indexed;
 
 @Getter
-@Builder
-@RedisHash
+@RedisHash(value = "refresh_token")
+@AllArgsConstructor
 public class RefreshToken {
 
     @Id
-    private String userEmail;
+    private String email;
 
     @Indexed
     private String refreshToken;
 
     @TimeToLive
-    private final Long ttl;
+    private Long ttl;
+
+    public RefreshToken update(String refreshToken, Long ttl) {
+        this.refreshToken = refreshToken;
+        this.ttl = ttl;
+        return this;
+    }
     
 }
