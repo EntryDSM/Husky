@@ -2,10 +2,9 @@ package kr.hs.entrydsm.husky.entities.verification;
 
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
-
-import javax.persistence.Id;
 
 @Getter
 @Builder

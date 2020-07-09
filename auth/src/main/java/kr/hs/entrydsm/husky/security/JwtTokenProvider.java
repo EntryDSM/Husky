@@ -20,10 +20,10 @@ public class JwtTokenProvider {
     private String secretKey;
 
     @Value("${auth.jwt.exp.access}")
-    private int accessTokenExpiration;
+    private Long accessTokenExpiration;
 
     @Value("${auth.jwt.exp.refresh}")
-    private int refreshTokenExpiration;
+    private Long refreshTokenExpiration;
 
     @Value("${auth.jwt.header}")
     private String header;
@@ -36,20 +36,20 @@ public class JwtTokenProvider {
     public String generateAccessToken(String data) {
         return Jwts.builder()
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + accessTokenExpiration))
+                .setExpiration(new Date(System.currentTimeMillis() + accessTokenExpiration * 1000))
                 .setSubject(data)
                 .claim("type", "access_token")
-                .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
+                .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
 
     public String generateRefreshToken(String data) {
         return Jwts.builder()
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpiration))
+                .setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpiration * 1000))
                 .setSubject(data)
                 .claim("type", "refresh_token")
-                .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
+                .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
 
@@ -63,7 +63,7 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parser().setSigningKey(secretKey.getBytes())
+            Jwts.parser().setSigningKey(secretKey)
                     .parseClaimsJws(token).getBody().getSubject();
             return true;
         } catch (Exception e) {
@@ -77,11 +77,11 @@ public class JwtTokenProvider {
     }
 
     public String getUserEmail(String token) {
-        return Jwts.parser().setSigningKey(secretKey.getBytes()).parseClaimsJws(token).getBody().getSubject();
+        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
     }
 
     public boolean isRefreshToken(String token) {
-        return Jwts.parser().setSigningKey(secretKey.getBytes())
+        return Jwts.parser().setSigningKey(secretKey)
                 .parseClaimsJws(token).getBody().get("type").equals("refresh_token");
     }
 
