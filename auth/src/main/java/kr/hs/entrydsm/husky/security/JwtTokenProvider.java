@@ -77,8 +77,7 @@ public class JwtTokenProvider {
     }
 
     public String getUserEmail(String token) {
-        Jwts.parser().setSigningKey(secretKey);
-        return "";
+        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
     }
 
     public boolean isRefreshToken(String token) {
