@@ -44,8 +44,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void sendEmail(String email) {
-        userRepository.findById(email)
-                .ifPresent(user -> userRepository.deleteById(email));
+        userRepository.findByEmail(email)
+                .ifPresent(userRepository::delete);
 
         String code = randomCode();
         emailService.sendEmail(email, code);
