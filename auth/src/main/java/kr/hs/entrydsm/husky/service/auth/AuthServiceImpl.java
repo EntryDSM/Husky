@@ -26,7 +26,7 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
 
     @Value("${auth.jwt.exp.refresh}")
-    private final Long expirationTime;
+    private Long expirationTime;
 
     @Override
     public TokenResponse signIn(AccountRequest accountRequest) {
@@ -35,10 +35,9 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(UserNotFoundException::new);
 
         TokenResponse response = this.responseToken(user.getEmail());
-        refreshTokenRepository.deleteById(user.getEmail());
         refreshTokenRepository.save(
                 RefreshToken.builder()
-                        .userEmail(user.getEmail())
+                        .id(user.getEmail())
                         .refreshToken(response.getRefreshToken())
                         .ttl(expirationTime)
                         .build()
@@ -49,16 +48,18 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public TokenResponse refreshToken(String refreshToken) {
         String email = jwtTokenProvider.getUserEmail(refreshToken);
+
         if (!jwtTokenProvider.isRefreshToken(refreshToken))
             throw new InvalidTokenException();
 
-        refreshTokenRepository.findById(email).orElseThrow(ExpiredTokenException::new);
+        refreshTokenRepository.findById(email)
+                .orElseThrow(ExpiredTokenException::new);
 
         TokenResponse response = this.responseToken(email);
         refreshTokenRepository.deleteById(email);
         refreshTokenRepository.save(
                 RefreshToken.builder()
-                        .userEmail(email)
+                        .id(email)
                         .refreshToken(response.getRefreshToken())
                         .ttl(expirationTime)
                         .build()
