@@ -2,9 +2,7 @@ name: Deploy to Entry Container Registry
 
 on:
   push:
-    branches:
-      - "cicd_pipeline"
-#    branches: [ master ]
+    branches: [ master ]
 
 jobs:
   build:
