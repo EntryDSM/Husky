@@ -18,7 +18,7 @@ jobs:
           mkdir -p ./husky/src/main/resources
       - name: download font archieve for pdf generating
         run: |
-          wget wget --no-check-certificate \
+          wget --no-check-certificate \
           --http-user=${{ secrets.STATIC_USERNAME }} \
           --http-password=${{ secrets.STATIC_PASSWORD }} \
           https://static.entrydsm.hs.kr/fonts/husky_fonts.zip
