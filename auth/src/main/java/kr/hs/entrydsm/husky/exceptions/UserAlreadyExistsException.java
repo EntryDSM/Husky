@@ -5,7 +5,4 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(code = HttpStatus.CONFLICT, reason = "VE1011")
 public class UserAlreadyExistsException extends RuntimeException {
-    public UserAlreadyExistsException() {
-        super();
-    }
 }
