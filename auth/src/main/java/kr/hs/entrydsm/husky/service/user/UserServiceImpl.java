@@ -34,6 +34,10 @@ public class UserServiceImpl implements UserService {
         String email = accountRequest.getEmail();
         String password = passwordEncoder.encode(accountRequest.getPassword());
 
+        emailVerificationRepository.findById(accountRequest.getEmail())
+                .filter(EmailVerification::isVerified)
+                .orElseThrow(ExpiredAuthCodeException::new);
+
         userRepository.save(
             User.builder()
                 .email(email)
@@ -68,9 +72,6 @@ public class UserServiceImpl implements UserService {
 
         if (!emailVerification.getAuthCode().equals(code))
             throw new InvalidAuthCodeException();
-
-        if (!emailVerification.isVerified())
-            throw new ExpiredAuthCodeException();
 
         emailVerification.verify();
         emailVerificationRepository.save(emailVerification);

@@ -1,11 +1,11 @@
 package kr.hs.entrydsm.husky.domains.request;
 
-import lombok.Data;
+import lombok.Getter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
-@Data
+@Getter
 public class VerifyCodeRequest {
 
     @Email
