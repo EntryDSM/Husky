@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(authenticationFacade.getUserEmail()).orElseThrow(UserNotFoundException::new);
 
         if (!isSamePassword(changePasswordRequest.getPassword(), user.getPassword())) {
-            throw new PasswordSameException();
+            throw new PasswordDuplicationException();
         }
 
         user.setPassword(passwordEncoder.encode(changePasswordRequest.getPassword()));
