@@ -48,9 +48,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void sendEmail(String email) {
-        userRepository.findByEmail(email).ifPresent(user -> {
-            throw new UserAlreadyExistsException();
-        });
+        userRepository.findByEmail(email)
+                .ifPresent(user -> {
+                    throw new UserAlreadyExistsException();
+                });
 
         String code = randomCode();
         emailService.sendEmail(email, code);
@@ -79,7 +80,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void changePassword(ChangePasswordRequest changePasswordRequest) {
-        User user = userRepository.findByEmail(authenticationFacade.getUserEmail()).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByEmail(authenticationFacade.getUserEmail())
+                .orElseThrow(UserNotFoundException::new);
 
         if (!isSamePassword(changePasswordRequest.getPassword(), user.getPassword())) {
             throw new PasswordDuplicationException();
