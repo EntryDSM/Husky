@@ -16,6 +16,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
@@ -50,21 +52,40 @@ public class ScheduleApiTest {
         String id = "엔트리_멘토링";
         String startDate = "2020-07-23";
         String endDate = "2020-07-25";
-        String url = "/schedules";
 
         //when
-        ResultActions resultActions = this.mvc.perform(
-                post(url)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"id\":\"" + id + "\"," +
-                                "\"startDate\":\"" + startDate + "\"," +
-                                "\"endDate\":\"" + endDate + "\"}")
-        );
+        ResultActions resultActions = this.postRequest(id, startDate, endDate);
 
         //then
         resultActions
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().string(containsString(id)));
+    }
+
+    @Test
+    public void get_schedules() throws Exception {
+        //given
+        this.postRequest("test", "2020-07-26", "2020-07-31");
+        this.postRequest("develop", "2020-07-23", "2020-07-25");
+        String url = "/schedules";
+
+        //when
+        ResultActions resultActions = this.mvc.perform(get(url).characterEncoding("utf-8"));
+
+        //then
+        resultActions
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    private ResultActions postRequest(String id, String startDate, String endDate) throws Exception {
+        String url = "/schedules";
+        return this.mvc.perform(post(url)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"id\":\"" + id + "\"," +
+                        "\"startDate\":\"" + startDate + "\"," +
+                        "\"endDate\":\"" + endDate + "\"}")
+        );
     }
 
 }
