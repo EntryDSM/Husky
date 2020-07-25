@@ -109,7 +109,7 @@ project(':info') {
 
         implementation 'org.springframework.boot:spring-boot-starter-web'
         implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-        compile group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2'
+        implementation 'it.ozimov:embedded-redis:0.7.3'
         testImplementation('org.springframework.boot:spring-boot-starter-test') {
             exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
         }
