@@ -1,8 +1,10 @@
 package kr.hs.entrydsm.husky.exceptions;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import kr.hs.entrydsm.husky.error.exception.BusinessException;
+import kr.hs.entrydsm.husky.error.exception.ErrorCode;
 
-@ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY, reason = "email create error")
-public class VerifyEmailGenerateException extends RuntimeException {
+public class VerifyEmailGenerateException extends BusinessException {
+    public VerifyEmailGenerateException() {
+        super(ErrorCode.FAIL_GENERATE_VERIFY_EMAIL);
+    }
 }

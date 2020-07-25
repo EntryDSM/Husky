@@ -1,11 +1,10 @@
 package kr.hs.entrydsm.husky.exceptions;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import kr.hs.entrydsm.husky.error.exception.BusinessException;
+import kr.hs.entrydsm.husky.error.exception.ErrorCode;
 
-@ResponseStatus(value = HttpStatus.UNAUTHORIZED, reason = "Expired Token")
-public class ExpiredTokenException extends RuntimeException {
+public class ExpiredTokenException extends BusinessException {
     public ExpiredTokenException() {
-        super();
+        super(ErrorCode.EXPIRED_TOKEN);
     }
 }
