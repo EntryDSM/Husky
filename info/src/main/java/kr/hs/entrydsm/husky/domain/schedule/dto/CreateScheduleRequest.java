@@ -8,8 +8,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
-@Builder
 @Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateScheduleRequest {
