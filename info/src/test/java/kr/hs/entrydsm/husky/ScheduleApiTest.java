@@ -1,6 +1,11 @@
 package kr.hs.entrydsm.husky;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import kr.hs.entrydsm.husky.domain.schedule.dao.ScheduleRepository;
+import kr.hs.entrydsm.husky.domain.schedule.domain.Schedule;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +18,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.time.LocalDate;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -82,10 +89,23 @@ public class ScheduleApiTest {
         String url = "/schedules";
         return this.mvc.perform(post(url)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"id\":\"" + id + "\"," +
-                        "\"startDate\":\"" + startDate + "\"," +
-                        "\"endDate\":\"" + endDate + "\"}")
+                .content(convertObjectToJson(Schedule.builder()
+                        .id(id)
+                        .startDate(LocalDate.parse(startDate))
+                        .endDate(LocalDate.parse(endDate))
+                        .build())
+                )
         );
+    }
+
+    private String convertObjectToJson(Object object) throws JsonProcessingException {
+        if (object == null) {
+            return null;
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        return mapper.writeValueAsString(object);
     }
 
 }
