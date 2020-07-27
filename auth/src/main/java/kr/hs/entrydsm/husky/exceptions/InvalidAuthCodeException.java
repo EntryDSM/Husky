@@ -1,11 +1,10 @@
 package kr.hs.entrydsm.husky.exceptions;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import kr.hs.entrydsm.husky.error.exception.BusinessException;
+import kr.hs.entrydsm.husky.error.exception.ErrorCode;
 
-@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "VE1013")
-public class InvalidAuthCodeException extends RuntimeException {
+public class InvalidAuthCodeException extends BusinessException {
     public InvalidAuthCodeException() {
-        super();
+        super(ErrorCode.INVALID_AUTH_CODE);
     }
 }

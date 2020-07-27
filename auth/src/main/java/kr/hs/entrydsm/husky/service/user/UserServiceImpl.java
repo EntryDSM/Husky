@@ -34,6 +34,10 @@ public class UserServiceImpl implements UserService {
         String email = accountRequest.getEmail();
         String password = passwordEncoder.encode(accountRequest.getPassword());
 
+        emailVerificationRepository.findById(accountRequest.getEmail())
+                .filter(EmailVerification::isVerified)
+                .orElseThrow(ExpiredAuthCodeException::new);
+
         userRepository.save(
             User.builder()
                 .email(email)
@@ -44,8 +48,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void sendEmail(String email) {
-        userRepository.findById(email)
-                .ifPresent(user -> userRepository.deleteById(email));
+        userRepository.findByEmail(email)
+                .ifPresent(user -> {
+                    throw new UserAlreadyExistsException();
+                });
 
         String code = randomCode();
         emailService.sendEmail(email, code);
@@ -68,20 +74,14 @@ public class UserServiceImpl implements UserService {
         if (!emailVerification.getAuthCode().equals(code))
             throw new InvalidAuthCodeException();
 
-        if (!emailVerification.isVerified())
-            throw new ExpiredAuthCodeException();
-
         emailVerification.verify();
         emailVerificationRepository.save(emailVerification);
     }
 
     @Override
     public void changePassword(ChangePasswordRequest changePasswordRequest) {
-        User user = userRepository.findByEmail(authenticationFacade.getUserEmail()).orElseThrow(UserNotFoundException::new);
-
-        if (!isSamePassword(changePasswordRequest.getPassword(), user.getPassword())) {
-            throw new PasswordSameException();
-        }
+        User user = userRepository.findByEmail(authenticationFacade.getUserEmail())
+                .orElseThrow(UserNotFoundException::new);
 
         user.setPassword(passwordEncoder.encode(changePasswordRequest.getPassword()));
         userRepository.save(user);
@@ -94,10 +94,6 @@ public class UserServiceImpl implements UserService {
             result.append(codes[(int) (Math.random() % codes.length)]);
         }
         return result.toString();
-    }
-
-    private boolean isSamePassword(String password, String encodedPassword) {
-        return passwordEncoder.matches(password, encodedPassword);
     }
 
 }

@@ -1,11 +1,10 @@
 package kr.hs.entrydsm.husky.exceptions;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import kr.hs.entrydsm.husky.error.exception.BusinessException;
+import kr.hs.entrydsm.husky.error.exception.ErrorCode;
 
-@ResponseStatus(value = HttpStatus.UNAUTHORIZED, reason = "Invalid Token")
-public class InvalidTokenException extends RuntimeException {
+public class InvalidTokenException extends BusinessException {
     public InvalidTokenException() {
-        super();
+        super(ErrorCode.INVALID_TOKEN);
     }
 }

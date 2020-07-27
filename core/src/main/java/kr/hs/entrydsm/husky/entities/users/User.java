@@ -22,14 +22,14 @@ import java.util.Date;
 public class User {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer receiptCode;
+
     @Column(length = 100, nullable = false)
     private String email;
 
     @Column(length = 100, nullable = false)
     private String password;
-
-    @Column(nullable = false)
-    private Integer receiptNumber;
 
     @Enumerated(EnumType.STRING)
     private ApplyType applyType;
@@ -103,7 +103,7 @@ public class User {
                 return this.gedApplication;
             case GRADUATED:
                 return this.graduatedApplication;
-            case UN_GRADUATED:
+            case UNGRADUATED:
                 return this.unGraduatedApplication;
             default:
                 return null;
