@@ -21,8 +21,9 @@ public class ScheduleController {
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    public String createSchedule(@RequestBody CreateScheduleRequest request) {
-        return scheduleService.createSchedule(request);
+    public String createSchedule(@RequestBody CreateScheduleRequest request,
+                                 @RequestHeader("secret") String secret) {
+        return scheduleService.createSchedule(request, secret);
     }
 
     @GetMapping
