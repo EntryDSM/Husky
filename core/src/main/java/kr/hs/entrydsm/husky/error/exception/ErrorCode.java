@@ -17,7 +17,11 @@ public enum ErrorCode {
     EXPIRED_TOKEN(401, "", "Expired Token"),
     UNAUTHORIZED(401, "", "Authentication is required and has failed or has not yet been provided."),
     USER_DUPLICATION(409, "VE1011", "User is Already Exists"),
-    FAIL_GENERATE_VERIFY_EMAIL(422, "", "Email Generate Error");
+    PASSWORD_DUPLICATION(409, "", "Password is Already Exists"),
+    FAIL_GENERATE_VERIFY_EMAIL(422, "", "Email Generate Error"),
+
+    //Info
+    NOT_ADMIN_FORBIDDEN(403, "", "The server understood the request but refuses to authorize it.");
 
     private final int status;
     private final String code;
