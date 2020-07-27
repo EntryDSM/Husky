@@ -24,7 +24,7 @@ public class UserController {
 
     @PostMapping("/email/verify")
     public void sendEmail(@RequestParam("email") @Email String email) {
-        userService.sendEmail(email);
+        userService.sendSignUpEmail(email);
     }
 
     @PutMapping("/email/verify")
