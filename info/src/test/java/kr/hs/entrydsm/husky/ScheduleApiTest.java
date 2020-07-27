@@ -11,8 +11,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -28,9 +30,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
-@SpringBootTest(classes = InfoApplication.class,
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
+@SpringBootTest(classes = InfoApplication.class,
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        properties = "value=test")
+@ActiveProfiles("test")
 public class ScheduleApiTest {
 
     @Autowired
@@ -40,6 +44,9 @@ public class ScheduleApiTest {
     private WebApplicationContext context;
 
     private MockMvc mvc;
+
+    @Value("${value}")
+    private String secret;
 
     @Before
     public void setup() {
@@ -61,7 +68,7 @@ public class ScheduleApiTest {
         String endDate = "2020-07-25";
 
         //when
-        ResultActions resultActions = this.postRequest(id, startDate, endDate);
+        ResultActions resultActions = this.postRequest(id, startDate, endDate, this.secret);
 
         //then
         resultActions
@@ -70,10 +77,25 @@ public class ScheduleApiTest {
     }
 
     @Test
+    public void save_forbidden() throws Exception {
+        //given
+        String id = "엔트리_멘토링";
+        String startDate = "2020-07-23";
+        String endDate = "2020-07-25";
+
+        //when
+        ResultActions resultActions = this.postRequest(id, startDate, endDate, "entry");
+
+        //then
+        resultActions
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     public void get_schedules() throws Exception {
         //given
-        this.postRequest("test", "2020-07-26", "2020-07-31");
-        this.postRequest("develop", "2020-07-23", "2020-07-25");
+        this.postRequest("test", "2020-07-26", "2020-07-31", this.secret);
+        this.postRequest("develop", "2020-07-23", "2020-07-25", this.secret);
         String url = "/schedules";
 
         //when
@@ -85,10 +107,11 @@ public class ScheduleApiTest {
                 .andDo(print());
     }
 
-    private ResultActions postRequest(String id, String startDate, String endDate) throws Exception {
+    private ResultActions postRequest(String id, String startDate, String endDate, String secretKey) throws Exception {
         String url = "/schedules";
         return this.mvc.perform(post(url)
                 .contentType(MediaType.APPLICATION_JSON)
+                .header("secret", secretKey)
                 .content(convertObjectToJson(Schedule.builder()
                         .id(id)
                         .startDate(LocalDate.parse(startDate))
