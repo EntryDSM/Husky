@@ -32,6 +32,11 @@ public class UserController {
         userService.authEmail(verifyCodeRequest);
     }
 
+    @PostMapping("/email/password/verify")
+    public void sendPasswordChangeEmail(@RequestParam("email") @Email String email) {
+        userService.sendPasswordChangeEmail(email);
+    }
+
     @PutMapping("/password")
     public void changePassword(@RequestBody @Valid ChangePasswordRequest changePasswordRequest) {
         userService.changePassword(changePasswordRequest);
