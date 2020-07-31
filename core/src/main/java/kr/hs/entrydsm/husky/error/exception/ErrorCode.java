@@ -8,6 +8,7 @@ import lombok.Getter;
 public enum ErrorCode {
     //Global
     USER_NOT_FOUND(404, "", "User Not Found."),
+    BAD_REQUEST(400, "", "Bad Request(Invalid Parameter)"),
 
     //Auth
     INVALID_AUTH_EMAIL(400, "VE1010", "Invalid Auth Email"),
