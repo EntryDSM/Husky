@@ -19,7 +19,6 @@ public abstract class Application extends BaseTimeEntity{
     private String email;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
     private User user;
 
 }
