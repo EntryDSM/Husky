@@ -1,11 +1,16 @@
 package kr.hs.entrydsm.husky.entities.applications;
 
 import kr.hs.entrydsm.husky.entities.schools.School;
+import kr.hs.entrydsm.husky.entities.users.User;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Entity
+@Getter
+@NoArgsConstructor
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Entity
 public abstract class GeneralApplication extends Application {
 
     @Column(length = 5)
@@ -53,5 +58,9 @@ public abstract class GeneralApplication extends Application {
 
     @Column(length = 6)
     private String english;                 // 영어
+
+    GeneralApplication(String email, User user) {
+        super(email, user);
+    }
 
 }

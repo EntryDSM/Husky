@@ -1,5 +1,6 @@
 package kr.hs.entrydsm.husky.entities.applications;
 
+import kr.hs.entrydsm.husky.entities.users.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,5 +12,9 @@ import javax.persistence.Entity;
 @Entity(name = "ungraduated_application")
 @NoArgsConstructor
 public class UnGraduatedApplication extends GeneralApplication {
+
+    public UnGraduatedApplication(String email, User user) {
+        super(email, user);
+    }
 
 }
