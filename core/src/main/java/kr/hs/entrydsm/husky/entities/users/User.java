@@ -114,4 +114,28 @@ public class User {
         this.password = password;
     }
 
+    public void setClassification(GradeType gradeType, ApplyType applyType, AdditionalType additionalType,
+                                  boolean isDaejeon) {
+        this.gradeType = gradeType;
+        this.applyType = applyType;
+        this.additionalType = additionalType;
+        this.isDaejeon = isDaejeon;
+    }
+
+    public void setApplication(GradeType gradeType, GEDApplication gedApplication,
+                               GraduatedApplication graduatedApplication,
+                               UnGraduatedApplication unGraduatedApplication) {
+        switch (gradeType) {
+            case GED:
+                this.gedApplication = gedApplication;
+                break;
+            case GRADUATED:
+                this.graduatedApplication = graduatedApplication;
+                break;
+            case UNGRADUATED:
+                this.unGraduatedApplication = unGraduatedApplication;
+                break;
+        }
+    }
+
 }
