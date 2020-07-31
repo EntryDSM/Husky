@@ -88,13 +88,13 @@ public class User {
     @OneToOne(mappedBy = "user")
     private Status status;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = {CascadeType.ALL})
     private GEDApplication gedApplication;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = {CascadeType.ALL})
     private GraduatedApplication graduatedApplication;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = {CascadeType.ALL})
     private UnGraduatedApplication unGraduatedApplication;
 
     public Application getApplication() {
