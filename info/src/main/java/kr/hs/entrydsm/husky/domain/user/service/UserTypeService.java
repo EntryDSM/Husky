@@ -1,7 +1,7 @@
 package kr.hs.entrydsm.husky.domain.user.service;
 
 import kr.hs.entrydsm.husky.domain.application.exception.ApplicationNotFoundException;
-import kr.hs.entrydsm.husky.domain.application.exception.NotCreateApplication;
+import kr.hs.entrydsm.husky.domain.application.exception.NotCreateApplicationException;
 import kr.hs.entrydsm.husky.domain.user.dto.SelectTypeRequest;
 import kr.hs.entrydsm.husky.domain.user.dto.UserTypeResponse;
 import kr.hs.entrydsm.husky.domain.user.exception.UserNotFoundException;
@@ -25,12 +25,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserTypeService {
 
-
     private final UserRepository userRepository;
     private final GEDApplicationRepository gedRepository;
     private final GraduatedApplicationRepository graduatedRepository;
     private final UnGraduatedApplicationRepository unGraduatedRepository;
-
 
     public void selectUserType(SelectTypeRequest request) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -95,16 +93,18 @@ public class UserTypeService {
                 .is_daejeon(user.isDaejeon())
                 .build();
 
-        if(user.getGradeType() == null) throw new NotCreateApplication();
+        if(user.getGradeType() == null) throw new NotCreateApplicationException();
 
         switch (user.getGradeType()) {
             case GED:
                 GEDApplication ged = gedRepository.findByEmail(email).orElseThrow(ApplicationNotFoundException::new);
                 userTypeResponse.setGed_pass_date(ged.getGedPassDate());
+                break;
             case GRADUATED:
                 GraduatedApplication gred = graduatedRepository.findByEmail(email)
                         .orElseThrow(ApplicationNotFoundException::new);
                 userTypeResponse.setGraduated_date(gred.getGraduatedDate());
+                break;
         }
 
         return userTypeResponse;
