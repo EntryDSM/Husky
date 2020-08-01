@@ -22,7 +22,9 @@ public enum ErrorCode {
     FAIL_GENERATE_VERIFY_EMAIL(422, "", "Email Generate Error"),
 
     //Info
-    NOT_ADMIN_FORBIDDEN(403, "", "The server understood the request but refuses to authorize it.");
+    NOT_ADMIN_FORBIDDEN(403, "", "The server understood the request but refuses to authorize it."),
+    APPLICATION_NOT_FOUND(404, "", "Application Not Found"),
+    NOT_CREATE_APPLICATION(406, "", "User Did Not Create Application.");
 
     private final int status;
     private final String code;
