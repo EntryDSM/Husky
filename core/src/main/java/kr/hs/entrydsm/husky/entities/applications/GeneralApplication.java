@@ -63,4 +63,10 @@ public abstract class GeneralApplication extends Application {
         super(email, user);
     }
 
+    public void setStudentInfo(String studentNumber, School school, String schoolTel) {
+        this.studentNumber = studentNumber;
+        this.school = school;
+        this.schoolTel = schoolTel;
+    }
+
 }
