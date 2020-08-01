@@ -1,5 +1,6 @@
 package kr.hs.entrydsm.husky;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -12,8 +13,11 @@ import kr.hs.entrydsm.husky.entities.applications.repositories.GraduatedApplicat
 import kr.hs.entrydsm.husky.entities.applications.repositories.UnGraduatedApplicationRepository;
 import kr.hs.entrydsm.husky.entities.users.User;
 import kr.hs.entrydsm.husky.entities.users.repositories.UserRepository;
+import org.junit.After;
+import org.junit.FixMethodOrder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -21,6 +25,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -29,12 +34,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ContextConfiguration(classes = {InfoApplication.class})
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class UserApiTest {
+class UserTypeApiTest {
 
     @LocalServerPort
     private int port;
@@ -68,6 +75,21 @@ class UserApiTest {
                 .createdAt(LocalDateTime.now())
                 .password("1234")
                 .build());
+
+        userRepository.save(User.builder()
+                .receiptCode(2)
+                .email("test2")
+                .createdAt(LocalDateTime.now())
+                .password("1234")
+                .build());
+    }
+
+    @After
+    public void cleanup() {
+        gedApplicationRepository.deleteAll();
+        graduatedApplicationRepository.deleteAll();
+        unGraduatedApplicationRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
@@ -76,6 +98,41 @@ class UserApiTest {
         //given
         String url = "http://localhost:" + port;
 
+        //when
+        ResultActions resultActions = select_type_request(url)
+                .andDo(print())
+                .andExpect(status().isNoContent());
+
+//      then
+        GraduatedApplication gred =
+                ((List<GraduatedApplication>) graduatedApplicationRepository.findAll()).get(0);
+        System.out.println(gred.getGraduatedDate() + " : " + gred.getCreatedAt());
+//        GEDApplication ged = ((List<GEDApplication>) gedApplicationRepository.findAll()).get(0);
+//
+//        System.out.println(ged.getEmail() + " passed At " + ged.getGedPassDate() + " ged createdAt " +
+//                ged.getCreatedAt());
+
+//        UnGraduatedApplication ungred =
+//                ((List<UnGraduatedApplication>) unGraduatedApplicationRepository.findAll()).get(0);
+//        System.out.println(ungred.getCreatedAt());
+    }
+
+    @Test
+    @WithMockUser(username = "test2", password = "1234")
+    public void get_type_api() throws Exception {
+        //given
+        String url = "http://localhost:" + port;
+
+        //when
+        select_type_request(url);
+
+        //then
+        mvc.perform(get(url + "/users/me/type"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    private ResultActions select_type_request(String url) throws Exception {
         SelectTypeRequest request = SelectTypeRequest.builder()
                 .grade_type("GRADUATED")
                 .apply_type("COMMON")
@@ -85,29 +142,11 @@ class UserApiTest {
                 .graduated_date(LocalDate.parse("2020-02-20"))
                 .build();
 
-        //when
-        mvc.perform(patch(url + "/users/me/type")
+        return mvc.perform(patch(url + "/users/me/type")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper()
                         .registerModule(new JavaTimeModule())
                         .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-                        .writeValueAsString(request)))
-                .andDo(print())
-                .andExpect(status().isNoContent());
-
-//        then
-
-//        GEDApplication ged = ((List<GEDApplication>) gedApplicationRepository.findAll()).get(0);
-//
-//        System.out.println(ged.getEmail() + " passed At " + ged.getGedPassDate() + " ged createdAt " +
-//                ged.getCreatedAt());
-
-//        UnGraduatedApplication ungred =
-//                ((List<UnGraduatedApplication>) unGraduatedApplicationRepository.findAll()).get(0);
-//        System.out.println(ungred.getCreatedAt());
-
-        GraduatedApplication gred =
-                ((List<GraduatedApplication>) graduatedApplicationRepository.findAll()).get(0);
-        System.out.println(gred.getGraduatedDate() + " : " + gred.getCreatedAt());
+                        .writeValueAsString(request)));
     }
 }
