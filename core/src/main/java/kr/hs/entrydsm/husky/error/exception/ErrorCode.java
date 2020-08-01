@@ -24,7 +24,10 @@ public enum ErrorCode {
     //Info
     NOT_ADMIN_FORBIDDEN(403, "", "The server understood the request but refuses to authorize it."),
     APPLICATION_NOT_FOUND(404, "", "Application Not Found"),
-    NOT_CREATE_APPLICATION(406, "", "User Did Not Create Application.");
+    NOT_CREATE_APPLICATION(406, "", "User Did Not Create Application."),
+
+    //School
+    SCHOOL_NOT_FOUND(404, "", "School Not Found.");
 
     private final int status;
     private final String code;
