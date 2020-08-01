@@ -1,6 +1,9 @@
 package kr.hs.entrydsm.husky.domain.user.service;
 
+import kr.hs.entrydsm.husky.domain.application.exception.ApplicationNotFoundException;
+import kr.hs.entrydsm.husky.domain.application.exception.NotCreateApplication;
 import kr.hs.entrydsm.husky.domain.user.dto.SelectTypeRequest;
+import kr.hs.entrydsm.husky.domain.user.dto.UserTypeResponse;
 import kr.hs.entrydsm.husky.domain.user.exception.UserNotFoundException;
 import kr.hs.entrydsm.husky.entities.applications.GEDApplication;
 import kr.hs.entrydsm.husky.entities.applications.GraduatedApplication;
@@ -20,7 +23,7 @@ import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-public class UserService {
+public class UserTypeService {
 
 
     private final UserRepository userRepository;
@@ -29,7 +32,7 @@ public class UserService {
     private final UnGraduatedApplicationRepository unGraduatedRepository;
 
 
-    public void selectType(SelectTypeRequest request) {
+    public void selectUserType(SelectTypeRequest request) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
 
@@ -79,6 +82,32 @@ public class UserService {
 
         userRepository.save(user);
 
+    }
+
+    public UserTypeResponse getUserType() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+
+        UserTypeResponse userTypeResponse = UserTypeResponse.builder()
+                .apply_type(user.getApplyType())
+                .additional_type(user.getAdditionalType())
+                .grade_type(user.getGradeType())
+                .is_daejeon(user.isDaejeon())
+                .build();
+
+        if(user.getGradeType() == null) throw new NotCreateApplication();
+
+        switch (user.getGradeType()) {
+            case GED:
+                GEDApplication ged = gedRepository.findByEmail(email).orElseThrow(ApplicationNotFoundException::new);
+                userTypeResponse.setGed_pass_date(ged.getGedPassDate());
+            case GRADUATED:
+                GraduatedApplication gred = graduatedRepository.findByEmail(email)
+                        .orElseThrow(ApplicationNotFoundException::new);
+                userTypeResponse.setGraduated_date(gred.getGraduatedDate());
+        }
+
+        return userTypeResponse;
     }
 
 }
