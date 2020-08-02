@@ -30,7 +30,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().disable()
                 .authorizeRequests()
                     .antMatchers("/auth").permitAll()
-                    .antMatchers("/user/password").authenticated()
                     .antMatchers("/user/**").permitAll()
                 .and()
                     .apply(new JwtConfigurer(jwtTokenProvider)).and()

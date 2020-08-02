@@ -24,12 +24,17 @@ public class UserController {
 
     @PostMapping("/email/verify")
     public void sendEmail(@RequestParam("email") @Email String email) {
-        userService.sendEmail(email);
+        userService.sendSignUpEmail(email);
     }
 
     @PutMapping("/email/verify")
     public void verifyEmail(@RequestBody @Valid VerifyCodeRequest verifyCodeRequest) {
         userService.authEmail(verifyCodeRequest);
+    }
+
+    @PostMapping("/email/password/verify")
+    public void sendPasswordChangeEmail(@RequestParam("email") @Email String email) {
+        userService.sendPasswordChangeEmail(email);
     }
 
     @PutMapping("/password")

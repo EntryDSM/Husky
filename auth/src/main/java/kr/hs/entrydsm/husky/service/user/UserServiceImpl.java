@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
         String email = accountRequest.getEmail();
         String password = passwordEncoder.encode(accountRequest.getPassword());
 
-        emailVerificationRepository.findById(accountRequest.getEmail())
+        emailVerificationRepository.findById(email)
                 .filter(EmailVerification::isVerified)
                 .orElseThrow(ExpiredAuthCodeException::new);
 
@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void sendEmail(String email) {
+    public void sendSignUpEmail(String email) {
         userRepository.findByEmail(email)
                 .ifPresent(user -> {
                     throw new UserAlreadyExistsException();
@@ -79,11 +79,34 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changePassword(ChangePasswordRequest changePasswordRequest) {
-        User user = userRepository.findByEmail(authenticationFacade.getUserEmail())
+    public void sendPasswordChangeEmail(String email) {
+        userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
 
-        user.setPassword(passwordEncoder.encode(changePasswordRequest.getPassword()));
+        String code = randomCode();
+        emailService.sendEmail(email, code);
+        emailVerificationRepository.save(
+                EmailVerification.builder()
+                        .email(email)
+                        .authCode(code)
+                        .status(EmailVerificationStatus.UNVERIFIED)
+                        .build()
+        );
+    }
+
+    @Override
+    public void changePassword(ChangePasswordRequest changePasswordRequest) {
+        String email = changePasswordRequest.getEmail();
+        String password = passwordEncoder.encode(changePasswordRequest.getPassword());
+
+        emailVerificationRepository.findById(email)
+                .filter(EmailVerification::isVerified)
+                .orElseThrow(ExpiredAuthCodeException::new);
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(UserAlreadyExistsException::new);
+
+        user.setPassword(password);
         userRepository.save(user);
     }
 
