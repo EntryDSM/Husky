@@ -45,40 +45,28 @@ public class UserTypeService {
             case GED: {
                 if(request.getGed_pass_date() == null) throw new BadRequestException();
 
-                System.out.println(email);
-                GEDApplication gedApplication = gedRepository.save(GEDApplication.builder()
+                gedRepository.save(GEDApplication.builder()
                         .email(email)
                         .user(user)
                         .gedPassDate(request.getGed_pass_date())
                         .build());
-
-
-                user.setApplication(gradeType, gedApplication, null, null);
                 break;
             }
             case GRADUATED: {
                 if(request.getGraduated_date() == null) throw new BadRequestException();
 
-                GraduatedApplication graduatedApplication = GraduatedApplication.builder()
+                graduatedRepository.save(GraduatedApplication.builder()
                         .email(email)
                         .user(user)
                         .graduatedDate(request.getGraduated_date())
-                        .build();
-                graduatedRepository.save(graduatedApplication);
-
-                user.setApplication(gradeType, null, graduatedApplication, null);
+                        .build());
                 break;
             }
             case UNGRADUATED: {
-                UnGraduatedApplication unGraduatedApplication = new UnGraduatedApplication(email, user);
-                unGraduatedRepository.save(unGraduatedApplication);
-
-                user.setApplication(gradeType, null, null, unGraduatedApplication);
+                unGraduatedRepository.save(new UnGraduatedApplication(email, user));
                 break;
             }
         }
-
-        userRepository.save(user);
 
     }
 
