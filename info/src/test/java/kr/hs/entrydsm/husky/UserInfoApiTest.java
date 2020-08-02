@@ -27,8 +27,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -81,7 +80,7 @@ public class UserInfoApiTest {
 
     @Test
     @WithMockUser(username = "test", password = "1234")
-    public void set_info_api() throws Exception {
+    public void set_and_get_info_api() throws Exception {
         //given
         String url = "http://localhost:" + port;
 
@@ -113,11 +112,15 @@ public class UserInfoApiTest {
                         .writeValueAsString(request)))
                 .andDo(print())
                 .andExpect(status().isCreated());
+
+        mvc.perform(get(url + "/users/me"))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
     @Test
     @WithMockUser(username = "test2", password = "1234")
-    public void set_ged_info_api() throws Exception {
+    public void set_and_get_ged_info_api() throws Exception {
         //given
         String url = "http://localhost:" + port;
 
@@ -146,6 +149,10 @@ public class UserInfoApiTest {
                         .writeValueAsString(request)))
                 .andDo(print())
                 .andExpect(status().isCreated());
+
+        mvc.perform(get(url + "/users/me"))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
     private void select_user_type(String url, String gradeType) throws Exception {
