@@ -43,4 +43,9 @@ public class UserController {
     public UserInfoResponse serGEDUserInfo(@RequestBody SetUserInfoRequest request) {
         return userInfoService.setUserInfo(request);
     }
+
+    @GetMapping
+    public UserInfoResponse getUserInfo() {
+        return userInfoService.getUserInfo();
+    }
 }
