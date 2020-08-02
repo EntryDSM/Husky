@@ -1,5 +1,6 @@
 package kr.hs.entrydsm.husky;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -63,6 +64,13 @@ public class UserInfoApiTest {
                 .password("1234")
                 .build());
 
+        userRepository.save(User.builder()
+                .receiptCode(2)
+                .email("test2")
+                .createdAt(LocalDateTime.now())
+                .password("1234")
+                .build());
+
         schoolRepository.save(School.builder()
                 .schoolName("대마고")
                 .schoolFullName("대전 대마고")
@@ -94,20 +102,7 @@ public class UserInfoApiTest {
                 .photo("test.png")
                 .build();
 
-        mvc.perform(patch(url + "/users/me/type")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper()
-                        .registerModule(new JavaTimeModule())
-                        .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-                        .writeValueAsString(SelectTypeRequest.builder()
-                                .grade_type("GRADUATED")
-                                .apply_type("COMMON")
-                                .additional_type("NOT_APPLICABLE")
-                                .is_daejeon(true)
-                                .ged_pass_date(LocalDate.parse("2020-02-20"))
-                                .graduated_date(LocalDate.parse("2020-02-20"))
-                                .build()))
-        );
+        select_user_type(url, "GRADUATED");
 
         //then
         mvc.perform(post(url + "/users/me")
@@ -118,5 +113,55 @@ public class UserInfoApiTest {
                         .writeValueAsString(request)))
                 .andDo(print())
                 .andExpect(status().isCreated());
+    }
+
+    @Test
+    @WithMockUser(username = "test2", password = "1234")
+    public void set_ged_info_api() throws Exception {
+        //given
+        String url = "http://localhost:" + port;
+
+        //when
+        SetUserInfoRequest request = SetUserInfoRequest.builder()
+                .name("test2")
+                .sex("FEMALE")
+                .birth_date(LocalDate.parse("2020-01-23"))
+                .parent_name("test2")
+                .parent_tel("010-1111-1111")
+                .applicant_tel("010-0000-1111")
+                .address("대전 유성구")
+                .detail_address("대덕 소프트웨어마이스터 고등학교")
+                .post_code("11111")
+                .photo("test.png")
+                .build();
+
+        select_user_type(url, "GED");
+
+        //then
+        mvc.perform(post(url + "/users/me/ged")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper()
+                        .registerModule(new JavaTimeModule())
+                        .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                        .writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(status().isCreated());
+    }
+
+    private void select_user_type(String url, String gradeType) throws Exception {
+        mvc.perform(patch(url + "/users/me/type")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper()
+                        .registerModule(new JavaTimeModule())
+                        .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                        .writeValueAsString(SelectTypeRequest.builder()
+                                .grade_type(gradeType)
+                                .apply_type("COMMON")
+                                .additional_type("NOT_APPLICABLE")
+                                .is_daejeon(true)
+                                .ged_pass_date(LocalDate.parse("2020-02-20"))
+                                .graduated_date(LocalDate.parse("2020-02-20"))
+                                .build()))
+        );
     }
 }
