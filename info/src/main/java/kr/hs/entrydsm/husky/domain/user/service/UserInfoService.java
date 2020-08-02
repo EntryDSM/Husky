@@ -39,20 +39,8 @@ public class UserInfoService {
                 request.getDetail_address(), request.getPost_code(), request.getPhoto());
         userRepository.save(user);
 
-        UserInfoResponse response = UserInfoResponse.builder()
-                .name(user.getName())
-                .sex(user.getSex())
-                .birth_date(user.getBirthDate().toString())
-                .parent_name(user.getParentName())
-                .parent_tel(user.getParentTel())
-                .applicant_tel(user.getApplicantTel())
-                .address(user.getAddress())
-                .detail_address(user.getDetailAddress())
-                .post_code(user.getPostCode())
-                .photo(user.getUserPhoto())
-                .build();
+        UserInfoResponse response = responseBuilder(user);
 
-        if(user.getGradeType() == null) throw new NotCreateApplicationException();
         switch (user.getGradeType()) {
             case UNGRADUATED: {
                 UnGraduatedApplication unGraduated = unGraduatedRepository.findByEmail(email)
@@ -80,6 +68,56 @@ public class UserInfoService {
                 break;
             }
         }
+
+        return response;
+    }
+
+    public UserInfoResponse getUserInfo() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+
+        UserInfoResponse response = responseBuilder(user);
+
+        switch (user.getGradeType()) {
+            case GRADUATED: {
+                GraduatedApplication graduated = graduatedRepository.findByEmail(email)
+                        .orElseThrow(ApplicationNotFoundException::new);
+                if(graduated.getSchool() == null) throw new SchoolNotFoundException();
+
+                response.setSchoolInfo(graduated.getStudentNumber(), graduated.getSchool().getSchoolCode(),
+                        graduated.getSchoolTel());
+                break;
+            }
+            case UNGRADUATED: {
+                UnGraduatedApplication unGraduated = unGraduatedRepository.findByEmail(email)
+                        .orElseThrow(ApplicationNotFoundException::new);
+                if(unGraduated.getSchool() == null) throw new SchoolNotFoundException();
+
+                response.setSchoolInfo(unGraduated.getStudentNumber(), unGraduated.getSchool().getSchoolCode(),
+                        unGraduated.getSchoolTel());
+                break;
+            }
+        }
+
+        return response;
+    }
+
+    private UserInfoResponse responseBuilder(User user) {
+        UserInfoResponse response = UserInfoResponse.builder()
+                .grade_type(user.getGradeType())
+                .name(user.getName())
+                .sex(user.getSex())
+                .birth_date(user.getBirthDate().toString())
+                .parent_name(user.getParentName())
+                .parent_tel(user.getParentTel())
+                .applicant_tel(user.getApplicantTel())
+                .address(user.getAddress())
+                .detail_address(user.getDetailAddress())
+                .post_code(user.getPostCode())
+                .photo(user.getUserPhoto())
+                .build();
+
+        if(user.getGradeType() == null) throw new NotCreateApplicationException();
 
         return response;
     }

@@ -1,5 +1,6 @@
 package kr.hs.entrydsm.husky.domain.user.dto;
 
+import kr.hs.entrydsm.husky.entities.users.enums.GradeType;
 import kr.hs.entrydsm.husky.entities.users.enums.Sex;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserInfoResponse {
 
+    private GradeType grade_type;
     private String name;
     private Sex sex;
     private String birth_date;
