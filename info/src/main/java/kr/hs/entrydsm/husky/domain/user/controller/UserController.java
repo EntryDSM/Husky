@@ -37,4 +37,10 @@ public class UserController {
     public UserInfoResponse serUserInfo(@RequestBody SetUserInfoRequest request) {
         return userInfoService.setUserInfo(request);
     }
+
+    @PostMapping("/ged")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public UserInfoResponse serGEDUserInfo(@RequestBody SetUserInfoRequest request) {
+        return userInfoService.setUserInfo(request);
+    }
 }

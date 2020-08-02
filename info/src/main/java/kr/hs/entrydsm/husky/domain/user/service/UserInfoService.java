@@ -65,6 +65,7 @@ public class UserInfoService {
 
                 response.setSchoolInfo(unGraduated.getStudentNumber(), school.getSchoolCode(),
                         unGraduated.getSchoolTel());
+                break;
             }
             case GRADUATED: {
                 GraduatedApplication graduated = graduatedRepository.findByEmail(email)
@@ -76,6 +77,7 @@ public class UserInfoService {
                 graduatedRepository.save(graduated);
 
                 response.setSchoolInfo(request.getStudent_number(), request.getSchool_code(), request.getSchool_tel());
+                break;
             }
         }
 
