@@ -6,11 +6,15 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import kr.hs.entrydsm.husky.domain.user.dto.SelectTypeRequest;
 import kr.hs.entrydsm.husky.domain.user.dto.SetUserInfoRequest;
+import kr.hs.entrydsm.husky.entities.applications.repositories.GEDApplicationRepository;
+import kr.hs.entrydsm.husky.entities.applications.repositories.GraduatedApplicationRepository;
+import kr.hs.entrydsm.husky.entities.applications.repositories.UnGraduatedApplicationRepository;
 import kr.hs.entrydsm.husky.entities.schools.School;
 import kr.hs.entrydsm.husky.entities.schools.repositories.SchoolRepository;
 import kr.hs.entrydsm.husky.entities.users.User;
 import kr.hs.entrydsm.husky.entities.users.repositories.UserRepository;
 import org.junit.FixMethodOrder;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runners.MethodSorters;
@@ -50,6 +54,15 @@ public class UserInfoApiTest {
     @Autowired
     private SchoolRepository schoolRepository;
 
+    @Autowired
+    private GEDApplicationRepository gedApplicationRepository;
+
+    @Autowired
+    private UnGraduatedApplicationRepository unGraduatedApplicationRepository;
+
+    @Autowired
+    private GraduatedApplicationRepository graduatedApplicationRepository;
+
     @BeforeEach
     private void setup() {
         mvc = MockMvcBuilders
@@ -58,14 +71,14 @@ public class UserInfoApiTest {
 
         userRepository.save(User.builder()
                 .receiptCode(1)
-                .email("test")
+                .email("test3")
                 .createdAt(LocalDateTime.now())
                 .password("1234")
                 .build());
 
         userRepository.save(User.builder()
                 .receiptCode(2)
-                .email("test2")
+                .email("test4")
                 .createdAt(LocalDateTime.now())
                 .password("1234")
                 .build());
@@ -78,8 +91,16 @@ public class UserInfoApiTest {
                 .build());
     }
 
+    @AfterEach
+    public void cleanup() {
+        gedApplicationRepository.deleteAll();
+        graduatedApplicationRepository.deleteAll();
+        unGraduatedApplicationRepository.deleteAll();
+        userRepository.deleteAll();
+    }
+
     @Test
-    @WithMockUser(username = "test", password = "1234")
+    @WithMockUser(username = "test3", password = "1234")
     public void set_and_get_info_api() throws Exception {
         //given
         String url = "http://localhost:" + port;
@@ -101,7 +122,7 @@ public class UserInfoApiTest {
                 .photo("test.png")
                 .build();
 
-        select_user_type(url, "GRADUATED");
+        select_user_type(url, "UNGRADUATED");
 
         //then
         mvc.perform(post(url + "/users/me")
@@ -119,7 +140,7 @@ public class UserInfoApiTest {
     }
 
     @Test
-    @WithMockUser(username = "test2", password = "1234")
+    @WithMockUser(username = "test4", password = "1234")
     public void set_and_get_ged_info_api() throws Exception {
         //given
         String url = "http://localhost:" + port;

@@ -15,6 +15,7 @@ import kr.hs.entrydsm.husky.entities.users.User;
 import kr.hs.entrydsm.husky.entities.users.repositories.UserRepository;
 import org.junit.After;
 import org.junit.FixMethodOrder;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runners.MethodSorters;
@@ -84,7 +85,7 @@ class UserTypeApiTest {
                 .build());
     }
 
-    @After
+    @AfterEach
     public void cleanup() {
         gedApplicationRepository.deleteAll();
         graduatedApplicationRepository.deleteAll();
@@ -99,7 +100,7 @@ class UserTypeApiTest {
         String url = "http://localhost:" + port;
 
         //when
-        ResultActions resultActions = select_type_request(url)
+        ResultActions resultActions = select_type_request(url, "GRADUATED")
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
@@ -124,7 +125,7 @@ class UserTypeApiTest {
         String url = "http://localhost:" + port;
 
         //when
-        select_type_request(url);
+        select_type_request(url, "GED");
 
         //then
         mvc.perform(get(url + "/users/me/type"))
@@ -132,9 +133,9 @@ class UserTypeApiTest {
                 .andExpect(status().isOk());
     }
 
-    private ResultActions select_type_request(String url) throws Exception {
+    private ResultActions select_type_request(String url, String gradeType) throws Exception {
         SelectTypeRequest request = SelectTypeRequest.builder()
-                .grade_type("GRADUATED")
+                .grade_type(gradeType)
                 .apply_type("COMMON")
                 .additional_type("NOT_APPLICABLE")
                 .is_daejeon(true)
