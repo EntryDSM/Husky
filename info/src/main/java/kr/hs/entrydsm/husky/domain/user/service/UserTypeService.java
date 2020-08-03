@@ -1,7 +1,6 @@
 package kr.hs.entrydsm.husky.domain.user.service;
 
 import kr.hs.entrydsm.husky.domain.application.exception.ApplicationNotFoundException;
-import kr.hs.entrydsm.husky.domain.application.exception.NotCreateApplicationException;
 import kr.hs.entrydsm.husky.domain.user.dto.SelectTypeRequest;
 import kr.hs.entrydsm.husky.domain.user.dto.UserTypeResponse;
 import kr.hs.entrydsm.husky.domain.user.exception.UserNotFoundException;
@@ -81,7 +80,7 @@ public class UserTypeService {
                 .is_daejeon(user.isDaejeon())
                 .build();
 
-        if(user.getGradeType() == null) throw new NotCreateApplicationException();
+        if(user.getGradeType() == null) throw new ApplicationNotFoundException();
 
         switch (user.getGradeType()) {
             case GED:

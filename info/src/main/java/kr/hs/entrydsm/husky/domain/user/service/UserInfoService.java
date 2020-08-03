@@ -1,7 +1,6 @@
 package kr.hs.entrydsm.husky.domain.user.service;
 
 import kr.hs.entrydsm.husky.domain.application.exception.ApplicationNotFoundException;
-import kr.hs.entrydsm.husky.domain.application.exception.NotCreateApplicationException;
 import kr.hs.entrydsm.husky.domain.user.dto.SetUserInfoRequest;
 import kr.hs.entrydsm.husky.domain.user.dto.UserInfoResponse;
 import kr.hs.entrydsm.husky.domain.user.exception.SchoolNotFoundException;
@@ -117,7 +116,7 @@ public class UserInfoService {
                 .photo(user.getUserPhoto())
                 .build();
 
-        if(user.getGradeType() == null) throw new NotCreateApplicationException();
+        if(user.getGradeType() == null) throw new ApplicationNotFoundException();
 
         return response;
     }
