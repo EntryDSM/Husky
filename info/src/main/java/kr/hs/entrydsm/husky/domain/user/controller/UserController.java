@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 
-@RequestMapping("/users/me")
 @RequiredArgsConstructor
+@RequestMapping("/users/me")
 @RestController
 public class UserController {
 
@@ -22,7 +22,6 @@ public class UserController {
 
     @PatchMapping("/type")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    @Transactional
     public void selectUserType(@RequestBody SelectTypeRequest request) {
         userTypeService.selectUserType(request);
     }

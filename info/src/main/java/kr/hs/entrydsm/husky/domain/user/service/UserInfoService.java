@@ -19,6 +19,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @RequiredArgsConstructor
 @Service
 public class UserInfoService {
@@ -29,6 +31,7 @@ public class UserInfoService {
     private final UnGraduatedApplicationRepository unGraduatedRepository;
     private final SchoolRepository schoolRepository;
 
+    @Transactional
     public UserInfoResponse setUserInfo(SetUserInfoRequest request) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
