@@ -1,6 +1,7 @@
 package kr.hs.entrydsm.husky;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import kr.hs.entrydsm.husky.domain.user.dto.SelectTypeRequest;
@@ -101,7 +102,7 @@ class UserInfoApiTest {
 
     @Test
     @WithMockUser(username = "test3", password = "1234")
-    public void set_and_get_info_api() throws Exception {
+    public void setAndGetInfoApi() throws Exception {
         //given
         String url = "http://localhost:" + port;
 
@@ -109,16 +110,16 @@ class UserInfoApiTest {
         SetUserInfoRequest request = SetUserInfoRequest.builder()
                 .name("test")
                 .sex("MALE")
-                .birth_date(LocalDate.parse("2020-01-23"))
-                .student_number("30120")
-                .school_code("1")
-                .school_tel("010-0000-0000")
-                .parent_name("test2")
-                .parent_tel("010-1111-1111")
-                .applicant_tel("010-0000-1111")
+                .birthDate(LocalDate.parse("2020-01-23"))
+                .studentNumber("30120")
+                .schoolCode("1")
+                .schoolTel("010-0000-0000")
+                .parentName("test2")
+                .parentTel("010-1111-1111")
+                .applicantTel("010-0000-1111")
                 .address("대전 유성구")
-                .detail_address("대덕 소프트웨어마이스터 고등학교")
-                .post_code("11111")
+                .detailAddress("대덕 소프트웨어마이스터 고등학교")
+                .postCode("11111")
                 .photo("test.png")
                 .build();
 
@@ -130,6 +131,7 @@ class UserInfoApiTest {
                 .content(new ObjectMapper()
                         .registerModule(new JavaTimeModule())
                         .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                        .setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
                         .writeValueAsString(request)))
                 .andDo(print())
                 .andExpect(status().isCreated());
@@ -141,7 +143,7 @@ class UserInfoApiTest {
 
     @Test
     @WithMockUser(username = "test4", password = "1234")
-    public void set_and_get_ged_info_api() throws Exception {
+    public void setAndGetGedInfoApi() throws Exception {
         //given
         String url = "http://localhost:" + port;
 
@@ -149,13 +151,13 @@ class UserInfoApiTest {
         SetUserInfoRequest request = SetUserInfoRequest.builder()
                 .name("test2")
                 .sex("FEMALE")
-                .birth_date(LocalDate.parse("2020-01-23"))
-                .parent_name("test2")
-                .parent_tel("010-1111-1111")
-                .applicant_tel("010-0000-1111")
+                .birthDate(LocalDate.parse("2020-01-23"))
+                .parentName("test2")
+                .parentTel("010-1111-1111")
+                .applicantTel("010-0000-1111")
                 .address("대전 유성구")
-                .detail_address("대덕 소프트웨어마이스터 고등학교")
-                .post_code("11111")
+                .detailAddress("대덕 소프트웨어마이스터 고등학교")
+                .postCode("11111")
                 .photo("test.png")
                 .build();
 
@@ -167,6 +169,7 @@ class UserInfoApiTest {
                 .content(new ObjectMapper()
                         .registerModule(new JavaTimeModule())
                         .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                        .setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
                         .writeValueAsString(request)))
                 .andDo(print())
                 .andExpect(status().isCreated());
@@ -182,13 +185,14 @@ class UserInfoApiTest {
                 .content(new ObjectMapper()
                         .registerModule(new JavaTimeModule())
                         .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                        .setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
                         .writeValueAsString(SelectTypeRequest.builder()
-                                .grade_type(gradeType)
-                                .apply_type("COMMON")
-                                .additional_type("NOT_APPLICABLE")
-                                .is_daejeon(true)
-                                .ged_pass_date(LocalDate.parse("2020-02-20"))
-                                .graduated_date(LocalDate.parse("2020-02-20"))
+                                .gradeType(gradeType)
+                                .applyType("COMMON")
+                                .additionalType("NOT_APPLICABLE")
+                                .isDaejeon(true)
+                                .gedPassDate(LocalDate.parse("2020-02-20"))
+                                .graduatedDate(LocalDate.parse("2020-02-20"))
                                 .build()))
         );
     }

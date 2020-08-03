@@ -38,31 +38,31 @@ public class UserTypeService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
 
-        GradeType gradeType = GradeType.valueOf(request.getGrade_type().toUpperCase());
-        ApplyType applyType = ApplyType.valueOf(request.getApply_type().toUpperCase());
+        GradeType gradeType = GradeType.valueOf(request.getGradeType().toUpperCase());
+        ApplyType applyType = ApplyType.valueOf(request.getApplyType().toUpperCase());
         AdditionalType additionalType =
-                AdditionalType.valueOf(request.getAdditional_type().toUpperCase());
+                AdditionalType.valueOf(request.getAdditionalType().toUpperCase());
 
-        user.setClassification(gradeType, applyType, additionalType, request.is_daejeon());
+        user.setClassification(gradeType, applyType, additionalType, request.isDaejeon());
 
         switch (gradeType) {
             case GED: {
-                if (request.getGed_pass_date() == null) throw new BadRequestException();
+                if (request.getGedPassDate() == null) throw new BadRequestException();
 
                 gedRepository.save(GEDApplication.builder()
                         .email(email)
                         .user(user)
-                        .gedPassDate(request.getGed_pass_date())
+                        .gedPassDate(request.getGedPassDate())
                         .build());
                 break;
             }
             case GRADUATED: {
-                if (request.getGraduated_date() == null) throw new BadRequestException();
+                if (request.getGraduatedDate() == null) throw new BadRequestException();
 
                 graduatedRepository.save(GraduatedApplication.builder()
                         .email(email)
                         .user(user)
-                        .graduatedDate(request.getGraduated_date())
+                        .graduatedDate(request.getGraduatedDate())
                         .build());
                 break;
             }

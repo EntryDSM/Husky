@@ -14,37 +14,37 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserInfoResponse {
 
-    private GradeType grade_type;
+    private GradeType gradeType;
     private String name;
     private Sex sex;
-    private String birth_date;
-    private String student_number;
-    private String school_code;
-    private String school_tel;
-    private String parent_name;
-    private String parent_tel;
-    private String applicant_tel;
+    private String birthDate;
+    private String studentNumber;
+    private String schoolCode;
+    private String schoolTel;
+    private String parentName;
+    private String parentTel;
+    private String applicantTel;
     private String address;
-    private String detail_address;
-    private String post_code;
+    private String detailAddress;
+    private String postCode;
     private String photo;
 
     public static UserInfoResponse response(User user, String studentNumber, String schoolCode, String schoolTel) {
         return UserInfoResponse.builder()
-                .grade_type(user.getGradeType())
+                .gradeType(user.getGradeType())
                 .name(user.getName())
                 .sex(user.getSex())
-                .birth_date(user.getBirthDate().toString())
-                .parent_name(user.getParentName())
-                .parent_tel(user.getParentTel())
-                .applicant_tel(user.getApplicantTel())
+                .birthDate(user.getBirthDate().toString())
+                .parentName(user.getParentName())
+                .parentTel(user.getParentTel())
+                .applicantTel(user.getApplicantTel())
                 .address(user.getAddress())
-                .detail_address(user.getDetailAddress())
-                .post_code(user.getPostCode())
+                .detailAddress(user.getDetailAddress())
+                .postCode(user.getPostCode())
                 .photo(user.getUserPhoto())
-                .student_number(studentNumber)
-                .school_code(schoolCode)
-                .school_tel(schoolTel)
+                .studentNumber(studentNumber)
+                .schoolCode(schoolCode)
+                .schoolTel(schoolTel)
                 .build();
     }
 

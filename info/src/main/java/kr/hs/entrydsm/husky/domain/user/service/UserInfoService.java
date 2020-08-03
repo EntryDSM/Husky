@@ -36,19 +36,19 @@ public class UserInfoService {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
 
-        user.setInfo(request.getName(), Sex.valueOf(request.getSex()), request.getBirth_date(),
-                request.getApplicant_tel(), request.getParent_tel(), request.getParent_name(), request.getAddress(),
-                request.getDetail_address(), request.getPost_code(), request.getPhoto());
+        user.setInfo(request.getName(), Sex.valueOf(request.getSex()), request.getBirthDate(),
+                request.getApplicantTel(), request.getParentTel(), request.getParentName(), request.getAddress(),
+                request.getDetailAddress(), request.getPostCode(), request.getPhoto());
         userRepository.save(user);
 
         switch (user.getGradeType()) {
             case UNGRADUATED: {
                 UnGraduatedApplication unGraduated = unGraduatedRepository.findByEmail(email)
                         .orElseThrow(ApplicationNotFoundException::new);
-                School school = schoolRepository.findById(request.getSchool_code())
+                School school = schoolRepository.findById(request.getSchoolCode())
                         .orElseThrow(SchoolNotFoundException::new);
 
-                unGraduated.setStudentInfo(request.getStudent_number(), school, request.getSchool_tel());
+                unGraduated.setStudentInfo(request.getStudentNumber(), school, request.getSchoolTel());
                 unGraduatedRepository.save(unGraduated);
 
                 return UserInfoResponse.response(user, unGraduated.getStudentNumber(),
@@ -57,10 +57,10 @@ public class UserInfoService {
             case GRADUATED: {
                 GraduatedApplication graduated = graduatedRepository.findByEmail(email)
                         .orElseThrow(ApplicationNotFoundException::new);
-                School school = schoolRepository.findById(request.getSchool_code())
+                School school = schoolRepository.findById(request.getSchoolCode())
                         .orElseThrow(SchoolNotFoundException::new);
 
-                graduated.setStudentInfo(request.getStudent_number(), school, request.getSchool_tel());
+                graduated.setStudentInfo(request.getStudentNumber(), school, request.getSchoolTel());
                 graduatedRepository.save(graduated);
 
                 return UserInfoResponse.response(user, graduated.getStudentNumber(),

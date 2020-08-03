@@ -17,16 +17,16 @@ public class SetUserInfoRequest {
     private String name;
     private String sex;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate birth_date;
-    private String student_number;
-    private String school_code;
-    private String school_tel;
-    private String parent_name;
-    private String parent_tel;
-    private String applicant_tel;
+    private LocalDate birthDate;
+    private String studentNumber;
+    private String schoolCode;
+    private String schoolTel;
+    private String parentName;
+    private String parentTel;
+    private String applicantTel;
     private String address;
-    private String detail_address;
-    private String post_code;
+    private String detailAddress;
+    private String postCode;
     private String photo;
 
 }

@@ -17,29 +17,22 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class UserTypeResponse {
 
-    private GradeType grade_type;
-    private ApplyType apply_type;
-    private AdditionalType additional_type;
-    private boolean is_daejeon;
-    private LocalDate graduated_date;
-    private LocalDate ged_pass_date;
-
-    public void setGraduated_date(LocalDate graduated_date) {
-        this.graduated_date = graduated_date;
-    }
-
-    public void setGed_pass_date(LocalDate ged_pass_date) {
-        this.ged_pass_date = ged_pass_date;
-    }
+    private GradeType gradeType;
+    private ApplyType applyType;
+    private AdditionalType additionalType;
+    private boolean isDaejeon;
+    private LocalDate graduatedDate;
+    private LocalDate gedPassDate;
 
     public static UserTypeResponse response(User user, LocalDate graduatedDate, LocalDate gedPassDate) {
+        System.out.println(user.getGradeType());
         return UserTypeResponse.builder()
-                .apply_type(user.getApplyType())
-                .additional_type(user.getAdditionalType())
-                .grade_type(user.getGradeType())
-                .is_daejeon(user.isDaejeon())
-                .graduated_date(graduatedDate)
-                .ged_pass_date(gedPassDate)
+                .applyType(user.getApplyType())
+                .additionalType(user.getAdditionalType())
+                .gradeType(user.getGradeType())
+                .isDaejeon(user.isDaejeon())
+                .graduatedDate(graduatedDate)
+                .gedPassDate(gedPassDate)
                 .build();
     }
 }

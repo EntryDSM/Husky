@@ -1,6 +1,7 @@
 package kr.hs.entrydsm.husky;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import kr.hs.entrydsm.husky.domain.user.dto.SelectTypeRequest;
@@ -91,12 +92,12 @@ class UserTypeApiTest {
 
     @Test
     @WithMockUser(username = "test", password = "1234")
-    public void select_type_api() throws Exception {
+    public void selectTypeApi() throws Exception {
         //given
         String url = "http://localhost:" + port;
 
         //when
-        ResultActions resultActions = select_type_request(url, "GRADUATED")
+        ResultActions resultActions = selectTypeRequest(url, "GRADUATED")
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
@@ -116,12 +117,12 @@ class UserTypeApiTest {
 
     @Test
     @WithMockUser(username = "test2", password = "1234")
-    public void get_type_api() throws Exception {
+    public void getTypeApi() throws Exception {
         //given
         String url = "http://localhost:" + port;
 
         //when
-        select_type_request(url, "GED");
+        selectTypeRequest(url, "GED");
 
         //then
         mvc.perform(get(url + "/users/me/type"))
@@ -129,14 +130,14 @@ class UserTypeApiTest {
                 .andExpect(status().isOk());
     }
 
-    private ResultActions select_type_request(String url, String gradeType) throws Exception {
+    private ResultActions selectTypeRequest(String url, String gradeType) throws Exception {
         SelectTypeRequest request = SelectTypeRequest.builder()
-                .grade_type(gradeType)
-                .apply_type("COMMON")
-                .additional_type("NOT_APPLICABLE")
-                .is_daejeon(true)
-                .ged_pass_date(LocalDate.parse("2020-02-20"))
-                .graduated_date(LocalDate.parse("2020-02-20"))
+                .gradeType(gradeType)
+                .applyType("COMMON")
+                .additionalType("NOT_APPLICABLE")
+                .isDaejeon(true)
+                .gedPassDate(LocalDate.parse("2020-02-20"))
+                .graduatedDate(LocalDate.parse("2020-02-20"))
                 .build();
 
         return mvc.perform(patch(url + "/users/me/type")
@@ -144,6 +145,7 @@ class UserTypeApiTest {
                 .content(new ObjectMapper()
                         .registerModule(new JavaTimeModule())
                         .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                        .setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
                         .writeValueAsString(request)));
     }
 }

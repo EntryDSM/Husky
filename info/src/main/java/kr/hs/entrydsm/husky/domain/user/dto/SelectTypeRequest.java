@@ -14,13 +14,13 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class SelectTypeRequest {
 
-    private String grade_type;
-    private String apply_type;
-    private String additional_type;
-    private boolean is_daejeon;
+    private String gradeType;
+    private String applyType;
+    private String additionalType;
+    private boolean isDaejeon;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate graduated_date;
+    private LocalDate graduatedDate;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate ged_pass_date;
+    private LocalDate gedPassDate;
 
 }
