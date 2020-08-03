@@ -174,6 +174,10 @@ class UserInfoApiTest {
                 .andDo(print())
                 .andExpect(status().isCreated());
 
+        mvc.perform(post(url + "/users/me/ged"))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
         mvc.perform(get(url + "/users/me"))
                 .andDo(print())
                 .andExpect(status().isOk());

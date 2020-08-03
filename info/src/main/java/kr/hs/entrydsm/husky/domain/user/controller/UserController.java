@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 
 @RequiredArgsConstructor
 @RequestMapping("/users/me")
@@ -22,7 +23,7 @@ public class UserController {
 
     @PatchMapping("/type")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void selectUserType(@RequestBody SelectTypeRequest request) {
+    public void selectUserType(@RequestBody @Valid SelectTypeRequest request) {
         userTypeService.selectUserType(request);
     }
 
@@ -33,13 +34,13 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    public UserInfoResponse serUserInfo(@RequestBody SetUserInfoRequest request) {
+    public UserInfoResponse serUserInfo(@RequestBody @Valid SetUserInfoRequest request) {
         return userInfoService.setUserInfo(request);
     }
 
     @PostMapping("/ged")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public UserInfoResponse serGEDUserInfo(@RequestBody SetUserInfoRequest request) {
+    public UserInfoResponse serGEDUserInfo(@RequestBody @Valid SetUserInfoRequest request) {
         return userInfoService.setUserInfo(request);
     }
 
