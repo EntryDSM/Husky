@@ -21,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 
 @RequiredArgsConstructor
 @Service
@@ -34,7 +35,8 @@ public class UserTypeService {
     @Transactional
     public void selectUserType(SelectTypeRequest request) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
 
         GradeType gradeType = GradeType.valueOf(request.getGrade_type().toUpperCase());
         ApplyType applyType = ApplyType.valueOf(request.getApply_type().toUpperCase());
@@ -74,30 +76,28 @@ public class UserTypeService {
 
     public UserTypeResponse getUserType() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
 
-        UserTypeResponse userTypeResponse = UserTypeResponse.builder()
-                .apply_type(user.getApplyType())
-                .additional_type(user.getAdditionalType())
-                .grade_type(user.getGradeType())
-                .is_daejeon(user.isDaejeon())
-                .build();
+        LocalDate graduatedDate = null;
+        LocalDate gedPassDate = null;
 
         if(user.getGradeType() == null) throw new ApplicationNotFoundException();
 
         switch (user.getGradeType()) {
             case GED:
-                GEDApplication ged = gedRepository.findByEmail(email).orElseThrow(ApplicationNotFoundException::new);
-                userTypeResponse.setGed_pass_date(ged.getGedPassDate());
+                GEDApplication ged = gedRepository.findByEmail(email)
+                        .orElseThrow(ApplicationNotFoundException::new);
+                gedPassDate = ged.getGedPassDate();
                 break;
             case GRADUATED:
                 GraduatedApplication gred = graduatedRepository.findByEmail(email)
                         .orElseThrow(ApplicationNotFoundException::new);
-                userTypeResponse.setGraduated_date(gred.getGraduatedDate());
+                graduatedDate = gred.getGraduatedDate();
                 break;
         }
 
-        return userTypeResponse;
+        return UserTypeResponse.response(user, graduatedDate, gedPassDate);
     }
 
 }

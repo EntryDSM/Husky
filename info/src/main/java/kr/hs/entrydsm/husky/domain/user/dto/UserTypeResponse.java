@@ -1,5 +1,6 @@
 package kr.hs.entrydsm.husky.domain.user.dto;
 
+import kr.hs.entrydsm.husky.entities.users.User;
 import kr.hs.entrydsm.husky.entities.users.enums.AdditionalType;
 import kr.hs.entrydsm.husky.entities.users.enums.ApplyType;
 import kr.hs.entrydsm.husky.entities.users.enums.GradeType;
@@ -29,5 +30,16 @@ public class UserTypeResponse {
 
     public void setGed_pass_date(LocalDate ged_pass_date) {
         this.ged_pass_date = ged_pass_date;
+    }
+
+    public static UserTypeResponse response(User user, LocalDate graduatedDate, LocalDate gedPassDate) {
+        return UserTypeResponse.builder()
+                .apply_type(user.getApplyType())
+                .additional_type(user.getAdditionalType())
+                .grade_type(user.getGradeType())
+                .is_daejeon(user.isDaejeon())
+                .graduated_date(graduatedDate)
+                .ged_pass_date(gedPassDate)
+                .build();
     }
 }
