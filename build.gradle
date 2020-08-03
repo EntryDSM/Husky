@@ -25,6 +25,7 @@ subprojects {
     group = 'kr.hs.entrydsm'
     version = '0.0.1-SNAPSHOT'
     sourceCompatibility = '11'
+    targetCompatibility = '11'
 
     configurations {
         compileOnly {
@@ -45,6 +46,10 @@ subprojects {
         implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
         testImplementation 'com.h2database:h2'
         compile 'junit:junit:4.12'
+    }
+
+    configurations {
+        all*.exclude module : 'spring-boot-starter-logging'
     }
 
     task initSourceFolders {
@@ -114,6 +119,8 @@ project(':info') {
             exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
         }
         testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+        testImplementation 'org.springframework.security:spring-security-test'
+        implementation 'org.springframework.boot:spring-boot-starter-security'
     }
     jar {
         enabled = false
