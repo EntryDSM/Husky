@@ -41,8 +41,6 @@ public class UserInfoService {
                 request.getDetail_address(), request.getPost_code(), request.getPhoto());
         userRepository.save(user);
 
-        UserInfoResponse response = responseBuilder(user);
-
         switch (user.getGradeType()) {
             case UNGRADUATED: {
                 UnGraduatedApplication unGraduated = unGraduatedRepository.findByEmail(email)
@@ -53,9 +51,8 @@ public class UserInfoService {
                 unGraduated.setStudentInfo(request.getStudent_number(), school, request.getSchool_tel());
                 unGraduatedRepository.save(unGraduated);
 
-                response.setSchoolInfo(unGraduated.getStudentNumber(), school.getSchoolCode(),
-                        unGraduated.getSchoolTel());
-                break;
+                return UserInfoResponse.response(user, unGraduated.getStudentNumber(),
+                        unGraduated.getSchool().getSchoolCode(), unGraduated.getSchoolTel());
             }
             case GRADUATED: {
                 GraduatedApplication graduated = graduatedRepository.findByEmail(email)
@@ -66,62 +63,39 @@ public class UserInfoService {
                 graduated.setStudentInfo(request.getStudent_number(), school, request.getSchool_tel());
                 graduatedRepository.save(graduated);
 
-                response.setSchoolInfo(request.getStudent_number(), request.getSchool_code(), request.getSchool_tel());
-                break;
+                return UserInfoResponse.response(user, graduated.getStudentNumber(),
+                        graduated.getSchool().getSchoolCode(), graduated.getSchoolTel());
             }
         }
 
-        return response;
+        return UserInfoResponse.response(user, null, null, null);
     }
 
     public UserInfoResponse getUserInfo() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
 
-        UserInfoResponse response = responseBuilder(user);
-
+        if (user.getGradeType() == null) throw new ApplicationNotFoundException();
         switch (user.getGradeType()) {
             case GRADUATED: {
                 GraduatedApplication graduated = graduatedRepository.findByEmail(email)
                         .orElseThrow(ApplicationNotFoundException::new);
-                if(graduated.getSchool() == null) throw new SchoolNotFoundException();
+                if (graduated.getSchool() == null) throw new SchoolNotFoundException();
 
-                response.setSchoolInfo(graduated.getStudentNumber(), graduated.getSchool().getSchoolCode(),
-                        graduated.getSchoolTel());
-                break;
+                return UserInfoResponse.response(user, graduated.getStudentNumber(),
+                        graduated.getSchool().getSchoolCode(), graduated.getSchoolTel());
             }
             case UNGRADUATED: {
                 UnGraduatedApplication unGraduated = unGraduatedRepository.findByEmail(email)
                         .orElseThrow(ApplicationNotFoundException::new);
-                if(unGraduated.getSchool() == null) throw new SchoolNotFoundException();
+                if (unGraduated.getSchool() == null) throw new SchoolNotFoundException();
 
-                response.setSchoolInfo(unGraduated.getStudentNumber(), unGraduated.getSchool().getSchoolCode(),
-                        unGraduated.getSchoolTel());
-                break;
+                return UserInfoResponse.response(user, unGraduated.getStudentNumber(),
+                        unGraduated.getSchool().getSchoolCode(), unGraduated.getSchoolTel());
             }
         }
-
-        return response;
-    }
-
-    private UserInfoResponse responseBuilder(User user) {
-        UserInfoResponse response = UserInfoResponse.builder()
-                .grade_type(user.getGradeType())
-                .name(user.getName())
-                .sex(user.getSex())
-                .birth_date(user.getBirthDate().toString())
-                .parent_name(user.getParentName())
-                .parent_tel(user.getParentTel())
-                .applicant_tel(user.getApplicantTel())
-                .address(user.getAddress())
-                .detail_address(user.getDetailAddress())
-                .post_code(user.getPostCode())
-                .photo(user.getUserPhoto())
-                .build();
-
-        if(user.getGradeType() == null) throw new ApplicationNotFoundException();
-
-        return response;
+        return UserInfoResponse.response(user, null, null, null);
     }
 
 }

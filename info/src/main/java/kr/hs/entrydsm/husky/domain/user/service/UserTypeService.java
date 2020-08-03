@@ -47,7 +47,7 @@ public class UserTypeService {
 
         switch (gradeType) {
             case GED: {
-                if(request.getGed_pass_date() == null) throw new BadRequestException();
+                if (request.getGed_pass_date() == null) throw new BadRequestException();
 
                 gedRepository.save(GEDApplication.builder()
                         .email(email)
@@ -57,7 +57,7 @@ public class UserTypeService {
                 break;
             }
             case GRADUATED: {
-                if(request.getGraduated_date() == null) throw new BadRequestException();
+                if (request.getGraduated_date() == null) throw new BadRequestException();
 
                 graduatedRepository.save(GraduatedApplication.builder()
                         .email(email)
@@ -82,7 +82,7 @@ public class UserTypeService {
         LocalDate graduatedDate = null;
         LocalDate gedPassDate = null;
 
-        if(user.getGradeType() == null) throw new ApplicationNotFoundException();
+        if (user.getGradeType() == null) throw new ApplicationNotFoundException();
 
         switch (user.getGradeType()) {
             case GED:

@@ -1,5 +1,6 @@
 package kr.hs.entrydsm.husky.domain.user.dto;
 
+import kr.hs.entrydsm.husky.entities.users.User;
 import kr.hs.entrydsm.husky.entities.users.enums.GradeType;
 import kr.hs.entrydsm.husky.entities.users.enums.Sex;
 import lombok.AllArgsConstructor;
@@ -28,10 +29,23 @@ public class UserInfoResponse {
     private String post_code;
     private String photo;
 
-    public void setSchoolInfo(String student_number, String school_code, String school_tel) {
-        this.student_number = student_number;
-        this.school_code = school_code;
-        this.school_tel = school_tel;
+    public static UserInfoResponse response(User user, String studentNumber, String schoolCode, String schoolTel) {
+        return UserInfoResponse.builder()
+                .grade_type(user.getGradeType())
+                .name(user.getName())
+                .sex(user.getSex())
+                .birth_date(user.getBirthDate().toString())
+                .parent_name(user.getParentName())
+                .parent_tel(user.getParentTel())
+                .applicant_tel(user.getApplicantTel())
+                .address(user.getAddress())
+                .detail_address(user.getDetailAddress())
+                .post_code(user.getPostCode())
+                .photo(user.getUserPhoto())
+                .student_number(studentNumber)
+                .school_code(schoolCode)
+                .school_tel(schoolTel)
+                .build();
     }
 
 }
