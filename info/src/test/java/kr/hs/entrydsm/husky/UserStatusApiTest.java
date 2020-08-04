@@ -74,6 +74,10 @@ class UserStatusApiTest {
                 .andDo(print())
                 .andExpect(status().isOk());
 
+        mvc.perform(patch(url + "/users/me/status"))
+                .andDo(print())
+                .andExpect(status().isOk());
+
         //then
         User user = userRepository.findByEmail("test5").orElseThrow(UserNotFoundException::new);
         System.out.println(user.getStatus().getUser().getName() + " final submitted : " +
