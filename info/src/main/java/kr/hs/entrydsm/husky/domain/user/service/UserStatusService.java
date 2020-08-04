@@ -27,6 +27,19 @@ public class UserStatusService {
         return UserStatusResponse.response(user, status);
     }
 
+    public UserStatusResponse finalSubmit() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+
+        Status status = user.getStatus();
+        if(status == null) status = createStatus(user);
+
+        status.finalSubmit();
+        statusRepository.save(status);
+
+        return UserStatusResponse.response(user, status);
+    }
+
     private Status createStatus(User user) {
         Status status = Status.builder()
                 .email(user.getEmail())
