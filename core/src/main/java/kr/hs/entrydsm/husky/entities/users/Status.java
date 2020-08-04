@@ -40,4 +40,8 @@ public class Status {
     @OneToOne(cascade = CascadeType.ALL)
     private User user;
 
+    public void finalSubmit() {
+        this.isFinalSubmit = true;
+    }
+
 }
