@@ -50,4 +50,9 @@ public class UserController {
 
     @GetMapping("/status")
     public UserStatusResponse getUserStatus() { return userStatusService.getStatus(); }
+
+    @PatchMapping("/status")
+    public UserStatusResponse finalSubmit() {
+        return userStatusService.finalSubmit();
+    }
 }
