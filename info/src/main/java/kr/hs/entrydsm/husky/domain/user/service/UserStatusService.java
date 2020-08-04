@@ -19,20 +19,22 @@ public class UserStatusService {
 
     public UserStatusResponse getStatus() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
 
         Status status = user.getStatus();
-        if(status == null) status = createStatus(user);
+        if (status == null) status = createStatus(user);
 
         return UserStatusResponse.response(user, status);
     }
 
     public UserStatusResponse finalSubmit() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
 
         Status status = user.getStatus();
-        if(status == null) status = createStatus(user);
+        if (status == null) status = createStatus(user);
 
         status.finalSubmit();
         statusRepository.save(status);
