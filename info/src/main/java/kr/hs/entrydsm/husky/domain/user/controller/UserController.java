@@ -1,10 +1,8 @@
 package kr.hs.entrydsm.husky.domain.user.controller;
 
-import kr.hs.entrydsm.husky.domain.user.dto.SelectTypeRequest;
-import kr.hs.entrydsm.husky.domain.user.dto.SetUserInfoRequest;
-import kr.hs.entrydsm.husky.domain.user.dto.UserInfoResponse;
-import kr.hs.entrydsm.husky.domain.user.dto.UserTypeResponse;
+import kr.hs.entrydsm.husky.domain.user.dto.*;
 import kr.hs.entrydsm.husky.domain.user.service.UserInfoService;
+import kr.hs.entrydsm.husky.domain.user.service.UserStatusService;
 import kr.hs.entrydsm.husky.domain.user.service.UserTypeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +18,7 @@ public class UserController {
 
     private final UserTypeService userTypeService;
     private final UserInfoService userInfoService;
+    private final UserStatusService userStatusService;
 
     @PatchMapping("/type")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
@@ -48,4 +47,7 @@ public class UserController {
     public UserInfoResponse getUserInfo() {
         return userInfoService.getUserInfo();
     }
+
+    @GetMapping("/status")
+    public UserStatusResponse getUserStatus() { return userStatusService.getStatus(); }
 }
