@@ -153,4 +153,12 @@ public class User {
         this.userPhoto = photo;
     }
 
+    public void setSelfIntroduction(String introduction) {
+        this.selfIntroduction = introduction;
+    }
+
+    public void setStudyPlan(String plan) {
+        this.studyPlan = plan;
+    }
+
 }
