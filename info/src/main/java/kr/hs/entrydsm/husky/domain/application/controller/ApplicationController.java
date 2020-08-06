@@ -1,6 +1,7 @@
 package kr.hs.entrydsm.husky.domain.application.controller;
 
 import kr.hs.entrydsm.husky.domain.application.dto.IntroResponse;
+import kr.hs.entrydsm.husky.domain.application.dto.PlanResponse;
 import kr.hs.entrydsm.husky.domain.application.service.ApplicationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,17 @@ public class ApplicationController {
     @GetMapping("/intro")
     public IntroResponse getIntro() {
         return applicationService.getIntro();
+    }
+
+    @PatchMapping("/plan")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void addPlan(@Valid @NotBlank @NotEmpty @RequestBody String plan) {
+        applicationService.addPlan(plan);
+    }
+
+    @GetMapping("/plan")
+    public PlanResponse getPlan() {
+        return applicationService.getPlan();
     }
 
 }
