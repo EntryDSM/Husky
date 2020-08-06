@@ -55,6 +55,13 @@ class ApplicationApiTest {
                 .createdAt(LocalDateTime.now())
                 .password("1234")
                 .build());
+
+        userRepository.save(User.builder()
+                .receiptCode(7)
+                .email("test7")
+                .createdAt(LocalDateTime.now())
+                .password("1234")
+                .build());
     }
 
     @AfterEach
@@ -72,12 +79,33 @@ class ApplicationApiTest {
         mvc.perform(patch(url + "/applications/me/intro"))
                 .andExpect(status().isBadRequest());
 
+        //then
         mvc.perform(patch(url + "/applications/me/intro")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("안녕하세요"))
                 .andExpect(status().isNoContent());
 
         mvc.perform(get(url + "/applications/me/intro"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(username = "test7", password = "1234")
+    public void add_and_get_plan_api() throws Exception {
+        //given
+        String url = "http://localhost:" + port;
+
+        //when
+        mvc.perform(patch(url + "/applications/me/plan"))
+                .andExpect(status().isBadRequest());
+
+        //then
+        mvc.perform(patch(url + "/applications/me/plan")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("안녕하세요"))
+                .andExpect(status().isNoContent());
+
+        mvc.perform(get(url + "/applications/me/plan"))
                 .andExpect(status().isOk());
     }
 
