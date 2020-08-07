@@ -24,6 +24,7 @@ public enum ErrorCode {
     //Info
     NOT_ADMIN_FORBIDDEN(403, "", "The server understood the request but refuses to authorize it."),
     APPLICATION_NOT_FOUND(404, "", "Application Not Found"),
+    APPLICATION_TYPE_UNMATCHED(403, "", "Application Type is unmatched"),
 
     //School
     SCHOOL_NOT_FOUND(404, "", "School Not Found.");
