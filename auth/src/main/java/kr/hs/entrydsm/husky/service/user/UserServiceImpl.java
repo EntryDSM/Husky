@@ -16,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -42,6 +44,7 @@ public class UserServiceImpl implements UserService {
             User.builder()
                 .email(email)
                 .password(password)
+                .createdAt(LocalDateTime.now())
                 .build()
         );
     }
@@ -104,7 +107,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(ExpiredAuthCodeException::new);
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(UserAlreadyExistsException::new);
+                .orElseThrow(UserNotFoundException::new);
 
         user.setPassword(password);
         userRepository.save(user);
