@@ -4,10 +4,14 @@ import kr.hs.entrydsm.husky.domain.application.dto.IntroResponse;
 import kr.hs.entrydsm.husky.domain.application.dto.PlanResponse;
 import kr.hs.entrydsm.husky.domain.application.exception.ApplicationNotFoundException;
 import kr.hs.entrydsm.husky.domain.application.exception.ApplicationTypeUnmatchedException;
-import kr.hs.entrydsm.husky.domain.user.dto.UserGradeResponse;
+import kr.hs.entrydsm.husky.domain.user.dto.AddScoreRequest;
 import kr.hs.entrydsm.husky.domain.user.exception.UserNotFoundException;
 import kr.hs.entrydsm.husky.entities.applications.GEDApplication;
+import kr.hs.entrydsm.husky.entities.applications.GraduatedApplication;
+import kr.hs.entrydsm.husky.entities.applications.UnGraduatedApplication;
 import kr.hs.entrydsm.husky.entities.applications.repositories.GEDApplicationRepository;
+import kr.hs.entrydsm.husky.entities.applications.repositories.GraduatedApplicationRepository;
+import kr.hs.entrydsm.husky.entities.applications.repositories.UnGraduatedApplicationRepository;
 import kr.hs.entrydsm.husky.entities.users.User;
 import kr.hs.entrydsm.husky.entities.users.enums.GradeType;
 import kr.hs.entrydsm.husky.entities.users.repositories.UserRepository;
@@ -21,6 +25,8 @@ public class ApplicationService {
 
     private final UserRepository userRepository;
     private final GEDApplicationRepository gedApplicationRepository;
+    private final GraduatedApplicationRepository graduatedApplicationRepository;
+    private final UnGraduatedApplicationRepository unGraduatedApplicationRepository;
 
     public void addIntro(String intro) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -68,6 +74,37 @@ public class ApplicationService {
 
         application.setGedAverageScore(gedAverageScore);
         gedApplicationRepository.save(application);
+    }
+
+    public void addScore(AddScoreRequest request) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+
+        if(user.getGradeType() != GradeType.UNGRADUATED && user.getGradeType() != GradeType.GRADUATED)
+            throw new ApplicationTypeUnmatchedException();
+        switch (user.getGradeType()) {
+            case GRADUATED: {
+                GraduatedApplication graduatedApplication = graduatedApplicationRepository.findByEmail(email)
+                        .orElseThrow(ApplicationNotFoundException::new);
+
+                graduatedApplication.setScore(request.getVolunteerTime(), request.getFullCutCount(),
+                        request.getPeriodCutCount(), request.getLateCount(), request.getEarlyLeaveCount(),
+                        request.getKorean(), request.getSocial(), request.getHistory(), request.getMath(),
+                        request.getScience(), request.getTechAndHome(), request.getEnglish());
+                graduatedApplicationRepository.save(graduatedApplication);
+            }
+            case UNGRADUATED: {
+                UnGraduatedApplication unGraduatedApplication = unGraduatedApplicationRepository.findByEmail(email)
+                        .orElseThrow(ApplicationNotFoundException::new);
+
+                unGraduatedApplication.setScore(request.getVolunteerTime(), request.getFullCutCount(),
+                        request.getPeriodCutCount(), request.getLateCount(), request.getEarlyLeaveCount(),
+                        request.getKorean(), request.getSocial(), request.getHistory(), request.getMath(),
+                        request.getScience(), request.getTechAndHome(), request.getEnglish());
+                unGraduatedApplicationRepository.save(unGraduatedApplication);
+            }
+        }
     }
 
 }
