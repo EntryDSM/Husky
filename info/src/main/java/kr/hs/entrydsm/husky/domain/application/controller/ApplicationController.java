@@ -3,11 +3,13 @@ package kr.hs.entrydsm.husky.domain.application.controller;
 import kr.hs.entrydsm.husky.domain.application.dto.IntroResponse;
 import kr.hs.entrydsm.husky.domain.application.dto.PlanResponse;
 import kr.hs.entrydsm.husky.domain.application.service.ApplicationService;
+import kr.hs.entrydsm.husky.domain.user.dto.AddScoreRequest;
 import kr.hs.entrydsm.husky.error.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 
 @RequiredArgsConstructor
@@ -20,7 +22,7 @@ public class ApplicationController {
     @PatchMapping("/intro")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void addIntro(@RequestBody HashMap<String, String> request) {
-        checkParameter(request, "introduce");
+        if(request.get("introduce") == null) throw new BadRequestException();
 
         applicationService.addIntro(request.get("introduce"));
     }
@@ -33,7 +35,7 @@ public class ApplicationController {
     @PatchMapping("/plan")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void addPlan(@RequestBody HashMap<String, String> request) {
-        checkParameter(request, "plan");
+        if(request.get("plan") == null) throw new BadRequestException();
 
         applicationService.addPlan(request.get("plan"));
     }
@@ -43,22 +45,19 @@ public class ApplicationController {
         return applicationService.getPlan();
     }
 
-    @PatchMapping("/score/ged")
+    @PatchMapping("/score")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void addGedScore(@RequestBody HashMap<String, String> request) {
-        checkParameter(request, "score");
-        int averageScore;
-        try {
-            averageScore = Integer.parseInt(request.get("score"));
-        } catch (Exception e) {
-            throw new BadRequestException();
-        }
-
-        applicationService.addGedScore(averageScore);
+    public void addScore(@RequestBody @Valid AddScoreRequest request) {
+        applicationService.addScore(request);
     }
 
-    private void checkParameter(HashMap<String, String> request, String key) {
-        if(request.get(key) == null) throw new BadRequestException();
+    @PatchMapping("/score/ged")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void addGedScore(@RequestBody HashMap<String, Integer> request) {
+        if(request.get("score") == null) throw new BadRequestException();
+        int averageScore = request.get("score");
+
+        applicationService.addGedScore(averageScore);
     }
 
 }
