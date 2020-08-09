@@ -5,10 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import kr.hs.entrydsm.husky.domain.application.exception.ApplicationNotFoundException;
+import kr.hs.entrydsm.husky.domain.user.dto.AddScoreRequest;
 import kr.hs.entrydsm.husky.domain.user.dto.SelectTypeRequest;
 import kr.hs.entrydsm.husky.domain.user.exception.UserNotFoundException;
 import kr.hs.entrydsm.husky.entities.applications.GEDApplication;
+import kr.hs.entrydsm.husky.entities.applications.UnGraduatedApplication;
 import kr.hs.entrydsm.husky.entities.applications.repositories.GEDApplicationRepository;
+import kr.hs.entrydsm.husky.entities.applications.repositories.UnGraduatedApplicationRepository;
 import kr.hs.entrydsm.husky.entities.users.User;
 import kr.hs.entrydsm.husky.entities.users.repositories.UserRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -51,6 +55,9 @@ class ApplicationApiTest {
     private GEDApplicationRepository gedApplicationRepository;
 
     @Autowired
+    private UnGraduatedApplicationRepository unGraduatedApplicationRepository;
+
+    @Autowired
     private WebApplicationContext context;
 
     private MockMvc mvc;
@@ -84,7 +91,7 @@ class ApplicationApiTest {
     }
 
     @Test
-    @WithMockUser(username = "test6", password = "1234")
+    @WithMockUser(username = "test7", password = "1234")
     public void add_and_get_intro_api() throws Exception {
         //given
         String url = "http://localhost:" + port;
@@ -107,7 +114,7 @@ class ApplicationApiTest {
     }
 
     @Test
-    @WithMockUser(username = "test7", password = "1234")
+    @WithMockUser(username = "test6", password = "1234")
     public void add_and_get_plan_api() throws Exception {
         //given
         String url = "http://localhost:" + port;
@@ -138,8 +145,8 @@ class ApplicationApiTest {
         //when
         select_user_type(url, "GED");
 
-        HashMap<String, String> request = new HashMap<>();
-        request.put("score", "3100");
+        HashMap<String, Integer> request = new HashMap<>();
+        request.put("score", 3100);
 
         mvc.perform(patch(url + "/applications/me/score/ged")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -147,8 +154,30 @@ class ApplicationApiTest {
                 .andExpect(status().isNoContent());
 
         GEDApplication application = gedApplicationRepository.findByEmail("test6")
-                .orElseThrow(UserNotFoundException::new);
+                .orElseThrow(ApplicationNotFoundException::new);
         System.out.println(application.getGedAverageScore());
+    }
+
+    @Test
+    @WithMockUser(username = "test7", password = "1234")
+    public void add_score_api() throws Exception {
+        //given
+        String url = "http://localhost:" + port;
+
+        //when
+        select_user_type(url, "UNGRADUATED");
+
+        AddScoreRequest request = new AddScoreRequest(100, 100, 100, 100, 100, "XAAAA", "XAAAA", "XAAAA", "XAAAA",
+                "XAAAA", "XAAAA", "XAAAA");
+
+        mvc.perform(patch(url + "applications/me/score")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(convertToJson(request)))
+                .andExpect(status().isNoContent());
+
+        UnGraduatedApplication application = unGraduatedApplicationRepository.findByEmail("test7")
+                .orElseThrow(ApplicationNotFoundException::new);
+        System.out.println(application.getEnglish());
     }
 
     private String convertToJson(Object object) throws JsonProcessingException {
