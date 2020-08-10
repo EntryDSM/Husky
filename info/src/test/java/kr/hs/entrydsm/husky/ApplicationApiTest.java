@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import kr.hs.entrydsm.husky.domain.application.dto.AddScoreRequest;
+import kr.hs.entrydsm.husky.domain.application.dto.SetDocsRequest;
+import kr.hs.entrydsm.husky.domain.application.dto.SetGedScoreRequest;
+import kr.hs.entrydsm.husky.domain.application.dto.SetScoreRequest;
 import kr.hs.entrydsm.husky.domain.user.dto.SelectTypeRequest;
 import kr.hs.entrydsm.husky.entities.applications.repositories.GEDApplicationRepository;
 import kr.hs.entrydsm.husky.entities.applications.repositories.UnGraduatedApplicationRepository;
@@ -88,7 +90,7 @@ class ApplicationApiTest {
 
     @Test
     @WithMockUser(username = "test7", password = "1234")
-    public void add_and_get_intro_api() throws Exception {
+    public void setAndGetIntroApi() throws Exception {
         //given
         String url = "http://localhost:" + port;
 
@@ -97,12 +99,9 @@ class ApplicationApiTest {
                 .andExpect(status().isBadRequest());
 
         //then
-        HashMap<String, String> request = new HashMap<>();
-        request.put("introduce", "test");
-
         mvc.perform(patch(url + "/applications/me/intro")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(convertToJson(request)))
+                .content(convertToJson(new SetDocsRequest("test"))))
                 .andExpect(status().isNoContent());
 
         mvc.perform(get(url + "/applications/me/intro"))
@@ -111,7 +110,7 @@ class ApplicationApiTest {
 
     @Test
     @WithMockUser(username = "test6", password = "1234")
-    public void add_and_get_plan_api() throws Exception {
+    public void setAndGetPlanApi() throws Exception {
         //given
         String url = "http://localhost:" + port;
 
@@ -120,12 +119,9 @@ class ApplicationApiTest {
                 .andExpect(status().isBadRequest());
 
         //then
-        HashMap<String, String> request = new HashMap<>();
-        request.put("plan", "test");
-
         mvc.perform(patch(url + "/applications/me/plan")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(convertToJson(request)))
+                .content(convertToJson(new SetDocsRequest("test"))))
                 .andExpect(status().isNoContent());
 
         mvc.perform(get(url + "/applications/me/plan"))
@@ -134,19 +130,16 @@ class ApplicationApiTest {
 
     @Test
     @WithMockUser(username = "test6", password = "1234")
-    public void add_ged_score_api() throws Exception {
+    public void setGedScoreApi() throws Exception {
         //given
         String url = "http://localhost:" + port;
 
         //when
         select_user_type(url, "GED");
 
-        HashMap<String, Integer> request = new HashMap<>();
-        request.put("score", 3100);
-
         mvc.perform(patch(url + "/applications/me/score/ged")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(convertToJson(request)))
+                .content(convertToJson(new SetGedScoreRequest(3100))))
                 .andExpect(status().isNoContent());
 
         //then
@@ -156,15 +149,27 @@ class ApplicationApiTest {
 
     @Test
     @WithMockUser(username = "test7", password = "1234")
-    public void add_score_api() throws Exception {
+    public void setScoreApi() throws Exception {
         //given
         String url = "http://localhost:" + port;
 
         //when
         select_user_type(url, "UNGRADUATED");
 
-        AddScoreRequest request = new AddScoreRequest(100, 100, 100, 100, 100, "XAAAA", "XAAAA", "XAAAA", "XAAAA",
-                "XAAAA", "XAAAA", "XAAAA");
+        SetScoreRequest request = SetScoreRequest.builder()
+                .volunteerTime(100)
+                .fullCutCount(100)
+                .periodCutCount(100)
+                .lateCount(100)
+                .earlyLeaveCount(100)
+                .korean("XAAAA")
+                .social("XAAAA")
+                .history("XAAAA")
+                .english("XAAAA")
+                .math("XAAAA")
+                .science("XAAAA")
+                .techAndHome("XAAAA")
+                .build();
 
         mvc.perform(patch(url + "applications/me/score")
                 .contentType(MediaType.APPLICATION_JSON)

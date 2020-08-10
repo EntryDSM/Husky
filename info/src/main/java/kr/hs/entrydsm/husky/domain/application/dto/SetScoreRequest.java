@@ -12,7 +12,7 @@ import javax.validation.constraints.Pattern;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddScoreRequest {
+public class SetScoreRequest {
 
     @NotNull
     private int volunteerTime;
