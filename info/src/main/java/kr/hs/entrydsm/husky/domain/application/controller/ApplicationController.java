@@ -2,8 +2,9 @@ package kr.hs.entrydsm.husky.domain.application.controller;
 
 import kr.hs.entrydsm.husky.domain.application.dto.IntroResponse;
 import kr.hs.entrydsm.husky.domain.application.dto.PlanResponse;
+import kr.hs.entrydsm.husky.domain.application.dto.ScoreResponse;
 import kr.hs.entrydsm.husky.domain.application.service.ApplicationService;
-import kr.hs.entrydsm.husky.domain.user.dto.AddScoreRequest;
+import kr.hs.entrydsm.husky.domain.application.dto.AddScoreRequest;
 import kr.hs.entrydsm.husky.error.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -43,6 +44,11 @@ public class ApplicationController {
     @GetMapping("/plan")
     public PlanResponse getPlan() {
         return applicationService.getPlan();
+    }
+
+    @GetMapping("/score")
+    public ScoreResponse getScore() {
+        return applicationService.getScore();
     }
 
     @PatchMapping("/score")
