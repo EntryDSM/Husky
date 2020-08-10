@@ -1,4 +1,4 @@
-package kr.hs.entrydsm.husky.domain.user.dto;
+package kr.hs.entrydsm.husky.domain.application.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
