@@ -99,7 +99,8 @@ public class GradeCalcServiceImpl implements GradeCalcService {
         }
 
         if (user.getApplyType() != ApplyType.COMMON) {
-            conversionScore = conversionScore.multiply(BigDecimal.valueOf(0.6));
+            conversionScore = conversionScore.multiply(BigDecimal.valueOf(0.6))
+                    .setScale(3, HALF_UP);
         }
 
         return conversionScore;
