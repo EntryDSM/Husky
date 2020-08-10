@@ -1,0 +1,23 @@
+spring:
+  jpa:
+    generate-ddl: true
+  datasource:
+    url: ${MYSQL_URL}
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+
+
+aws:
+  credential:
+    access_key_id: ${aws.credential.access_key_id}
+    secret_key: ${aws.credential.secret_key}
+    region: ${aws.credential.region}
+
+auth:
+  jwt:
+    secret: ${auth.jwt.secret}
+    exp:
+      access: ${auth.jwt.exp.access}
+      refresh: ${auth.jwt.exp.refresh}
+    header: ${auth.jwt.header}
+    prefix: ${auth.jwt.prefix}
