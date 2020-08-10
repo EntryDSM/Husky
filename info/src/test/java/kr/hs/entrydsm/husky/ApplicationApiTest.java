@@ -5,12 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import kr.hs.entrydsm.husky.domain.application.exception.ApplicationNotFoundException;
-import kr.hs.entrydsm.husky.domain.user.dto.AddScoreRequest;
+import kr.hs.entrydsm.husky.domain.application.dto.AddScoreRequest;
 import kr.hs.entrydsm.husky.domain.user.dto.SelectTypeRequest;
-import kr.hs.entrydsm.husky.domain.user.exception.UserNotFoundException;
-import kr.hs.entrydsm.husky.entities.applications.GEDApplication;
-import kr.hs.entrydsm.husky.entities.applications.UnGraduatedApplication;
 import kr.hs.entrydsm.husky.entities.applications.repositories.GEDApplicationRepository;
 import kr.hs.entrydsm.husky.entities.applications.repositories.UnGraduatedApplicationRepository;
 import kr.hs.entrydsm.husky.entities.users.User;
@@ -153,9 +149,9 @@ class ApplicationApiTest {
                 .content(convertToJson(request)))
                 .andExpect(status().isNoContent());
 
-        GEDApplication application = gedApplicationRepository.findByEmail("test6")
-                .orElseThrow(ApplicationNotFoundException::new);
-        System.out.println(application.getGedAverageScore());
+        //then
+        mvc.perform(get(url + "/applications/me/score"))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -175,9 +171,9 @@ class ApplicationApiTest {
                 .content(convertToJson(request)))
                 .andExpect(status().isNoContent());
 
-        UnGraduatedApplication application = unGraduatedApplicationRepository.findByEmail("test7")
-                .orElseThrow(ApplicationNotFoundException::new);
-        System.out.println(application.getEnglish());
+        //then
+        mvc.perform(get(url + "/applications/me/score"))
+                .andExpect(status().isOk());
     }
 
     private String convertToJson(Object object) throws JsonProcessingException {
