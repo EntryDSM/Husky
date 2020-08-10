@@ -14,11 +14,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class Application {
+public class Application {
 
     @Id
     @Column(name = "user_email")
-    private String email;
+    private Integer receiptCode;
 
     @Column
     private LocalDateTime createdAt;
@@ -32,7 +32,7 @@ public abstract class Application {
 
     @Builder(builderMethodName = "applicationBuilder")
     public Application(User user) {
-        this.email = user.getEmail();
+        this.receiptCode = user.getReceiptCode();
         this.createdAt = LocalDateTime.now();
         this.modifiedAt = LocalDateTime.now();
         this.user = user;

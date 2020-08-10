@@ -14,7 +14,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class GeneralApplication extends Application {
+public class GeneralApplication extends Application {
 
     @Column(length = 5)
     private String studentNumber;
