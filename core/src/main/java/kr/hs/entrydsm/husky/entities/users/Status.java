@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 public class Status {
 
     @Id
-    @Column(name = "user_email")
-    private String email;
+    @Column(name = "user_receipt_code")
+    private Integer receiptCode;
 
     @Column
     private boolean isPaid;                         // 전형료 납부 여부
