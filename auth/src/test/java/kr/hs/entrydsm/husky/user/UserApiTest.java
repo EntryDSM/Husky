@@ -1,6 +1,5 @@
 package kr.hs.entrydsm.husky.user;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -13,19 +12,15 @@ import kr.hs.entrydsm.husky.entities.users.repositories.UserRepository;
 import kr.hs.entrydsm.husky.entities.verification.EmailVerification;
 import kr.hs.entrydsm.husky.entities.verification.EmailVerificationRepository;
 import kr.hs.entrydsm.husky.entities.verification.EmailVerificationStatus;
-import org.junit.After;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.event.annotation.AfterTestClass;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -34,7 +29,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ContextConfiguration(classes = {AuthApplication.class})
@@ -105,7 +99,7 @@ public class UserApiTest {
         assert passwordEncoder.matches("P@ssw0rd123", user.getPassword());
     }
 
-    public void requestMvc(MockHttpServletRequestBuilder method, Object obj) throws Exception {
+    private void requestMvc(MockHttpServletRequestBuilder method, Object obj) throws Exception {
         String baseUrl = "http://localhost:" + port;
 
         mvc.perform(method
