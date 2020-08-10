@@ -1,10 +1,7 @@
 package kr.hs.entrydsm.husky.domain.application.controller;
 
-import kr.hs.entrydsm.husky.domain.application.dto.IntroResponse;
-import kr.hs.entrydsm.husky.domain.application.dto.PlanResponse;
-import kr.hs.entrydsm.husky.domain.application.dto.ScoreResponse;
+import kr.hs.entrydsm.husky.domain.application.dto.*;
 import kr.hs.entrydsm.husky.domain.application.service.ApplicationService;
-import kr.hs.entrydsm.husky.domain.application.dto.AddScoreRequest;
 import kr.hs.entrydsm.husky.error.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,10 +19,8 @@ public class ApplicationController {
 
     @PatchMapping("/intro")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void addIntro(@RequestBody HashMap<String, String> request) {
-        if (request.get("introduce") == null) throw new BadRequestException();
-
-        applicationService.addIntro(request.get("introduce"));
+    public void setIntro(@RequestBody @Valid SetDocsRequest request) {
+        applicationService.setIntro(request);
     }
 
     @GetMapping("/intro")
@@ -35,10 +30,8 @@ public class ApplicationController {
 
     @PatchMapping("/plan")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void addPlan(@RequestBody HashMap<String, String> request) {
-        if (request.get("plan") == null) throw new BadRequestException();
-
-        applicationService.addPlan(request.get("plan"));
+    public void setPlan(@RequestBody @Valid SetDocsRequest request) {
+        applicationService.setPlan(request);
     }
 
     @GetMapping("/plan")
@@ -53,17 +46,14 @@ public class ApplicationController {
 
     @PatchMapping("/score")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void addScore(@RequestBody @Valid AddScoreRequest request) {
-        applicationService.addScore(request);
+    public void setScore(@RequestBody @Valid SetScoreRequest request) {
+        applicationService.setScore(request);
     }
 
     @PatchMapping("/score/ged")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void addGedScore(@RequestBody HashMap<String, Integer> request) {
-        if (request.get("score") == null) throw new BadRequestException();
-        int averageScore = request.get("score");
-
-        applicationService.addGedScore(averageScore);
+    public void setGedScore(@RequestBody @Valid SetGedScoreRequest request) {
+        applicationService.setGedScore(request);
     }
 
 }

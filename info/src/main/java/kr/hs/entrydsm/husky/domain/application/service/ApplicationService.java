@@ -1,11 +1,8 @@
 package kr.hs.entrydsm.husky.domain.application.service;
 
-import kr.hs.entrydsm.husky.domain.application.dto.IntroResponse;
-import kr.hs.entrydsm.husky.domain.application.dto.PlanResponse;
-import kr.hs.entrydsm.husky.domain.application.dto.ScoreResponse;
+import kr.hs.entrydsm.husky.domain.application.dto.*;
 import kr.hs.entrydsm.husky.domain.application.exception.ApplicationNotFoundException;
 import kr.hs.entrydsm.husky.domain.application.exception.ApplicationTypeUnmatchedException;
-import kr.hs.entrydsm.husky.domain.application.dto.AddScoreRequest;
 import kr.hs.entrydsm.husky.domain.user.exception.UserNotFoundException;
 import kr.hs.entrydsm.husky.entities.applications.GEDApplication;
 import kr.hs.entrydsm.husky.entities.applications.GeneralApplication;
@@ -30,12 +27,12 @@ public class ApplicationService {
     private final GraduatedApplicationRepository graduatedApplicationRepository;
     private final UnGraduatedApplicationRepository unGraduatedApplicationRepository;
 
-    public void addIntro(String intro) {
+    public void setIntro(SetDocsRequest request) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
 
-        user.setSelfIntroduction(intro);
+        user.setSelfIntroduction(request.getContent());
         userRepository.save(user);
     }
 
@@ -47,12 +44,12 @@ public class ApplicationService {
         return new IntroResponse(user.getSelfIntroduction());
     }
 
-    public void addPlan(String plan) {
+    public void setPlan(SetDocsRequest request) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
 
-        user.setStudyPlan(plan);
+        user.setStudyPlan(request.getContent());
         userRepository.save(user);
     }
 
@@ -64,27 +61,29 @@ public class ApplicationService {
         return new PlanResponse(user.getStudyPlan());
     }
 
-    public void addGedScore(int gedAverageScore) {
+    public void setGedScore(SetGedScoreRequest request) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
 
-        if (user.getGradeType() != GradeType.GED) throw new ApplicationTypeUnmatchedException();
+        if (user.getGradeType() != GradeType.GED)
+            throw new ApplicationTypeUnmatchedException();
 
         GEDApplication application = gedApplicationRepository.findByEmail(email)
                 .orElseThrow(ApplicationNotFoundException::new);
 
-        application.setGedAverageScore(gedAverageScore);
+        application.setGedAverageScore(request.getGedAverageScore());
         gedApplicationRepository.save(application);
     }
 
-    public void addScore(AddScoreRequest request) {
+    public void setScore(SetScoreRequest request) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
 
         if (user.getGradeType() != GradeType.UNGRADUATED && user.getGradeType() != GradeType.GRADUATED)
             throw new ApplicationTypeUnmatchedException();
+
         switch (user.getGradeType()) {
             case GRADUATED: {
                 GraduatedApplication graduatedApplication = graduatedApplicationRepository.findByEmail(email)
@@ -96,6 +95,7 @@ public class ApplicationService {
                         request.getScience(), request.getTechAndHome(), request.getEnglish());
                 graduatedApplicationRepository.save(graduatedApplication);
             }
+
             case UNGRADUATED: {
                 UnGraduatedApplication unGraduatedApplication = unGraduatedApplicationRepository.findByEmail(email)
                         .orElseThrow(ApplicationNotFoundException::new);
