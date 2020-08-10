@@ -47,8 +47,6 @@ public class AuthApiTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private static String refreshToken;
-
     @BeforeEach
     public void setup() {
         mvc = MockMvcBuilders
