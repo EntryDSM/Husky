@@ -25,6 +25,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -59,36 +60,14 @@ public class GradeCalcTest {
     }
 
     @Test
-    public void calcUnGraduatedApplication() {
-        User user = User.builder()
-                .receiptCode(null)
-                .email("email")
-                .password("password")
+    public void commonUnGraduatedApplication() {
+        User user = this.getDefaultUser()
                 .applyType(ApplyType.COMMON)
-                .additionalType(AdditionalType.NOT_APPLICABLE)
                 .gradeType(GradeType.UNGRADUATED)
-                .isDaejeon(true)
-                .name("name")
-                .sex(Sex.MALE)
-                .createdAt(LocalDateTime.now())
                 .build();
         user = userRepository.save(user);
 
-        UnGraduatedApplication unGraduatedApplication = UnGraduatedApplication.unGraduatedApplicationBuilder()
-                .user(user)
-                .volunteerTime(39)
-                .fullCutCount(0)
-                .periodCutCount(0)
-                .lateCount(1)
-                .earlyLeaveCount(0)
-                .korean("ABBAAX")
-                .social("AAXAAX")
-                .history("AAAAAX")
-                .math("XABCAX")
-                .science("AABBAX")
-                .techAndHome("BABAAX")
-                .english("AAAAAX")
-                .build();
+        UnGraduatedApplication unGraduatedApplication = this.getDefaultUnGraduatedApplication(user).build();
         unGraduatedApplicationRepository.save(unGraduatedApplication);
 
         gradeCalcService.calcStudentGrade(user.getReceiptCode());
@@ -102,28 +81,14 @@ public class GradeCalcTest {
     }
 
     @Test
-    public void calcGraduatedApplication() {
-        User user = User.builder()
-                .receiptCode(null)
-                .email("email")
-                .password("password")
+    public void commonGraduatedApplication() {
+        User user = this.getDefaultUser()
                 .applyType(ApplyType.COMMON)
-                .additionalType(AdditionalType.NOT_APPLICABLE)
                 .gradeType(GradeType.GRADUATED)
-                .isDaejeon(true)
-                .name("name")
-                .sex(Sex.MALE)
-                .createdAt(LocalDateTime.now())
                 .build();
         user = userRepository.save(user);
 
-        GraduatedApplication graduatedApplication = GraduatedApplication.graduatedApplicationBuilder()
-                .user(user)
-                .volunteerTime(39)
-                .fullCutCount(0)
-                .periodCutCount(0)
-                .lateCount(1)
-                .earlyLeaveCount(0)
+        GraduatedApplication graduatedApplication = this.getDefaultGraduatedApplication(user)
                 .korean("ABBAAA")
                 .social("AAXAAB")
                 .history("AAAAAC")
@@ -145,23 +110,14 @@ public class GradeCalcTest {
     }
 
     @Test
-    public void calcGEDApplication() {
-        User user = User.builder()
-                .receiptCode(null)
-                .email("email")
-                .password("password")
+    public void commonGEDApplication() {
+        User user = this.getDefaultUser()
                 .applyType(ApplyType.COMMON)
-                .additionalType(AdditionalType.NOT_APPLICABLE)
                 .gradeType(GradeType.GED)
-                .isDaejeon(true)
-                .name("name")
-                .sex(Sex.MALE)
-                .createdAt(LocalDateTime.now())
                 .build();
         user = userRepository.save(user);
 
-        GEDApplication gedApplication = GEDApplication.gedApplicationBuilder()
-                .user(user)
+        GEDApplication gedApplication = this.getDefaultGEDApplication(user)
                 .gedAverageScore(89)
                 .build();
         gedApplicationRepository.save(gedApplication);
@@ -174,6 +130,202 @@ public class GradeCalcTest {
         assertEquals(BigDecimal.valueOf(12.8), calculatedScore.getVolunteerScore().stripTrailingZeros());
         assertEquals(BigDecimal.valueOf(117), calculatedScore.getConversionScore().stripTrailingZeros());
         assertEquals(BigDecimal.valueOf(144.8), calculatedScore.getFinalScore().stripTrailingZeros());
+    }
+
+    @Test
+    public void meisterUnGraduatedApplication() {
+        User user = this.getDefaultUser()
+                .applyType(ApplyType.MEISTER)
+                .gradeType(GradeType.UNGRADUATED)
+                .build();
+        user = userRepository.save(user);
+
+        UnGraduatedApplication unGraduatedApplication = this.getDefaultUnGraduatedApplication(user).build();
+        unGraduatedApplicationRepository.save(unGraduatedApplication);
+
+        gradeCalcService.calcStudentGrade(user.getReceiptCode());
+        CalculatedScore calculatedScore = calcScoreRepository.findById(user.getReceiptCode()).orElseThrow();
+
+        assertEquals(15, calculatedScore.getAttendanceScore());
+        assertEquals(BigDecimal.valueOf(13), calculatedScore.getVolunteerScore().stripTrailingZeros());
+        assertEquals(BigDecimal.valueOf(86.207), calculatedScore.getConversionScore().stripTrailingZeros());
+        assertEquals(BigDecimal.valueOf(114.207), calculatedScore.getFinalScore().stripTrailingZeros());
+    }
+
+    @Test
+    public void meisterGraduatedApplication() {
+        User user = this.getDefaultUser()
+                .applyType(ApplyType.MEISTER)
+                .gradeType(GradeType.GRADUATED)
+                .build();
+        user = userRepository.save(user);
+
+        GraduatedApplication unGraduatedApplication = this.getDefaultGraduatedApplication(user).build();
+        graduatedApplicationRepository.save(unGraduatedApplication);
+
+        gradeCalcService.calcStudentGrade(user.getReceiptCode());
+        CalculatedScore calculatedScore = calcScoreRepository.findById(user.getReceiptCode()).orElseThrow();
+
+        assertEquals(15, calculatedScore.getAttendanceScore());
+        assertEquals(BigDecimal.valueOf(13), calculatedScore.getVolunteerScore().stripTrailingZeros());
+        assertEquals(BigDecimal.valueOf(82.607), calculatedScore.getConversionScore().stripTrailingZeros());
+        assertEquals(BigDecimal.valueOf(110.607), calculatedScore.getFinalScore().stripTrailingZeros());
+    }
+
+    @Test
+    public void meisterGEDApplication() {
+        User user = this.getDefaultUser()
+                .applyType(ApplyType.MEISTER)
+                .gradeType(GradeType.GED)
+                .build();
+        user = userRepository.save(user);
+
+        GEDApplication gedApplication = this.getDefaultGEDApplication(user)
+                .gedAverageScore(89)
+                .build();
+        gedApplicationRepository.save(gedApplication);
+
+        gradeCalcService.calcStudentGrade(user.getReceiptCode());
+        CalculatedScore calculatedScore = calcScoreRepository.findById(user.getReceiptCode())
+                .orElseThrow();
+
+        assertEquals(15, calculatedScore.getAttendanceScore());
+        assertEquals(BigDecimal.valueOf(12.8), calculatedScore.getVolunteerScore().stripTrailingZeros());
+        assertEquals(BigDecimal.valueOf(70.2), calculatedScore.getConversionScore().stripTrailingZeros());
+        assertEquals(BigDecimal.valueOf(98), calculatedScore.getFinalScore().stripTrailingZeros());
+    }
+
+    @Test
+    public void socialUnGraduatedApplication() {
+        Arrays.stream(ApplyType.values())
+                .filter(type -> type != ApplyType.COMMON && type != ApplyType.MEISTER)
+                .forEach(this::calcSocialUnGraduatedApplication);
+    }
+
+    private void calcSocialUnGraduatedApplication(ApplyType applyType) {
+        User user = this.getDefaultUser()
+                .applyType(applyType)
+                .gradeType(GradeType.UNGRADUATED)
+                .build();
+        user = userRepository.save(user);
+
+        UnGraduatedApplication unGraduatedApplication = this.getDefaultUnGraduatedApplication(user).build();
+        unGraduatedApplicationRepository.save(unGraduatedApplication);
+
+        gradeCalcService.calcStudentGrade(user.getReceiptCode());
+        CalculatedScore calculatedScore = calcScoreRepository.findById(user.getReceiptCode())
+                .orElseThrow();
+
+        assertEquals(15, calculatedScore.getAttendanceScore());
+        assertEquals(BigDecimal.valueOf(13), calculatedScore.getVolunteerScore().stripTrailingZeros());
+        assertEquals(BigDecimal.valueOf(86.207), calculatedScore.getConversionScore().stripTrailingZeros());
+        assertEquals(BigDecimal.valueOf(114.207), calculatedScore.getFinalScore().stripTrailingZeros());
+    }
+
+    @Test
+    public void socialGraduatedApplication() {
+        Arrays.stream(ApplyType.values())
+                .filter(type -> type != ApplyType.COMMON && type != ApplyType.MEISTER)
+                .forEach(this::calcSocialGraduatedApplication);
+    }
+
+    private void calcSocialGraduatedApplication(ApplyType applyType) {
+        User user = this.getDefaultUser()
+                .applyType(applyType)
+                .gradeType(GradeType.GRADUATED)
+                .build();
+        user = userRepository.save(user);
+
+        GraduatedApplication unGraduatedApplication = this.getDefaultGraduatedApplication(user).build();
+        graduatedApplicationRepository.save(unGraduatedApplication);
+
+        gradeCalcService.calcStudentGrade(user.getReceiptCode());
+        CalculatedScore calculatedScore = calcScoreRepository.findById(user.getReceiptCode()).orElseThrow();
+
+        assertEquals(15, calculatedScore.getAttendanceScore());
+        assertEquals(BigDecimal.valueOf(13), calculatedScore.getVolunteerScore().stripTrailingZeros());
+        assertEquals(BigDecimal.valueOf(82.607), calculatedScore.getConversionScore().stripTrailingZeros());
+        assertEquals(BigDecimal.valueOf(110.607), calculatedScore.getFinalScore().stripTrailingZeros());
+    }
+
+    @Test
+    public void socialGEDApplication() {
+        Arrays.stream(ApplyType.values())
+                .filter(type -> type != ApplyType.COMMON && type != ApplyType.MEISTER)
+                .forEach(this::calcSocialGEDApplication);
+    }
+
+    private void calcSocialGEDApplication(ApplyType applyType) {
+        User user = this.getDefaultUser()
+                .applyType(applyType)
+                .gradeType(GradeType.GED)
+                .build();
+        user = userRepository.save(user);
+
+        GEDApplication gedApplication = this.getDefaultGEDApplication(user)
+                .gedAverageScore(89)
+                .build();
+        gedApplicationRepository.save(gedApplication);
+
+        gradeCalcService.calcStudentGrade(user.getReceiptCode());
+        CalculatedScore calculatedScore = calcScoreRepository.findById(user.getReceiptCode())
+                .orElseThrow();
+
+        assertEquals(15, calculatedScore.getAttendanceScore());
+        assertEquals(BigDecimal.valueOf(12.8), calculatedScore.getVolunteerScore().stripTrailingZeros());
+        assertEquals(BigDecimal.valueOf(70.2), calculatedScore.getConversionScore().stripTrailingZeros());
+        assertEquals(BigDecimal.valueOf(98), calculatedScore.getFinalScore().stripTrailingZeros());
+    }
+
+    private User.UserBuilder getDefaultUser() {
+        return User.builder()
+                .receiptCode(null)
+                .email("email")
+                .password("password")
+                .additionalType(AdditionalType.NOT_APPLICABLE)
+                .isDaejeon(true)
+                .name("name")
+                .sex(Sex.MALE)
+                .createdAt(LocalDateTime.now());
+    }
+
+    private UnGraduatedApplication.UnGraduatedApplicationBuilder getDefaultUnGraduatedApplication(User user) {
+        return UnGraduatedApplication.unGraduatedApplicationBuilder()
+                .user(user)
+                .volunteerTime(39)
+                .fullCutCount(0)
+                .periodCutCount(0)
+                .lateCount(1)
+                .earlyLeaveCount(0)
+                .korean("ABBAAX")
+                .social("AAXAAX")
+                .history("AAAAAX")
+                .math("XABCAX")
+                .science("AABBAX")
+                .techAndHome("BABAAX")
+                .english("AAAAAX");
+    }
+
+    private GraduatedApplication.GraduatedApplicationBuilder getDefaultGraduatedApplication(User user) {
+        return GraduatedApplication.graduatedApplicationBuilder()
+                .user(user)
+                .volunteerTime(39)
+                .fullCutCount(0)
+                .periodCutCount(0)
+                .lateCount(1)
+                .earlyLeaveCount(0)
+                .korean("ABBAAA")
+                .social("AAXAAB")
+                .history("AAAAAC")
+                .math("XABCAB")
+                .science("AABBAA")
+                .techAndHome("BABAAB")
+                .english("AAAAAC");
+    }
+
+    private GEDApplication.GEDApplicationBuilder getDefaultGEDApplication(User user) {
+        return GEDApplication.gedApplicationBuilder()
+                .user(user);
     }
 
 }
