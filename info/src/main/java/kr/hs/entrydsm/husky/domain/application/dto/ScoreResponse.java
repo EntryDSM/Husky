@@ -1,5 +1,6 @@
 package kr.hs.entrydsm.husky.domain.application.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import kr.hs.entrydsm.husky.entities.applications.GEDApplication;
 import kr.hs.entrydsm.husky.entities.applications.GeneralApplication;
 import kr.hs.entrydsm.husky.entities.users.enums.GradeType;
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_DEFAULT)
 public class ScoreResponse {
 
     private GradeType gradeType;
