@@ -2,11 +2,13 @@ package kr.hs.entrydsm.husky.domain.application.service;
 
 import kr.hs.entrydsm.husky.domain.application.dto.IntroResponse;
 import kr.hs.entrydsm.husky.domain.application.dto.PlanResponse;
+import kr.hs.entrydsm.husky.domain.application.dto.ScoreResponse;
 import kr.hs.entrydsm.husky.domain.application.exception.ApplicationNotFoundException;
 import kr.hs.entrydsm.husky.domain.application.exception.ApplicationTypeUnmatchedException;
-import kr.hs.entrydsm.husky.domain.user.dto.AddScoreRequest;
+import kr.hs.entrydsm.husky.domain.application.dto.AddScoreRequest;
 import kr.hs.entrydsm.husky.domain.user.exception.UserNotFoundException;
 import kr.hs.entrydsm.husky.entities.applications.GEDApplication;
+import kr.hs.entrydsm.husky.entities.applications.GeneralApplication;
 import kr.hs.entrydsm.husky.entities.applications.GraduatedApplication;
 import kr.hs.entrydsm.husky.entities.applications.UnGraduatedApplication;
 import kr.hs.entrydsm.husky.entities.applications.repositories.GEDApplicationRepository;
@@ -105,6 +107,36 @@ public class ApplicationService {
                 unGraduatedApplicationRepository.save(unGraduatedApplication);
             }
         }
+    }
+
+    public ScoreResponse getScore() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+
+        GeneralApplication generalApplication;
+
+        GradeType gradeType = user.getGradeType();
+        switch (gradeType) {
+            case GED: {
+                GEDApplication gedApplication = gedApplicationRepository.findByEmail(email)
+                        .orElseThrow(ApplicationNotFoundException::new);
+                return ScoreResponse.gedResponse(gedApplication, gradeType);
+            }
+            case UNGRADUATED: {
+                generalApplication = unGraduatedApplicationRepository.findByEmail(email)
+                        .orElseThrow(ApplicationNotFoundException::new);
+                break;
+            }
+            case GRADUATED: {
+                generalApplication = graduatedApplicationRepository.findByEmail(email)
+                        .orElseThrow(ApplicationNotFoundException::new);
+                break;
+            }
+            default:
+                throw new ApplicationNotFoundException();
+        }
+        return ScoreResponse.response(generalApplication, gradeType);
     }
 
 }
