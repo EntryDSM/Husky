@@ -161,4 +161,16 @@ public class User {
         this.studyPlan = plan;
     }
 
+    public boolean isGed() {
+        return gradeType == GradeType.GED;
+    }
+
+    public boolean isGraduated() {
+        return gradeType == GradeType.GRADUATED;
+    }
+
+    public boolean isUngraduated() {
+        return gradeType == GradeType.UNGRADUATED;
+    }
+
 }

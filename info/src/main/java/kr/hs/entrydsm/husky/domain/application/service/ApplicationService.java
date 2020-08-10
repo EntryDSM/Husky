@@ -66,7 +66,7 @@ public class ApplicationService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
 
-        if (user.getGradeType() != GradeType.GED)
+        if (!user.isGed())
             throw new ApplicationTypeUnmatchedException();
 
         GEDApplication application = gedApplicationRepository.findByEmail(email)
@@ -81,7 +81,7 @@ public class ApplicationService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
 
-        if (user.getGradeType() != GradeType.UNGRADUATED && user.getGradeType() != GradeType.GRADUATED)
+        if (!user.isGraduated() && !user.isUngraduated())
             throw new ApplicationTypeUnmatchedException();
 
         switch (user.getGradeType()) {
@@ -94,6 +94,7 @@ public class ApplicationService {
                         request.getKorean(), request.getSocial(), request.getHistory(), request.getMath(),
                         request.getScience(), request.getTechAndHome(), request.getEnglish());
                 graduatedApplicationRepository.save(graduatedApplication);
+                break;
             }
 
             case UNGRADUATED: {
@@ -105,6 +106,7 @@ public class ApplicationService {
                         request.getKorean(), request.getSocial(), request.getHistory(), request.getMath(),
                         request.getScience(), request.getTechAndHome(), request.getEnglish());
                 unGraduatedApplicationRepository.save(unGraduatedApplication);
+                break;
             }
         }
     }
@@ -117,22 +119,26 @@ public class ApplicationService {
         GeneralApplication generalApplication;
 
         GradeType gradeType = user.getGradeType();
+
         switch (gradeType) {
             case GED: {
                 GEDApplication gedApplication = gedApplicationRepository.findByEmail(email)
                         .orElseThrow(ApplicationNotFoundException::new);
                 return ScoreResponse.gedResponse(gedApplication, gradeType);
             }
+
             case UNGRADUATED: {
                 generalApplication = unGraduatedApplicationRepository.findByEmail(email)
                         .orElseThrow(ApplicationNotFoundException::new);
                 break;
             }
+
             case GRADUATED: {
                 generalApplication = graduatedApplicationRepository.findByEmail(email)
                         .orElseThrow(ApplicationNotFoundException::new);
                 break;
             }
+
             default:
                 throw new ApplicationNotFoundException();
         }
