@@ -83,7 +83,7 @@ public class ApplicationService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
 
-        if(user.getGradeType() != GradeType.UNGRADUATED && user.getGradeType() != GradeType.GRADUATED)
+        if (user.getGradeType() != GradeType.UNGRADUATED && user.getGradeType() != GradeType.GRADUATED)
             throw new ApplicationTypeUnmatchedException();
         switch (user.getGradeType()) {
             case GRADUATED: {

@@ -23,7 +23,7 @@ public class ApplicationController {
     @PatchMapping("/intro")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void addIntro(@RequestBody HashMap<String, String> request) {
-        if(request.get("introduce") == null) throw new BadRequestException();
+        if (request.get("introduce") == null) throw new BadRequestException();
 
         applicationService.addIntro(request.get("introduce"));
     }
@@ -36,7 +36,7 @@ public class ApplicationController {
     @PatchMapping("/plan")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void addPlan(@RequestBody HashMap<String, String> request) {
-        if(request.get("plan") == null) throw new BadRequestException();
+        if (request.get("plan") == null) throw new BadRequestException();
 
         applicationService.addPlan(request.get("plan"));
     }
@@ -60,7 +60,7 @@ public class ApplicationController {
     @PatchMapping("/score/ged")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void addGedScore(@RequestBody HashMap<String, Integer> request) {
-        if(request.get("score") == null) throw new BadRequestException();
+        if (request.get("score") == null) throw new BadRequestException();
         int averageScore = request.get("score");
 
         applicationService.addGedScore(averageScore);
