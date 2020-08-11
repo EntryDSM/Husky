@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
@@ -14,15 +15,15 @@ import javax.validation.constraints.Pattern;
 @AllArgsConstructor
 public class SetScoreRequest {
 
-    @NotNull
+    @NotNull @Min(0)
     private int volunteerTime;
-    @NotNull
+    @NotNull @Min(0)
     private int fullCutCount;
-    @NotNull
+    @NotNull @Min(0)
     private int periodCutCount;
-    @NotNull
+    @NotNull @Min(0)
     private int lateCount;
-    @NotNull
+    @NotNull @Min(0)
     private int earlyLeaveCount;
     @Pattern(regexp = "[AX][AX][AX][AX][AX]")
     private String korean;
