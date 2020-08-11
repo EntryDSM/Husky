@@ -4,6 +4,9 @@ spring:
     console:
       enabled: true
       path: /h2
+  redis:
+    port: ${REDIS_PORT:1234}
+    host: ${REDIS_HOST:localhost}
 
 spring.datasource:
     driver-class-name: org.h2.Driver
