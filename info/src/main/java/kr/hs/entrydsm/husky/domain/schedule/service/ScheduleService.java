@@ -16,7 +16,7 @@ public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
 
-    @Value("${admin.secret.key}")
+    @Value("${auth.maintenance.key}")
     private String adminSecretKey;
 
     public String createSchedule(CreateScheduleRequest request, String secret) {
