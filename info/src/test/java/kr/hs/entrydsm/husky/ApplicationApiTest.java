@@ -90,6 +90,19 @@ class ApplicationApiTest {
 
     @Test
     @WithMockUser(username = "test7", password = "1234")
+    public void setIntroAndPlanApi() throws Exception {
+        //given
+        String url = "http://localhost:" + port;
+
+        //when
+        setAndGetIntroApi();
+        setAndGetPlanApi();
+
+        //then
+        mvc.perform(get(url + "/process/me"))
+                .andExpect(status().isOk());
+    }
+
     public void setAndGetIntroApi() throws Exception {
         //given
         String url = "http://localhost:" + port;
@@ -108,8 +121,6 @@ class ApplicationApiTest {
                 .andExpect(status().isOk());
     }
 
-    @Test
-    @WithMockUser(username = "test6", password = "1234")
     public void setAndGetPlanApi() throws Exception {
         //given
         String url = "http://localhost:" + port;
@@ -145,6 +156,9 @@ class ApplicationApiTest {
         //then
         mvc.perform(get(url + "/applications/me/score"))
                 .andExpect(status().isOk());
+
+        mvc.perform(get(url + "/process/me"))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -178,6 +192,9 @@ class ApplicationApiTest {
 
         //then
         mvc.perform(get(url + "/applications/me/score"))
+                .andExpect(status().isOk());
+
+        mvc.perform(get(url + "/process/me"))
                 .andExpect(status().isOk());
     }
 
