@@ -135,11 +135,11 @@ class ApplicationApiTest {
         String url = "http://localhost:" + port;
 
         //when
-        select_user_type(url, "GED");
+        selectUserType(url, "GED");
 
         mvc.perform(patch(url + "/applications/me/score/ged")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(convertToJson(new SetGedScoreRequest(3100))))
+                .content(convertToJson(new SetGedScoreRequest(100))))
                 .andExpect(status().isNoContent());
 
         //then
@@ -154,7 +154,7 @@ class ApplicationApiTest {
         String url = "http://localhost:" + port;
 
         //when
-        select_user_type(url, "UNGRADUATED");
+        selectUserType(url, "UNGRADUATED");
 
         SetScoreRequest request = SetScoreRequest.builder()
                 .volunteerTime(100)
@@ -189,7 +189,7 @@ class ApplicationApiTest {
                 .writeValueAsString(object);
     }
 
-    private void select_user_type(String url, String gradeType) throws Exception {
+    private void selectUserType(String url, String gradeType) throws Exception {
         mvc.perform(patch(url + "/users/me/type")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper()
