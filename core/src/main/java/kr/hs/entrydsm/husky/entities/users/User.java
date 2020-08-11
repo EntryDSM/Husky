@@ -153,4 +153,24 @@ public class User {
         this.userPhoto = photo;
     }
 
+    public void setSelfIntroduction(String introduction) {
+        this.selfIntroduction = introduction;
+    }
+
+    public void setStudyPlan(String plan) {
+        this.studyPlan = plan;
+    }
+
+    public boolean isGed() {
+        return gradeType == GradeType.GED;
+    }
+
+    public boolean isGraduated() {
+        return gradeType == GradeType.GRADUATED;
+    }
+
+    public boolean isUngraduated() {
+        return gradeType == GradeType.UNGRADUATED;
+    }
+
 }

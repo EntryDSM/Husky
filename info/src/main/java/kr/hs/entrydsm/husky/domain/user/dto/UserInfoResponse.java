@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class UserInfoResponse {
 
     private GradeType gradeType;
