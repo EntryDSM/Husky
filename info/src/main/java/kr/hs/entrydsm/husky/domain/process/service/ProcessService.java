@@ -6,7 +6,6 @@ import kr.hs.entrydsm.husky.entities.applications.*;
 import kr.hs.entrydsm.husky.entities.applications.repositories.GEDApplicationRepository;
 import kr.hs.entrydsm.husky.entities.applications.repositories.GraduatedApplicationRepository;
 import kr.hs.entrydsm.husky.entities.users.User;
-import kr.hs.entrydsm.husky.entities.users.enums.GradeType;
 import kr.hs.entrydsm.husky.entities.users.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,21 +34,18 @@ public class ProcessService {
 
     private boolean checkType(User user) {
         if (user.isGed()) {
-            GEDApplication gedApplication = gedApplicationRepository.findByEmail(user.getEmail())
-                    .orElseThrow();
-            if (gedApplication == null) return false;
-
-            if (gedApplication.getGedPassDate() == null) return false;
+            return gedApplicationRepository.findByEmail(user.getEmail())
+                    .map(application -> (application.getGedPassDate() != null) && user.isFilledType())
+                    .orElse(false);
         }
+
         if (user.isGraduated()) {
-            GraduatedApplication graduatedApplication = graduatedApplicationRepository.findByEmail(user.getEmail())
-                    .orElseThrow();
-            if (graduatedApplication == null) return false;
-
-            if (graduatedApplication.getGraduatedDate() == null) return false;
+            return graduatedApplicationRepository.findByEmail(user.getEmail())
+                    .map(application -> (application.getGraduatedDate() != null) && user.isFilledType())
+                    .orElse(false);
         }
 
-        return user.isSetType();
+        return user.isFilledType();
     }
 
     private boolean checkInfo(User user) {
@@ -57,28 +53,24 @@ public class ProcessService {
 
         if (user.isUngraduated() || user.isGraduated()) {
             GeneralApplication application = user.getGeneralApplication();
-            if (application == null) return false;
 
-            if (!application.isSetStudentInfo()) return false;
+            return application != null && application.isFilledStudentInfo() && user.isFilledInfo();
         }
 
-        return user.isSetInfo();
+        return user.isFilledInfo();
     }
 
     private boolean checkScore(User user) {
         if (!checkType(user)) return false;
 
-        if (user.getGradeType() == GradeType.GED) {
-            GEDApplication gedApplication = gedApplicationRepository.findByEmail(user.getEmail())
-                    .orElseThrow();
-            if (gedApplication == null) return false;
-
-            return gedApplication.getGedAverageScore() != null;
+        if (user.isGed()) {
+            return gedApplicationRepository.findByEmail(user.getEmail())
+                    .map(application -> application.getGedAverageScore() != null)
+                    .orElse(false);
         } else {
             GeneralApplication application = user.getGeneralApplication();
-            if (application == null) return false;
 
-            return application.isSetScore();
+            return application != null && application.isFilledScore();
         }
     }
 
