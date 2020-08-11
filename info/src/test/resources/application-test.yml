@@ -1,0 +1,7 @@
+spring:
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
+auth:
+  maintenance:
+    key: dGVzdA==
