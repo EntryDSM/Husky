@@ -166,12 +166,12 @@ public class User {
         return gradeType == GradeType.UNGRADUATED;
     }
 
-    public boolean isSetInfo() {
+    public boolean isFilledInfo() {
         return name != null && sex != null && birthDate != null && applicantTel != null && parentTel != null &&
                 parentName != null && address != null && detailAddress != null && postCode != null && userPhoto != null;
     }
 
-    public boolean isSetType() {
+    public boolean isFilledType() {
         return gradeType != null && applyType != null && additionalType != null && getApplication() != null;
     }
 
