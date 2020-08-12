@@ -139,6 +139,10 @@ class UserInfoApiTest {
         mvc.perform(get(url + "/users/me"))
                 .andDo(print())
                 .andExpect(status().isOk());
+
+        mvc.perform(get(url + "/process/me"))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -179,6 +183,10 @@ class UserInfoApiTest {
                 .andExpect(status().isBadRequest());
 
         mvc.perform(get(url + "/users/me"))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mvc.perform(get(url + "/process/me"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }

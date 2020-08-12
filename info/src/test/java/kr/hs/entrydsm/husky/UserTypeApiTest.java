@@ -102,17 +102,9 @@ class UserTypeApiTest {
                 .andExpect(status().isNoContent());
 
 //      then
-        GraduatedApplication gred =
-                ((List<GraduatedApplication>) graduatedApplicationRepository.findAll()).get(0);
-        System.out.println(gred.getGraduatedDate() + " : " + gred.getCreatedAt());
-//        GEDApplication ged = ((List<GEDApplication>) gedApplicationRepository.findAll()).get(0);
-//
-//        System.out.println(ged.getEmail() + " passed At " + ged.getGedPassDate() + " ged createdAt " +
-//                ged.getCreatedAt());
-
-//        UnGraduatedApplication ungred =
-//                ((List<UnGraduatedApplication>) unGraduatedApplicationRepository.findAll()).get(0);
-//        System.out.println(ungred.getCreatedAt());
+        mvc.perform(get(url + "/process/me"))
+                .andExpect(status().isOk())
+                .andDo(print());
     }
 
     @Test

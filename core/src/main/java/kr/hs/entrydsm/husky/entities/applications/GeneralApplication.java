@@ -86,4 +86,14 @@ public abstract class GeneralApplication extends Application {
         this.english = english;
     }
 
+    public boolean isFilledScore() {
+        return volunteerTime != null && fullCutCount != null && periodCutCount != null && lateCount != null &&
+                earlyLeaveCount != null && korean != null && social != null && history != null && math != null &&
+                science != null && techAndHome != null && english != null;
+    }
+
+    public boolean isFilledStudentInfo() {
+        return studentNumber != null && school != null && schoolTel != null;
+    }
+
 }
