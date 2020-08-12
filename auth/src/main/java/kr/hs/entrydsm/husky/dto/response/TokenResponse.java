@@ -1,4 +1,4 @@
-package kr.hs.entrydsm.husky.domains.response;
+package kr.hs.entrydsm.husky.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

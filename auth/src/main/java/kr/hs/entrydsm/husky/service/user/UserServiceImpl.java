@@ -1,8 +1,8 @@
 package kr.hs.entrydsm.husky.service.user;
 
-import kr.hs.entrydsm.husky.domains.request.AccountRequest;
-import kr.hs.entrydsm.husky.domains.request.VerifyCodeRequest;
-import kr.hs.entrydsm.husky.domains.request.ChangePasswordRequest;
+import kr.hs.entrydsm.husky.dto.request.AccountRequest;
+import kr.hs.entrydsm.husky.dto.request.VerifyCodeRequest;
+import kr.hs.entrydsm.husky.dto.request.ChangePasswordRequest;
 import kr.hs.entrydsm.husky.entities.verification.EmailVerification;
 import kr.hs.entrydsm.husky.entities.verification.EmailVerificationStatus;
 import kr.hs.entrydsm.husky.entities.verification.EmailVerificationRepository;

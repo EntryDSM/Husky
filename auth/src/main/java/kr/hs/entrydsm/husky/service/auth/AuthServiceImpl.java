@@ -1,7 +1,7 @@
 package kr.hs.entrydsm.husky.service.auth;
 
-import kr.hs.entrydsm.husky.domains.request.AccountRequest;
-import kr.hs.entrydsm.husky.domains.response.TokenResponse;
+import kr.hs.entrydsm.husky.dto.request.AccountRequest;
+import kr.hs.entrydsm.husky.dto.response.TokenResponse;
 import kr.hs.entrydsm.husky.entities.refresh_token.RefreshToken;
 import kr.hs.entrydsm.husky.entities.refresh_token.RefreshTokenRepository;
 import kr.hs.entrydsm.husky.entities.users.User;
