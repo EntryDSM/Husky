@@ -13,7 +13,7 @@ import javax.validation.constraints.Email;
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
-public class UserController {
+public class UserAuthController {
 
     private final UserServiceImpl userService;
 
