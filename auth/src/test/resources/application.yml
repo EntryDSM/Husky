@@ -1,11 +1,12 @@
-#H2 Setting
+# H2 Setting
 spring:
   h2:
     console:
       enabled: true
       path: /h2
+# Redis Setting
   redis:
-    port: ${REDIS_PORT:1234}
+    port: ${REDIS_PORT:6379}
     host: ${REDIS_HOST:localhost}
 
 spring.datasource:
@@ -14,14 +15,14 @@ spring.datasource:
     username: test
     password: 1234
 
-#AWS Setting
+# AWS Setting
 aws:
   credential:
     access_key_id: ${AWS_ACCESS_KEY:access_key}
     secret_key: ${AWS_SECRET_KEY:secret_key}
     region: ${AWS_REGION:region}
 
-#JWT Setting
+# JWT Setting
 auth:
   jwt:
     secret: ${JWT_SECRET_KEY:dGVzdA==}
