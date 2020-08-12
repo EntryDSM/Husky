@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = InfoApplication.class)
-@ActiveProfiles("test")
+@ActiveProfiles({"test", "local"})
 public class ScheduleRepositoryTest {
 
     @Autowired
