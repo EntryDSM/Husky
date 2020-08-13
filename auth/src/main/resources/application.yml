@@ -6,7 +6,8 @@ spring:
     username: ${MYSQL_USER}
     password: ${MYSQL_PASSWORD}
   redis:
-    port: ${REDIS_PORT:1234}
+    port: ${REDIS_PORT:6379}
+    host: ${REDIS_HOST:localhost}
 
 #AWS Setting
 aws:
