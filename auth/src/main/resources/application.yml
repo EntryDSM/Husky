@@ -14,7 +14,7 @@ aws:
   credential:
     access_key_id: ${AWS_ACCESS_KEY:access_key}
     secret_key: ${AWS_SECRET_KEY:secret_key}
-    region: ${AWS_REGION:region}
+    region: ${AWS_REGION:us-east-1}
 
 #JWT Setting
 auth:
