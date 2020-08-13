@@ -69,4 +69,31 @@ public abstract class GeneralApplication extends Application {
         this.schoolTel = schoolTel;
     }
 
+    public void setScore(Integer volunteerTime, Integer fullCutCount, Integer periodCutCount, Integer lateCount,
+                         Integer earlyLeaveCount, String korean, String social, String history, String math,
+                         String science, String techAndHome, String english) {
+        this.volunteerTime = volunteerTime;
+        this.fullCutCount = fullCutCount;
+        this.periodCutCount = periodCutCount;
+        this.lateCount = lateCount;
+        this.earlyLeaveCount = earlyLeaveCount;
+        this.korean = korean;
+        this.social = social;
+        this.history = history;
+        this.math = math;
+        this.science = science;
+        this.techAndHome = techAndHome;
+        this.english = english;
+    }
+
+    public boolean isFilledScore() {
+        return volunteerTime != null && fullCutCount != null && periodCutCount != null && lateCount != null &&
+                earlyLeaveCount != null && korean != null && social != null && history != null && math != null &&
+                science != null && techAndHome != null && english != null;
+    }
+
+    public boolean isFilledStudentInfo() {
+        return studentNumber != null && school != null && schoolTel != null;
+    }
+
 }

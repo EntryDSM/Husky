@@ -10,8 +10,8 @@ import java.time.LocalDate;
 
 @Getter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class CreateScheduleRequest {
 
     private String id;

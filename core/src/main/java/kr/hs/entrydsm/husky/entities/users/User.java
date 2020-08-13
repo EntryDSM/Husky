@@ -1,9 +1,6 @@
 package kr.hs.entrydsm.husky.entities.users;
 
-import kr.hs.entrydsm.husky.entities.applications.Application;
-import kr.hs.entrydsm.husky.entities.applications.GEDApplication;
-import kr.hs.entrydsm.husky.entities.applications.GraduatedApplication;
-import kr.hs.entrydsm.husky.entities.applications.UnGraduatedApplication;
+import kr.hs.entrydsm.husky.entities.applications.*;
 import kr.hs.entrydsm.husky.entities.users.enums.AdditionalType;
 import kr.hs.entrydsm.husky.entities.users.enums.ApplyType;
 import kr.hs.entrydsm.husky.entities.users.enums.GradeType;
@@ -111,6 +108,17 @@ public class User {
         }
     }
 
+    public GeneralApplication getGeneralApplication() {
+        switch (gradeType) {
+            case GRADUATED:
+                return this.graduatedApplication;
+            case UNGRADUATED:
+                return this.unGraduatedApplication;
+            default:
+                return null;
+        }
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }
@@ -123,21 +131,6 @@ public class User {
         this.isDaejeon = isDaejeon;
     }
 
-    public void setApplication(GradeType gradeType, GEDApplication gedApplication,
-                               GraduatedApplication graduatedApplication,
-                               UnGraduatedApplication unGraduatedApplication) {
-        switch (gradeType) {
-            case GED:
-                this.gedApplication = gedApplication;
-                break;
-            case GRADUATED:
-                this.graduatedApplication = graduatedApplication;
-                break;
-            case UNGRADUATED:
-                this.unGraduatedApplication = unGraduatedApplication;
-                break;
-        }
-    }
 
     public void setInfo(String name, Sex sex, LocalDate birthDate, String applicantTel, String parentTel,
                         String parentName, String address, String detailAddress, String postCode, String photo) {
@@ -151,6 +144,35 @@ public class User {
         this.detailAddress = detailAddress;
         this.postCode = postCode;
         this.userPhoto = photo;
+    }
+
+    public void setSelfIntroduction(String introduction) {
+        this.selfIntroduction = introduction;
+    }
+
+    public void setStudyPlan(String plan) {
+        this.studyPlan = plan;
+    }
+
+    public boolean isGed() {
+        return gradeType == GradeType.GED;
+    }
+
+    public boolean isGraduated() {
+        return gradeType == GradeType.GRADUATED;
+    }
+
+    public boolean isUngraduated() {
+        return gradeType == GradeType.UNGRADUATED;
+    }
+
+    public boolean isFilledInfo() {
+        return name != null && sex != null && birthDate != null && applicantTel != null && parentTel != null &&
+                parentName != null && address != null && detailAddress != null && postCode != null && userPhoto != null;
+    }
+
+    public boolean isFilledType() {
+        return gradeType != null && applyType != null && additionalType != null && getApplication() != null;
     }
 
 }

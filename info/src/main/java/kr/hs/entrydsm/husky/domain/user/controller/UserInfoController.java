@@ -1,25 +1,23 @@
 package kr.hs.entrydsm.husky.domain.user.controller;
 
-import kr.hs.entrydsm.husky.domain.user.dto.SelectTypeRequest;
-import kr.hs.entrydsm.husky.domain.user.dto.SetUserInfoRequest;
-import kr.hs.entrydsm.husky.domain.user.dto.UserInfoResponse;
-import kr.hs.entrydsm.husky.domain.user.dto.UserTypeResponse;
+import kr.hs.entrydsm.husky.domain.user.dto.*;
 import kr.hs.entrydsm.husky.domain.user.service.UserInfoService;
+import kr.hs.entrydsm.husky.domain.user.service.UserStatusService;
 import kr.hs.entrydsm.husky.domain.user.service.UserTypeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 @RequiredArgsConstructor
 @RequestMapping("/users/me")
 @RestController
-public class UserController {
+public class UserInfoController {
 
     private final UserTypeService userTypeService;
     private final UserInfoService userInfoService;
+    private final UserStatusService userStatusService;
 
     @PatchMapping("/type")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
@@ -47,5 +45,13 @@ public class UserController {
     @GetMapping
     public UserInfoResponse getUserInfo() {
         return userInfoService.getUserInfo();
+    }
+
+    @GetMapping("/status")
+    public UserStatusResponse getUserStatus() { return userStatusService.getStatus(); }
+
+    @PatchMapping("/status")
+    public UserStatusResponse finalSubmit() {
+        return userStatusService.finalSubmit();
     }
 }

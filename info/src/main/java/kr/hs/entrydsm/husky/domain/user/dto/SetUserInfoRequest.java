@@ -12,8 +12,8 @@ import java.time.LocalDate;
 
 @Getter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class SetUserInfoRequest {
 
     @NotEmpty @NotBlank
