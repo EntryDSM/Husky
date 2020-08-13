@@ -1,8 +1,8 @@
 package kr.hs.entrydsm.husky.entities.verification;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface EmailVerificationRepository extends JpaRepository<EmailVerification, String> {
+public interface EmailVerificationRepository extends CrudRepository<EmailVerification, String> {
 }
