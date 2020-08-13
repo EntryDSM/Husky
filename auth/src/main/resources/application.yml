@@ -3,8 +3,6 @@ spring:
     generate-ddl: true
   datasource:
     url: ${MYSQL_URL}
-    username: ${MYSQL_USER}
-    password: ${MYSQL_PASSWORD}
   redis:
     port: ${REDIS_PORT:6379}
     host: ${REDIS_HOST:localhost}
