@@ -2,11 +2,13 @@ package kr.hs.entrydsm.husky.domain.user.controller;
 
 import kr.hs.entrydsm.husky.domain.user.dto.*;
 import kr.hs.entrydsm.husky.domain.user.service.UserInfoService;
+import kr.hs.entrydsm.husky.domain.user.service.UserPhotoService;
 import kr.hs.entrydsm.husky.domain.user.service.UserStatusService;
 import kr.hs.entrydsm.husky.domain.user.service.UserTypeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 
@@ -18,6 +20,7 @@ public class UserInfoController {
     private final UserTypeService userTypeService;
     private final UserInfoService userInfoService;
     private final UserStatusService userStatusService;
+    private final UserPhotoService userPhotoService;
 
     @PatchMapping("/type")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
@@ -53,5 +56,10 @@ public class UserInfoController {
     @PatchMapping("/status")
     public UserStatusResponse finalSubmit() {
         return userStatusService.finalSubmit();
+    }
+
+    @PostMapping("/photo")
+    public String uploadPhoto(@RequestPart MultipartFile file) throws Exception {
+        return userPhotoService.upload(file);
     }
 }
