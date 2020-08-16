@@ -115,12 +115,14 @@ project(':info') {
         implementation 'org.springframework.boot:spring-boot-starter-web'
         implementation 'org.springframework.boot:spring-boot-starter-data-redis'
         implementation 'it.ozimov:embedded-redis:0.7.3'
+        implementation 'org.springframework.boot:spring-boot-starter-security'
+        implementation 'org.springframework.cloud:spring-cloud-aws-context:2.2.1.RELEASE'
+        implementation 'com.h2database:h2'
         testImplementation('org.springframework.boot:spring-boot-starter-test') {
             exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
         }
         testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
         testImplementation 'org.springframework.security:spring-security-test'
-        implementation 'org.springframework.boot:spring-boot-starter-security'
     }
     jar {
         enabled = false
