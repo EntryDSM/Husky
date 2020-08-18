@@ -1,12 +1,16 @@
-package kr.hs.entrydsm.husky.domains.request;
+package kr.hs.entrydsm.husky.dto.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
 
 @Getter
-public class AccountRequest {
+@NoArgsConstructor
+@AllArgsConstructor
+public class ChangePasswordRequest {
 
     @Email
     private String email;
