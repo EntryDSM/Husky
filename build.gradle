@@ -76,6 +76,7 @@ subprojects {
 project(':core') {
     dependencies {
         implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.boot:spring-boot-starter-security'
         runtimeOnly 'mysql:mysql-connector-java'
     }
 
@@ -95,7 +96,6 @@ project(':auth') {
 
         implementation 'org.springframework.boot:spring-boot-starter-data-redis'
         implementation 'org.springframework.boot:spring-boot-starter-web'
-        implementation 'org.springframework.boot:spring-boot-starter-security'
         implementation 'io.jsonwebtoken:jjwt:0.9.1'
         implementation 'com.amazonaws:aws-java-sdk-ses:1.11.807'
         implementation 'it.ozimov:embedded-redis:0.7.3'
