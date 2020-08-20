@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import kr.hs.entrydsm.husky.AuthApplication;
-import kr.hs.entrydsm.husky.config.RedisConfig;
 import kr.hs.entrydsm.husky.dto.request.AccountRequest;
 import kr.hs.entrydsm.husky.dto.response.TokenResponse;
 import kr.hs.entrydsm.husky.entities.users.User;

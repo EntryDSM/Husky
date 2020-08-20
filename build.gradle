@@ -76,6 +76,7 @@ subprojects {
 project(':core') {
     dependencies {
         implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.boot:spring-boot-starter-security'
         runtimeOnly 'mysql:mysql-connector-java'
     }
 
