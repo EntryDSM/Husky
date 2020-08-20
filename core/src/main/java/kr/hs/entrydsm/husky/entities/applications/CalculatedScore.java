@@ -38,6 +38,15 @@ public class CalculatedScore {
     @Digits(integer = 3, fraction = 3)
     private BigDecimal finalScore;
 
+    @Digits(integer = 3, fraction = 3)
+    private BigDecimal firstGradeScore;
+
+    @Digits(integer = 3, fraction = 3)
+    private BigDecimal secondGradeScore;
+
+    @Digits(integer = 3, fraction = 3)
+    private BigDecimal thirdGradeScore;
+
     @OneToOne(cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private User user;
