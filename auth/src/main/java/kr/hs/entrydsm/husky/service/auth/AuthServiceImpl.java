@@ -35,14 +35,14 @@ public class AuthServiceImpl implements AuthService {
     public TokenResponse signIn(AccountRequest request) {
         return userRepository.findByEmail(request.getEmail())
                 .filter(user -> passwordEncoder.matches(request.getPassword(), user.getPassword()))
-                    .map(User::getEmail)
-                    .map(email -> {
-                        String refreshToken = tokenProvider.generateRefreshToken(email);
-                        return new RefreshToken(email, refreshToken, refreshExp);
+                    .map(User::getReceiptCode)
+                    .map(receiptCode -> {
+                        String refreshToken = tokenProvider.generateRefreshToken(receiptCode);
+                        return new RefreshToken(receiptCode, refreshToken, refreshExp);
                     })
                     .map(refreshTokenRepository::save)
                     .map(refresh -> {
-                        String accessToken = tokenProvider.generateAccessToken(refresh.getEmail());
+                        String accessToken = tokenProvider.generateAccessToken(refresh.getReceiptCode());
                         return new TokenResponse(accessToken, refresh.getRefreshToken(), tokenType);
                     })
                 .orElseThrow(UserNotFoundException::new);
@@ -55,12 +55,12 @@ public class AuthServiceImpl implements AuthService {
         
         return refreshTokenRepository.findByRefreshToken(receivedToken)
                 .map(refreshToken -> {
-                    String generatedRefreshToken = tokenProvider.generateRefreshToken(refreshToken.getEmail());
+                    String generatedRefreshToken = tokenProvider.generateRefreshToken(refreshToken.getReceiptCode());
                     return refreshToken.update(generatedRefreshToken, refreshExp);
                 })
                 .map(refreshTokenRepository::save)
                 .map(refreshToken -> {
-                    String generatedAccessToken = tokenProvider.generateAccessToken(refreshToken.getEmail());
+                    String generatedAccessToken = tokenProvider.generateAccessToken(refreshToken.getReceiptCode());
                     return new TokenResponse(generatedAccessToken, refreshToken.getRefreshToken(), tokenType);
                 })
                 .orElseThrow(ExpiredTokenException::new);
