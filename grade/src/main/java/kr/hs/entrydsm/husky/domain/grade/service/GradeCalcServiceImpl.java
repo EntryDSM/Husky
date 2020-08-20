@@ -31,7 +31,7 @@ public class GradeCalcServiceImpl implements GradeCalcService {
     private final CalculatedScoreRepository calculatedScoreRepository;
 
     @Override
-    public void calcStudentGrade(int receiptCode) {
+    public CalculatedScore calcStudentGrade(int receiptCode) {
         User user = userRepository.findByReceiptCode(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
@@ -40,7 +40,7 @@ public class GradeCalcServiceImpl implements GradeCalcService {
         GradeScore gradeScore = calcGradeScore(user);
         BigDecimal finalScore = calcFinalScore(attendanceScore, volunteerScore, gradeScore);
 
-        calculatedScoreRepository.save(CalculatedScore.builder()
+        return calculatedScoreRepository.save(CalculatedScore.builder()
                 .user(user)
                 .attendanceScore(attendanceScore)
                 .volunteerScore(volunteerScore)
