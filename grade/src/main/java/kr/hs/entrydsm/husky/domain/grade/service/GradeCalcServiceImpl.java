@@ -1,10 +1,12 @@
 package kr.hs.entrydsm.husky.domain.grade.service;
 
+import kr.hs.entrydsm.husky.domain.grade.exception.UserNotFoundException;
 import kr.hs.entrydsm.husky.domain.grade.util.GradeUtil;
 import kr.hs.entrydsm.husky.domain.grade.value.GradeMatrix;
 import kr.hs.entrydsm.husky.entities.applications.CalculatedScore;
 import kr.hs.entrydsm.husky.entities.applications.GeneralApplication;
 import kr.hs.entrydsm.husky.entities.applications.repositories.CalculatedScoreRepository;
+import kr.hs.entrydsm.husky.entities.applications.value.GradeScore;
 import kr.hs.entrydsm.husky.entities.users.User;
 import kr.hs.entrydsm.husky.entities.users.enums.ApplyType;
 import kr.hs.entrydsm.husky.entities.users.enums.GradeType;
@@ -31,21 +33,20 @@ public class GradeCalcServiceImpl implements GradeCalcService {
     @Override
     public void calcStudentGrade(int receiptCode) {
         User user = userRepository.findByReceiptCode(receiptCode)
-                .orElseThrow();
+                .orElseThrow(UserNotFoundException::new);
 
         int attendanceScore = calcAttendanceScore(user);
         BigDecimal volunteerScore = calcVolunteerScore(user);
-        BigDecimal conversionScore = calcConversionScore(user);
-        BigDecimal finalScore = calcFinalScore(attendanceScore, volunteerScore, conversionScore);
+        GradeScore gradeScore = calcGradeScore(user);
+        BigDecimal finalScore = calcFinalScore(attendanceScore, volunteerScore, gradeScore);
 
-        CalculatedScore calculatedScore = CalculatedScore.builder()
+        calculatedScoreRepository.save(CalculatedScore.builder()
                 .user(user)
                 .attendanceScore(attendanceScore)
                 .volunteerScore(volunteerScore)
-                .conversionScore(conversionScore)
+                .gradeScore(gradeScore)
                 .finalScore(finalScore)
-                .build();
-        calculatedScoreRepository.save(calculatedScore);
+                .build());
     }
 
     private Integer calcAttendanceScore(User user) {
@@ -84,41 +85,42 @@ public class GradeCalcServiceImpl implements GradeCalcService {
                 .setScale(3, HALF_UP);
     }
 
-    private BigDecimal calcConversionScore(User user) {
-        BigDecimal conversionScore;
+    private GradeScore calcGradeScore(User user) {
+        GradeScore gradeScore;
 
         if (user.getGradeType() == GradeType.GED) {
-            conversionScore = BigDecimal.valueOf(user.getGedApplication().getGedAverageScore())
+            BigDecimal conversionScore = BigDecimal.valueOf(user.getGedApplication().getGedAverageScore())
                     .subtract(BigDecimal.valueOf(50))
                     .divide(BigDecimal.valueOf(50), 3, CEILING)
                     .multiply(BigDecimal.valueOf(150))
                     .setScale(3, HALF_UP);
+            gradeScore = new GradeScore(conversionScore);
 
         } else {
-            conversionScore = this.calcGeneralApplication(user);
+            gradeScore = this.calcGeneralApplication(user);
         }
 
         if (user.getApplyType() != ApplyType.COMMON) {
-            conversionScore = conversionScore.multiply(BigDecimal.valueOf(0.6))
-                    .setScale(3, HALF_UP);
+            gradeScore.setConversionScore(gradeScore.getConversionScore().multiply(BigDecimal.valueOf(0.6))
+                    .setScale(3, HALF_UP));
         }
 
-        return conversionScore;
+        return gradeScore;
     }
 
-    private BigDecimal calcFinalScore(int attendanceScore, BigDecimal volunteerScore, BigDecimal conversionScore) {
+    private BigDecimal calcFinalScore(int attendanceScore, BigDecimal volunteerScore, GradeScore gradeScore) {
         return BigDecimal.valueOf(attendanceScore)
                 .add(volunteerScore)
-                .add(conversionScore);
+                .add(gradeScore.getConversionScore());
     }
 
-    private BigDecimal calcGeneralApplication(User user) {
+    private GradeScore calcGeneralApplication(User user) {
         GeneralApplication application = (GeneralApplication) user.getApplication();
         GradeMatrix matrix = new GradeMatrix(application);
         GradeUtil matrixUtil = new GradeUtil(user, matrix);
 
-        BigDecimal firstGradeScore;
-        BigDecimal secondGradeScore;
+        BigDecimal firstGradeScore = null;
+        BigDecimal secondGradeScore = null;
         BigDecimal thirdGradeScore;
 
         boolean isFirstGradeEmpty = matrixUtil.isFirstGradeEmpty();
@@ -129,31 +131,36 @@ public class GradeCalcServiceImpl implements GradeCalcService {
         if (isFirstGradeEmpty && isSecondGradeEmpty) {
             firstGradeScore = matrixUtil.getAverageScoreIf3rdGradeLeft();
             secondGradeScore = firstGradeScore;
-            thirdGradeScore = matrixUtil.getScore(SEMESTER_3_1, SEMESTER_3_2);
-
-        } else if (isFirstGradeEmpty && !isSecondGradeEmpty) {
-            firstGradeScore = matrixUtil.getAverageScoreIf1stGradeEmpty();
-            secondGradeScore = matrixUtil.getScore(SEMESTER_2_1, SEMESTER_2_2);
-            thirdGradeScore = matrixUtil.getScore(SEMESTER_3_1, SEMESTER_3_2);
-
-        } else if (!isFirstGradeEmpty && isSecondGradeEmpty) {
-            firstGradeScore = matrixUtil.getScore(SEMESTER_1_1, SEMESTER_1_2);
-            secondGradeScore = matrixUtil.getAverageScoreIf2ndGradeEmpty();
-            thirdGradeScore = matrixUtil.getScore(SEMESTER_3_1, SEMESTER_3_2);
-
-        } else {
-            firstGradeScore = matrixUtil.getScore(SEMESTER_1_1, SEMESTER_1_2);
-            secondGradeScore = matrixUtil.getScore(SEMESTER_2_1, SEMESTER_2_2);
-            thirdGradeScore = matrixUtil.getScore(SEMESTER_3_1, SEMESTER_3_2);
         }
+
+        else if (isFirstGradeEmpty && !isSecondGradeEmpty)
+            firstGradeScore = matrixUtil.getAverageScoreIf1stGradeEmpty();
+
+        else if (!isFirstGradeEmpty && isSecondGradeEmpty)
+            secondGradeScore = matrixUtil.getAverageScoreIf2ndGradeEmpty();
+
+        if (firstGradeScore == null)
+            firstGradeScore = matrixUtil.getScore(SEMESTER_1_1, SEMESTER_1_2);
+
+        if (secondGradeScore == null)
+            secondGradeScore = matrixUtil.getScore(SEMESTER_2_1, SEMESTER_2_2);
+
+        thirdGradeScore = matrixUtil.getScore(SEMESTER_3_1, SEMESTER_3_2);
 
         firstGradeScore = firstGradeScore.multiply(BigDecimal.valueOf(4.5)).setScale(3, HALF_UP);
         secondGradeScore = secondGradeScore.multiply(BigDecimal.valueOf(4.5)).setScale(3, HALF_UP);
         thirdGradeScore = thirdGradeScore.multiply(SIX).setScale(3, HALF_UP);
 
-        return firstGradeScore
+        BigDecimal conversionScore = firstGradeScore
                 .add(secondGradeScore)
                 .add(thirdGradeScore);
+
+        return GradeScore.builder()
+                .firstGradeScore(firstGradeScore)
+                .secondGradeScore(secondGradeScore)
+                .thirdGradeScore(thirdGradeScore)
+                .conversionScore(conversionScore)
+                .build();
     }
 
 }
