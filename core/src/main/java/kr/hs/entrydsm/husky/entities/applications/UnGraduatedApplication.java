@@ -13,8 +13,8 @@ import javax.persistence.Entity;
 @NoArgsConstructor
 public class UnGraduatedApplication extends GeneralApplication {
 
-    public UnGraduatedApplication(String email, User user) {
-        super(email, user);
+    public UnGraduatedApplication(User user) {
+        super(user);
     }
 
     @Builder(builderMethodName = "unGraduatedApplicationBuilder")

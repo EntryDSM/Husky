@@ -95,8 +95,8 @@ public class GeneralApplication extends Application {
         return studentNumber != null && school != null && schoolTel != null;
     }
     
-    GeneralApplication(String email, User user) {
-        super(email, user);
+    GeneralApplication(User user) {
+        super(user);
     }
     
     @Builder(builderMethodName = "generalApplicationBuilder")

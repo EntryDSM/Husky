@@ -25,8 +25,6 @@ public class Application extends BaseTimeEntity {
     @Builder(builderMethodName = "applicationBuilder")
     public Application(User user) {
         this.receiptCode = user.getReceiptCode();
-        this.createdAt = LocalDateTime.now();
-        this.modifiedAt = LocalDateTime.now();
         this.user = user;
     }
 
