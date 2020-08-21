@@ -103,6 +103,9 @@ public class GradeCalcTest {
 
         assertEquals(15, calculatedScore.getAttendanceScore());
         assertEquals(BigDecimal.valueOf(13), calculatedScore.getVolunteerScore().stripTrailingZeros());
+        assertEquals(BigDecimal.valueOf(43.607), calculatedScore.getFirstGradeScore().stripTrailingZeros());
+        assertEquals(BigDecimal.valueOf(40.071), calculatedScore.getSecondGradeScore().stripTrailingZeros());
+        assertEquals(BigDecimal.valueOf(50.571), calculatedScore.getThirdGradeScore().stripTrailingZeros());
         assertEquals(BigDecimal.valueOf(134.249), calculatedScore.getConversionScore().stripTrailingZeros());
         assertEquals(BigDecimal.valueOf(162.249), calculatedScore.getFinalScore().stripTrailingZeros());
     }
@@ -116,7 +119,7 @@ public class GradeCalcTest {
         user = userRepository.save(user);
 
         GEDApplication gedApplication = this.getDefaultGEDApplication(user)
-                .gedAverageScore(89)
+                .gedAverageScore(BigDecimal.valueOf(89))
                 .build();
         gedApplicationRepository.save(gedApplication);
 
@@ -179,7 +182,7 @@ public class GradeCalcTest {
         user = userRepository.save(user);
 
         GEDApplication gedApplication = this.getDefaultGEDApplication(user)
-                .gedAverageScore(89)
+                .gedAverageScore(BigDecimal.valueOf(89))
                 .build();
         gedApplicationRepository.save(gedApplication);
 
@@ -261,7 +264,7 @@ public class GradeCalcTest {
         user = userRepository.save(user);
 
         GEDApplication gedApplication = this.getDefaultGEDApplication(user)
-                .gedAverageScore(89)
+                .gedAverageScore(BigDecimal.valueOf(89))
                 .build();
         gedApplicationRepository.save(gedApplication);
 
@@ -273,6 +276,110 @@ public class GradeCalcTest {
         assertEquals(BigDecimal.valueOf(12.8), calculatedScore.getVolunteerScore().stripTrailingZeros());
         assertEquals(BigDecimal.valueOf(70.2), calculatedScore.getConversionScore().stripTrailingZeros());
         assertEquals(BigDecimal.valueOf(98), calculatedScore.getFinalScore().stripTrailingZeros());
+    }
+
+    @Test
+    public void commonGraduatedApplicationWithout1stGradeScore() {
+        User user = getDefaultUser()
+                .gradeType(GradeType.GRADUATED)
+                .applyType(ApplyType.COMMON)
+                .build();
+        userRepository.save(user);
+
+        GraduatedApplication graduatedApplication = getDefaultGraduatedApplication(user)
+                .lateCount(1)
+                .earlyLeaveCount(1)
+                .volunteerTime(45)
+                .korean("XXBAAA")
+                .social("XXXABB")
+                .history("XXAAAC")
+                .math("XXBCAB")
+                .science("XXBBAA")
+                .techAndHome("XXBAAB")
+                .english("XXAAAC")
+                .build();
+        graduatedApplicationRepository.save(graduatedApplication);
+
+        gradeCalcService.calcStudentGrade(user.getReceiptCode());
+        CalculatedScore calculatedScore = calcScoreRepository.findById(user.getReceiptCode())
+                .orElseThrow();
+
+        assertEquals(15, calculatedScore.getAttendanceScore());
+        assertEquals(BigDecimal.valueOf(15), calculatedScore.getVolunteerScore().stripTrailingZeros());
+        assertEquals(BigDecimal.valueOf(133.178), calculatedScore.getConversionScore().stripTrailingZeros());
+        assertEquals(BigDecimal.valueOf(163.178), calculatedScore.getFinalScore().stripTrailingZeros());
+    }
+
+    @Test
+    public void meisterUnGraduatedApplicationWithout2ndGradeScore() {
+        User user = getDefaultUser()
+                .gradeType(GradeType.UNGRADUATED)
+                .applyType(ApplyType.MEISTER)
+                .build();
+        userRepository.save(user);
+
+        UnGraduatedApplication graduatedApplication = getDefaultUnGraduatedApplication(user)
+                .lateCount(4)
+                .fullCutCount(3)
+                .earlyLeaveCount(2)
+                .volunteerTime(15)
+                .korean("ABXXAX")
+                .social("BCXXBX")
+                .history("CAXXAX")
+                .math("CEXXAX")
+                .science("CDXXAX")
+                .techAndHome("BDXXAX")
+                .english("ACXXAX")
+                .build();
+        unGraduatedApplicationRepository.save(graduatedApplication);
+
+        gradeCalcService.calcStudentGrade(user.getReceiptCode());
+        CalculatedScore calculatedScore = calcScoreRepository.findById(user.getReceiptCode())
+                .orElseThrow();
+
+        assertEquals(10, calculatedScore.getAttendanceScore());
+        assertEquals(BigDecimal.valueOf(5), calculatedScore.getVolunteerScore().stripTrailingZeros());
+        assertEquals(BigDecimal.valueOf(18.129), calculatedScore.getFirstGradeScore().stripTrailingZeros());
+        assertEquals(BigDecimal.valueOf(22.179), calculatedScore.getSecondGradeScore().stripTrailingZeros());
+        assertEquals(BigDecimal.valueOf(34.971), calculatedScore.getThirdGradeScore().stripTrailingZeros());
+        assertEquals(BigDecimal.valueOf(75.279), calculatedScore.getConversionScore().stripTrailingZeros());
+        assertEquals(BigDecimal.valueOf(90.279), calculatedScore.getFinalScore().stripTrailingZeros());
+    }
+
+    @Test
+    public void socialUnGraduatedApplicationWithOnly3rdGradeScore() {
+        User user = getDefaultUser()
+                .gradeType(GradeType.UNGRADUATED)
+                .applyType(ApplyType.SOCIAL_FROM_NORTH)
+                .build();
+        userRepository.save(user);
+
+        UnGraduatedApplication graduatedApplication = getDefaultUnGraduatedApplication(user)
+                .lateCount(4)
+                .fullCutCount(3)
+                .earlyLeaveCount(2)
+                .volunteerTime(44)
+                .korean("XXXXAX")
+                .social("XXXXBX")
+                .history("XXXXAX")
+                .math("XXXXAX")
+                .science("XXXXAX")
+                .techAndHome("XXXXAX")
+                .english("XXXXAX")
+                .build();
+        unGraduatedApplicationRepository.save(graduatedApplication);
+
+        gradeCalcService.calcStudentGrade(user.getReceiptCode());
+        CalculatedScore calculatedScore = calcScoreRepository.findById(user.getReceiptCode())
+                .orElseThrow();
+
+        assertEquals(10, calculatedScore.getAttendanceScore());
+        assertEquals(BigDecimal.valueOf(14.667), calculatedScore.getVolunteerScore().stripTrailingZeros());
+        assertEquals(BigDecimal.valueOf(26.229), calculatedScore.getFirstGradeScore().stripTrailingZeros());
+        assertEquals(BigDecimal.valueOf(26.229), calculatedScore.getSecondGradeScore().stripTrailingZeros());
+        assertEquals(BigDecimal.valueOf(34.971), calculatedScore.getThirdGradeScore().stripTrailingZeros());
+        assertEquals(BigDecimal.valueOf(87.429), calculatedScore.getConversionScore().stripTrailingZeros());
+        assertEquals(BigDecimal.valueOf(112.096), calculatedScore.getFinalScore().stripTrailingZeros());
     }
 
     private User.UserBuilder getDefaultUser() {
