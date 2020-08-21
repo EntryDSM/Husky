@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Getter
 @Setter
@@ -17,6 +18,26 @@ public class GradeScore {
     private BigDecimal thirdGradeScore;
 
     private BigDecimal conversionScore;
+
+    public void multiplyAll(BigDecimal multiplicand) {
+        this.firstGradeScore = firstGradeScore.multiply(multiplicand);
+        this.secondGradeScore = secondGradeScore.multiply(multiplicand);
+        this.thirdGradeScore = thirdGradeScore.multiply(multiplicand);
+        this.conversionScore = conversionScore.multiply(multiplicand);
+    }
+
+    public void setScaleAll(int newScale, RoundingMode roundingMode) {
+        this.firstGradeScore = firstGradeScore.setScale(newScale, roundingMode);
+        this.secondGradeScore = secondGradeScore.setScale(newScale, roundingMode);
+        this.thirdGradeScore = thirdGradeScore.setScale(newScale, roundingMode);
+        this.conversionScore = conversionScore.setScale(newScale, roundingMode);
+    }
+
+    public void setConversionScore() {
+        this.conversionScore = firstGradeScore
+                .add(secondGradeScore)
+                .add(thirdGradeScore);
+    }
 
     public GradeScore(BigDecimal conversionScore) {
         this.firstGradeScore = BigDecimal.ZERO;
