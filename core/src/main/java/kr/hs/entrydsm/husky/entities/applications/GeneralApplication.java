@@ -14,7 +14,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class GeneralApplication extends Application {
+public class GeneralApplication extends Application {
 
     @Column(length = 5)
     private String studentNumber;
@@ -108,6 +108,18 @@ public abstract class GeneralApplication extends Application {
         this.studentNumber = studentNumber;
         this.school = school;
         this.schoolTel = schoolTel;
+        this.volunteerTime = volunteerTime;
+        this.fullCutCount = fullCutCount;
+        this.periodCutCount = periodCutCount;
+        this.lateCount = lateCount;
+        this.earlyLeaveCount = earlyLeaveCount;
+        this.korean = korean;
+        this.social = social;
+        this.history = history;
+        this.math = math;
+        this.science = science;
+        this.techAndHome = techAndHome;
+        this.english = english;
     }
 
 }

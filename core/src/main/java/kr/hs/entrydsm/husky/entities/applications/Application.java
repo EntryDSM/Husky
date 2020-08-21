@@ -13,7 +13,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class Application extends BaseTimeEntity {
+public class Application extends BaseTimeEntity {
 
     @Id
     @Column(name = "user_email")
