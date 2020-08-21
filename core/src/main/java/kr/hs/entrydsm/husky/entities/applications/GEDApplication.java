@@ -6,8 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.validation.constraints.Digits;
+import java.math.BigDecimal;
 
 @Getter
 @Entity(name = "ged_application")
@@ -15,11 +16,11 @@ import javax.persistence.Entity;
 @AllArgsConstructor
 public class GEDApplication extends Application {
 
-    @Column
-    private Integer gedAverageScore;
+    @Digits(integer = 3, fraction = 2)
+    private BigDecimal gedAverageScore;
 
     @Builder(builderMethodName = "gedApplicationBuilder")
-    public GEDApplication(User user, int gedAverageScore) {
+    public GEDApplication(User user, BigDecimal gedAverageScore) {
         super(user);
         this.gedAverageScore = gedAverageScore;
     }
