@@ -38,7 +38,10 @@ public class Status {
     private String examCode;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
     private User user;
+
+    public void finalSubmit() {
+        this.isFinalSubmit = true;
+    }
 
 }

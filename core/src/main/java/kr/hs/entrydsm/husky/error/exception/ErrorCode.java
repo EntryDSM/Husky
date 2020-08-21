@@ -8,6 +8,7 @@ import lombok.Getter;
 public enum ErrorCode {
     //Global
     USER_NOT_FOUND(404, "", "User Not Found."),
+    BAD_REQUEST(400, "", "Bad Request(Invalid Parameter)"),
 
     //Auth
     INVALID_AUTH_EMAIL(400, "VE1010", "Invalid Auth Email"),
@@ -21,7 +22,12 @@ public enum ErrorCode {
     FAIL_GENERATE_VERIFY_EMAIL(422, "", "Email Generate Error"),
 
     //Info
-    NOT_ADMIN_FORBIDDEN(403, "", "The server understood the request but refuses to authorize it.");
+    NOT_ADMIN_FORBIDDEN(403, "", "The server understood the request but refuses to authorize it."),
+    APPLICATION_NOT_FOUND(404, "", "Application Not Found"),
+    APPLICATION_TYPE_UNMATCHED(403, "", "Application Type is unmatched"),
+
+    //School
+    SCHOOL_NOT_FOUND(404, "", "School Not Found.");
 
     private final int status;
     private final String code;

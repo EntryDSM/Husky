@@ -1,0 +1,10 @@
+spring:
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+  redis:
+    host: localhost
+    port: 6379
+
+auth:
+  maintenance:
+    key: dGVzdA==

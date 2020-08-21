@@ -1,8 +1,8 @@
 package kr.hs.entrydsm.husky.service.user;
 
-import kr.hs.entrydsm.husky.domains.request.AccountRequest;
-import kr.hs.entrydsm.husky.domains.request.VerifyCodeRequest;
-import kr.hs.entrydsm.husky.domains.request.ChangePasswordRequest;
+import kr.hs.entrydsm.husky.dto.request.AccountRequest;
+import kr.hs.entrydsm.husky.dto.request.VerifyCodeRequest;
+import kr.hs.entrydsm.husky.dto.request.ChangePasswordRequest;
 import kr.hs.entrydsm.husky.entities.verification.EmailVerification;
 import kr.hs.entrydsm.husky.entities.verification.EmailVerificationStatus;
 import kr.hs.entrydsm.husky.entities.verification.EmailVerificationRepository;
@@ -15,6 +15,8 @@ import kr.hs.entrydsm.husky.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +44,7 @@ public class UserServiceImpl implements UserService {
             User.builder()
                 .email(email)
                 .password(password)
+                .createdAt(LocalDateTime.now())
                 .build()
         );
     }
@@ -104,7 +107,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(ExpiredAuthCodeException::new);
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(UserAlreadyExistsException::new);
+                .orElseThrow(UserNotFoundException::new);
 
         user.setPassword(password);
         userRepository.save(user);

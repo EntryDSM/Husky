@@ -25,6 +25,7 @@ subprojects {
     group = 'kr.hs.entrydsm'
     version = '0.0.1-SNAPSHOT'
     sourceCompatibility = '11'
+    targetCompatibility = '11'
 
     configurations {
         compileOnly {
@@ -45,6 +46,10 @@ subprojects {
         implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
         testImplementation 'com.h2database:h2'
         compile 'junit:junit:4.12'
+    }
+
+    configurations {
+        all*.exclude module : 'spring-boot-starter-logging'
     }
 
     task initSourceFolders {
@@ -93,6 +98,7 @@ project(':auth') {
         implementation 'org.springframework.boot:spring-boot-starter-security'
         implementation 'io.jsonwebtoken:jjwt:0.9.1'
         implementation 'com.amazonaws:aws-java-sdk-ses:1.11.807'
+        implementation 'it.ozimov:embedded-redis:0.7.3'
         testImplementation('org.springframework.boot:spring-boot-starter-test') {
             exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
         }
@@ -114,6 +120,8 @@ project(':info') {
             exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
         }
         testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+        testImplementation 'org.springframework.security:spring-security-test'
+        implementation 'org.springframework.boot:spring-boot-starter-security'
     }
     jar {
         enabled = false

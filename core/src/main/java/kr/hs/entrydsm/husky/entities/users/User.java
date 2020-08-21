@@ -1,9 +1,6 @@
 package kr.hs.entrydsm.husky.entities.users;
 
-import kr.hs.entrydsm.husky.entities.applications.Application;
-import kr.hs.entrydsm.husky.entities.applications.GEDApplication;
-import kr.hs.entrydsm.husky.entities.applications.GraduatedApplication;
-import kr.hs.entrydsm.husky.entities.applications.UnGraduatedApplication;
+import kr.hs.entrydsm.husky.entities.applications.*;
 import kr.hs.entrydsm.husky.entities.users.enums.AdditionalType;
 import kr.hs.entrydsm.husky.entities.users.enums.ApplyType;
 import kr.hs.entrydsm.husky.entities.users.enums.GradeType;
@@ -11,6 +8,7 @@ import kr.hs.entrydsm.husky.entities.users.enums.Sex;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -50,7 +48,7 @@ public class User {
     private Sex sex;
 
     @Column
-    private Date birthDate;
+    private LocalDate birthDate;
 
     @Column(length = 15)
     private String parentName;
@@ -88,13 +86,13 @@ public class User {
     @OneToOne(mappedBy = "user")
     private Status status;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private GEDApplication gedApplication;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private GraduatedApplication graduatedApplication;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private UnGraduatedApplication unGraduatedApplication;
 
     public Application getApplication() {
@@ -110,8 +108,71 @@ public class User {
         }
     }
 
+    public GeneralApplication getGeneralApplication() {
+        switch (gradeType) {
+            case GRADUATED:
+                return this.graduatedApplication;
+            case UNGRADUATED:
+                return this.unGraduatedApplication;
+            default:
+                return null;
+        }
+    }
+
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setClassification(GradeType gradeType, ApplyType applyType, AdditionalType additionalType,
+                                  boolean isDaejeon) {
+        this.gradeType = gradeType;
+        this.applyType = applyType;
+        this.additionalType = additionalType;
+        this.isDaejeon = isDaejeon;
+    }
+
+
+    public void setInfo(String name, Sex sex, LocalDate birthDate, String applicantTel, String parentTel,
+                        String parentName, String address, String detailAddress, String postCode, String photo) {
+        this.name = name;
+        this.sex = sex;
+        this.birthDate = birthDate;
+        this.applicantTel = applicantTel;
+        this.parentTel = parentTel;
+        this.parentName = parentName;
+        this.address = address;
+        this.detailAddress = detailAddress;
+        this.postCode = postCode;
+        this.userPhoto = photo;
+    }
+
+    public void setSelfIntroduction(String introduction) {
+        this.selfIntroduction = introduction;
+    }
+
+    public void setStudyPlan(String plan) {
+        this.studyPlan = plan;
+    }
+
+    public boolean isGed() {
+        return gradeType == GradeType.GED;
+    }
+
+    public boolean isGraduated() {
+        return gradeType == GradeType.GRADUATED;
+    }
+
+    public boolean isUngraduated() {
+        return gradeType == GradeType.UNGRADUATED;
+    }
+
+    public boolean isFilledInfo() {
+        return name != null && sex != null && birthDate != null && applicantTel != null && parentTel != null &&
+                parentName != null && address != null && detailAddress != null && postCode != null && userPhoto != null;
+    }
+
+    public boolean isFilledType() {
+        return gradeType != null && applyType != null && additionalType != null && getApplication() != null;
     }
 
 }

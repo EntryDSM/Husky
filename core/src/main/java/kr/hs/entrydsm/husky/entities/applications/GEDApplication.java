@@ -1,19 +1,16 @@
 package kr.hs.entrydsm.husky.entities.applications;
 
 import kr.hs.entrydsm.husky.entities.users.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.validation.constraints.Digits;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Getter
 @Entity(name = "ged_application")
 @NoArgsConstructor
-@AllArgsConstructor
 public class GEDApplication extends Application {
 
     @Digits(integer = 3, fraction = 2)
@@ -25,4 +22,16 @@ public class GEDApplication extends Application {
         this.gedAverageScore = gedAverageScore;
     }
 
+    @Column
+    private LocalDate gedPassDate;
+
+    @Builder
+    public GEDApplication(LocalDate gedPassDate, String email, User user) {
+        super(email, user);
+        this.gedPassDate = gedPassDate;
+    }
+
+    public void setGedAverageScore(Integer gedAverageScore) {
+        this.gedAverageScore = gedAverageScore;
+    }
 }

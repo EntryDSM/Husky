@@ -1,7 +1,7 @@
 package kr.hs.entrydsm.husky.controllers;
 
-import kr.hs.entrydsm.husky.domains.request.AccountRequest;
-import kr.hs.entrydsm.husky.domains.response.TokenResponse;
+import kr.hs.entrydsm.husky.dto.request.AccountRequest;
+import kr.hs.entrydsm.husky.dto.response.TokenResponse;
 import kr.hs.entrydsm.husky.service.auth.AuthServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

@@ -17,14 +17,14 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
 
     @Value("${auth.maintenance.key}")
-    private String adminSecretKey;
+    private String maintenanceKey;
 
     public String createSchedule(CreateScheduleRequest request, String secret) {
         byte[] targetBytes = secret.getBytes();
         Base64.Encoder encoder = Base64.getEncoder();
         byte[] encodeBytes = encoder.encode(targetBytes);
 
-        if(!adminSecretKey.equals(new String(encodeBytes))) {
+        if (!maintenanceKey.equals(new String(encodeBytes))) {
             throw new NotAdminException();
         }
 
