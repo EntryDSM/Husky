@@ -16,8 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
-import static java.math.RoundingMode.CEILING;
-import static java.math.RoundingMode.HALF_UP;
+import static java.math.RoundingMode.*;
 import static kr.hs.entrydsm.husky.domain.grade.constant.BigDecimalConstants.SIX;
 import static kr.hs.entrydsm.husky.domain.grade.constant.Semester.*;
 
@@ -63,9 +62,9 @@ public class GradeCalcServiceImpl implements GradeCalcService {
 
     private BigDecimal calcVolunteerScore(User user) {
         if (user.getGradeType() == GradeType.GED) {
-            return BigDecimal.valueOf(user.getGedApplication().getGedAverageScore())
+            return user.getGedApplication().getGedAverageScore()
                     .subtract(BigDecimal.valueOf(40))
-                    .divide(BigDecimal.valueOf(5), 3, CEILING)
+                    .divide(BigDecimal.valueOf(5), 3, HALF_UP)
                     .add(BigDecimal.valueOf(3));
         }
 
@@ -80,7 +79,7 @@ public class GradeCalcServiceImpl implements GradeCalcService {
 
         return BigDecimal.valueOf(app.getVolunteerTime())
                 .subtract(BigDecimal.valueOf(9))
-                .divide(BigDecimal.valueOf(3), 3, CEILING)
+                .divide(BigDecimal.valueOf(3), 4, DOWN)
                 .add(BigDecimal.valueOf(3))
                 .setScale(3, HALF_UP);
     }
@@ -89,23 +88,30 @@ public class GradeCalcServiceImpl implements GradeCalcService {
         GradeScore gradeScore;
 
         if (user.getGradeType() == GradeType.GED) {
-            BigDecimal conversionScore = BigDecimal.valueOf(user.getGedApplication().getGedAverageScore())
-                    .subtract(BigDecimal.valueOf(50))
-                    .divide(BigDecimal.valueOf(50), 3, CEILING)
-                    .multiply(BigDecimal.valueOf(150))
-                    .setScale(3, HALF_UP);
+            BigDecimal conversionScore = calcGEDConversionScore(user.getGedApplication().getGedAverageScore());
             gradeScore = new GradeScore(conversionScore);
 
         } else {
             gradeScore = this.calcGeneralApplication(user);
         }
 
-        if (user.getApplyType() != ApplyType.COMMON) {
-            gradeScore.setConversionScore(gradeScore.getConversionScore().multiply(BigDecimal.valueOf(0.6))
-                    .setScale(3, HALF_UP));
-        }
+        if (user.getApplyType() != ApplyType.COMMON)
+            gradeScore.multiplyAll(BigDecimal.valueOf(0.6));
+
+        gradeScore.setScaleAll(3, HALF_UP);
+
+        if (user.getGradeType() != GradeType.GED)
+            gradeScore.setConversionScore();
 
         return gradeScore;
+    }
+
+    private BigDecimal calcGEDConversionScore(BigDecimal averageScore) {
+        return averageScore
+                .subtract(BigDecimal.valueOf(50))
+                .divide(BigDecimal.valueOf(50), 3, DOWN)
+                .multiply(BigDecimal.valueOf(150))
+                .setScale(3, HALF_UP);
     }
 
     private BigDecimal calcFinalScore(int attendanceScore, BigDecimal volunteerScore, GradeScore gradeScore) {
@@ -131,35 +137,29 @@ public class GradeCalcServiceImpl implements GradeCalcService {
         if (isFirstGradeEmpty && isSecondGradeEmpty) {
             firstGradeScore = matrixUtil.getAverageScoreIf3rdGradeLeft();
             secondGradeScore = firstGradeScore;
-        }
-
-        else if (isFirstGradeEmpty && !isSecondGradeEmpty)
+        } else if (isFirstGradeEmpty && !isSecondGradeEmpty)
             firstGradeScore = matrixUtil.getAverageScoreIf1stGradeEmpty();
 
         else if (!isFirstGradeEmpty && isSecondGradeEmpty)
             secondGradeScore = matrixUtil.getAverageScoreIf2ndGradeEmpty();
 
-        if (firstGradeScore == null)
+        if (!isFirstGradeEmpty)
             firstGradeScore = matrixUtil.getScore(SEMESTER_1_1, SEMESTER_1_2);
 
-        if (secondGradeScore == null)
+        if (!isSecondGradeEmpty)
             secondGradeScore = matrixUtil.getScore(SEMESTER_2_1, SEMESTER_2_2);
 
         thirdGradeScore = matrixUtil.getScore(SEMESTER_3_1, SEMESTER_3_2);
 
-        firstGradeScore = firstGradeScore.multiply(BigDecimal.valueOf(4.5)).setScale(3, HALF_UP);
-        secondGradeScore = secondGradeScore.multiply(BigDecimal.valueOf(4.5)).setScale(3, HALF_UP);
-        thirdGradeScore = thirdGradeScore.multiply(SIX).setScale(3, HALF_UP);
-
-        BigDecimal conversionScore = firstGradeScore
-                .add(secondGradeScore)
-                .add(thirdGradeScore);
+        firstGradeScore = firstGradeScore.multiply(BigDecimal.valueOf(4.5)).setScale(6, DOWN);
+        secondGradeScore = secondGradeScore.multiply(BigDecimal.valueOf(4.5)).setScale(6, DOWN);
+        thirdGradeScore = thirdGradeScore.multiply(SIX).setScale(6, DOWN);
 
         return GradeScore.builder()
                 .firstGradeScore(firstGradeScore)
                 .secondGradeScore(secondGradeScore)
                 .thirdGradeScore(thirdGradeScore)
-                .conversionScore(conversionScore)
+                .conversionScore(BigDecimal.ZERO)
                 .build();
     }
 
