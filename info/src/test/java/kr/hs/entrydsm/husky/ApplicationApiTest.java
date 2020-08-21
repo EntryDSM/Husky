@@ -29,9 +29,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -150,7 +150,7 @@ class ApplicationApiTest {
 
         mvc.perform(patch(url + "/applications/me/score/ged")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(convertToJson(new SetGedScoreRequest(100))))
+                .content(convertToJson(new SetGedScoreRequest(BigDecimal.valueOf(100)))))
                 .andExpect(status().isNoContent());
 
         //then
