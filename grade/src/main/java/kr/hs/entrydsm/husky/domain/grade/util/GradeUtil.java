@@ -6,9 +6,8 @@ import kr.hs.entrydsm.husky.entities.users.User;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
-import static java.math.RoundingMode.CEILING;
+import static java.math.RoundingMode.*;
 import static kr.hs.entrydsm.husky.domain.grade.constant.BigDecimalConstants.FOUR;
 import static kr.hs.entrydsm.husky.domain.grade.constant.BigDecimalConstants.TWO;
 import static kr.hs.entrydsm.husky.domain.grade.constant.Semester.*;
@@ -62,12 +61,12 @@ public class GradeUtil {
                 return getScore(SEMESTER_2_1, SEMESTER_2_2)
                         .add(getScore(SEMESTER_3_1).multiply(TWO))
                         .multiply(TWO)
-                        .divide(FOUR, 3, CEILING);
+                        .divide(FOUR, 5, DOWN);
 
             case GRADUATED:
                 return getScore(SEMESTER_2_1, SEMESTER_3_2)
                         .multiply(TWO)
-                        .divide(FOUR, 3, CEILING);
+                        .divide(FOUR, 5, DOWN);
 
             default:
                 return BigDecimal.ZERO;
@@ -80,13 +79,13 @@ public class GradeUtil {
                 return getScore(SEMESTER_1_1, SEMESTER_1_2)
                         .add(getScore(SEMESTER_3_1).multiply(TWO))
                         .multiply(TWO)
-                        .divide(FOUR, 3, CEILING);
+                        .divide(FOUR, 5, DOWN);
 
             case GRADUATED:
                 return getScore(SEMESTER_1_1, SEMESTER_1_2)
                         .add(getScore(SEMESTER_3_1, SEMESTER_3_2))
                         .multiply(TWO)
-                        .divide(FOUR, 3, CEILING);
+                        .divide(FOUR, 5, DOWN);
 
             default:
                 return BigDecimal.ZERO;
@@ -105,7 +104,7 @@ public class GradeUtil {
         }
 
         return BigDecimal.valueOf(sum)
-                .divide(BigDecimal.valueOf(subject), 5, CEILING);
+                .divide(BigDecimal.valueOf(subject), 5, DOWN);
     }
 
     public BigDecimal getScore(int beginColumn, int endColumn) {
