@@ -59,7 +59,7 @@ public class CalculatedScore {
         this.conversionScore = gradeScore.getConversionScore();
         this.firstGradeScore = gradeScore.getFirstGradeScore();
         this.secondGradeScore = gradeScore.getSecondGradeScore();
-        this.thirdGradeScore = gradeScore.getSecondGradeScore();
+        this.thirdGradeScore = gradeScore.getThirdGradeScore();
         this.createdAt = LocalDateTime.now();
         this.modifiedAt = LocalDateTime.now();
     }
