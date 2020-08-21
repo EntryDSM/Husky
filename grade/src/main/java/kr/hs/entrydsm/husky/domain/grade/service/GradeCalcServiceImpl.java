@@ -53,7 +53,7 @@ public class GradeCalcServiceImpl implements GradeCalcService {
             return DEFAULT_ATTENDANCE_SCORE;
         }
 
-        GeneralApplication app = (GeneralApplication) user.getApplication();
+        GeneralApplication app = user.getGeneralApplication();
         int conversionAbsence = app.getFullCutCount() +
                 (app.getLateCount() + app.getEarlyLeaveCount() + app.getPeriodCutCount()) / 3;
 
