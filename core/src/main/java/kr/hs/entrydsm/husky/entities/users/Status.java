@@ -37,7 +37,9 @@ public class Status {
     @Column(length = 6)
     private String examCode;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @MapsId
+    @OneToOne
+    @JoinColumn
     private User user;
 
     public void finalSubmit() {
