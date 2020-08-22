@@ -18,8 +18,8 @@ public class GraduatedApplication extends GeneralApplication {
     private LocalDate graduatedDate;
 
     @Builder
-    public GraduatedApplication(String email, User user, LocalDate graduatedDate) {
-        super(email, user);
+    public GraduatedApplication(Integer receiptCode, User user, LocalDate graduatedDate) {
+        super(receiptCode, user);
         this.graduatedDate = graduatedDate;
     }
 

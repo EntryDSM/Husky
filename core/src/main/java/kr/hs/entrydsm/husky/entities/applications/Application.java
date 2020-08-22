@@ -12,11 +12,10 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class Application extends BaseTimeEntity{
+public abstract class Application extends BaseTimeEntity {
 
     @Id
-    @Column(name = "user_email")
-    private String email;
+    private Integer receiptCode;
 
     @OneToOne(cascade = CascadeType.ALL)
     private User user;

@@ -59,8 +59,8 @@ public abstract class GeneralApplication extends Application {
     @Column(length = 6)
     private String english;                 // 영어
 
-    GeneralApplication(String email, User user) {
-        super(email, user);
+    GeneralApplication(Integer receiptCode, User user) {
+        super(receiptCode, user);
     }
 
     public void setStudentInfo(String studentNumber, School school, String schoolTel) {

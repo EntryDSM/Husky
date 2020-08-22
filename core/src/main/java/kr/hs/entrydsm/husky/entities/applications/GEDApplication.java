@@ -19,8 +19,8 @@ public class GEDApplication extends Application {
     private LocalDate gedPassDate;
 
     @Builder
-    public GEDApplication(LocalDate gedPassDate, String email, User user) {
-        super(email, user);
+    public GEDApplication(LocalDate gedPassDate, Integer receiptCode, User user) {
+        super(receiptCode, user);
         this.gedPassDate = gedPassDate;
     }
 
