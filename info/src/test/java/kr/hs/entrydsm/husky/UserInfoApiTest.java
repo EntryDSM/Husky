@@ -71,14 +71,14 @@ class UserInfoApiTest {
                 .build();
 
         userRepository.save(User.builder()
-                .receiptCode(1)
+                .receiptCode(3)
                 .email("test3")
                 .createdAt(LocalDateTime.now())
                 .password("1234")
                 .build());
 
         userRepository.save(User.builder()
-                .receiptCode(2)
+                .receiptCode(4)
                 .email("test4")
                 .createdAt(LocalDateTime.now())
                 .password("1234")
