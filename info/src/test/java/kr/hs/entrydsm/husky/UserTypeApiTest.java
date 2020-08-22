@@ -102,9 +102,9 @@ class UserTypeApiTest {
 //                .andDo(print());
 
         // then
-        mvc.perform(get(url + "/process/me"))
-                .andExpect(status().isOk())
-                .andDo(print());
+//        mvc.perform(get(url + "/process/me"))
+//                .andExpect(status().isOk())
+//                .andDo(print());
     }
 
     @Test
