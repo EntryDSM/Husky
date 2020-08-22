@@ -14,8 +14,8 @@ import kr.hs.entrydsm.husky.entities.applications.repositories.UnGraduatedApplic
 import kr.hs.entrydsm.husky.entities.users.User;
 import kr.hs.entrydsm.husky.entities.users.enums.GradeType;
 import kr.hs.entrydsm.husky.entities.users.repositories.UserRepository;
+import kr.hs.entrydsm.husky.security.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -27,9 +27,11 @@ public class ApplicationService {
     private final GraduatedApplicationRepository graduatedApplicationRepository;
     private final UnGraduatedApplicationRepository unGraduatedApplicationRepository;
 
+    private final AuthenticationFacade authenticationFacade;
+
     public void setIntro(SetDocsRequest request) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email)
+        Integer receiptCode = authenticationFacade.getReceiptCode();
+        User user = userRepository.findByReceiptCode(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
         user.setSelfIntroduction(request.getContent());
@@ -37,16 +39,16 @@ public class ApplicationService {
     }
 
     public IntroResponse getIntro() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email)
+        Integer receiptCode = authenticationFacade.getReceiptCode();
+        User user = userRepository.findByReceiptCode(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
         return new IntroResponse(user.getSelfIntroduction());
     }
 
     public void setPlan(SetDocsRequest request) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email)
+        Integer receiptCode = authenticationFacade.getReceiptCode();
+        User user = userRepository.findByReceiptCode(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
         user.setStudyPlan(request.getContent());
@@ -54,22 +56,22 @@ public class ApplicationService {
     }
 
     public PlanResponse getPlan() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email)
+        Integer receiptCode = authenticationFacade.getReceiptCode();
+        User user = userRepository.findByReceiptCode(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
         return new PlanResponse(user.getStudyPlan());
     }
 
     public void setGedScore(SetGedScoreRequest request) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email)
+        Integer receiptCode = authenticationFacade.getReceiptCode();
+        User user = userRepository.findByReceiptCode(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
         if (!user.isGed())
             throw new ApplicationTypeUnmatchedException();
 
-        GEDApplication application = gedApplicationRepository.findByEmail(email)
+        GEDApplication application = gedApplicationRepository.findByReceiptCode(receiptCode)
                 .orElseThrow(ApplicationNotFoundException::new);
 
         application.setGedAverageScore(request.getGedAverageScore());
@@ -77,8 +79,8 @@ public class ApplicationService {
     }
 
     public void setScore(SetScoreRequest request) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email)
+        Integer receiptCode = authenticationFacade.getReceiptCode();
+        User user = userRepository.findByReceiptCode(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
         if (!user.isGraduated() && !user.isUngraduated())
@@ -86,7 +88,8 @@ public class ApplicationService {
 
         switch (user.getGradeType()) {
             case GRADUATED: {
-                GraduatedApplication graduatedApplication = graduatedApplicationRepository.findByEmail(email)
+                GraduatedApplication graduatedApplication =
+                        graduatedApplicationRepository.findByReceiptCode(receiptCode)
                         .orElseThrow(ApplicationNotFoundException::new);
 
                 graduatedApplication.setScore(request.getVolunteerTime(), request.getFullCutCount(),
@@ -98,7 +101,8 @@ public class ApplicationService {
             }
 
             case UNGRADUATED: {
-                UnGraduatedApplication unGraduatedApplication = unGraduatedApplicationRepository.findByEmail(email)
+                UnGraduatedApplication unGraduatedApplication =
+                        unGraduatedApplicationRepository.findByReceiptCode(receiptCode)
                         .orElseThrow(ApplicationNotFoundException::new);
 
                 unGraduatedApplication.setScore(request.getVolunteerTime(), request.getFullCutCount(),
@@ -112,8 +116,8 @@ public class ApplicationService {
     }
 
     public ScoreResponse getScore() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email)
+        Integer receiptCode = authenticationFacade.getReceiptCode();
+        User user = userRepository.findByReceiptCode(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
         GeneralApplication generalApplication;
@@ -122,19 +126,19 @@ public class ApplicationService {
 
         switch (gradeType) {
             case GED: {
-                GEDApplication gedApplication = gedApplicationRepository.findByEmail(email)
+                GEDApplication gedApplication = gedApplicationRepository.findByReceiptCode(receiptCode)
                         .orElseThrow(ApplicationNotFoundException::new);
                 return ScoreResponse.gedResponse(gedApplication, gradeType);
             }
 
             case UNGRADUATED: {
-                generalApplication = unGraduatedApplicationRepository.findByEmail(email)
+                generalApplication = unGraduatedApplicationRepository.findByReceiptCode(receiptCode)
                         .orElseThrow(ApplicationNotFoundException::new);
                 break;
             }
 
             case GRADUATED: {
-                generalApplication = graduatedApplicationRepository.findByEmail(email)
+                generalApplication = graduatedApplicationRepository.findByReceiptCode(receiptCode)
                         .orElseThrow(ApplicationNotFoundException::new);
                 break;
             }

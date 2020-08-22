@@ -7,8 +7,8 @@ import kr.hs.entrydsm.husky.entities.applications.repositories.GEDApplicationRep
 import kr.hs.entrydsm.husky.entities.applications.repositories.GraduatedApplicationRepository;
 import kr.hs.entrydsm.husky.entities.users.User;
 import kr.hs.entrydsm.husky.entities.users.repositories.UserRepository;
+import kr.hs.entrydsm.husky.security.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -19,9 +19,11 @@ public class ProcessService {
     private final GEDApplicationRepository gedApplicationRepository;
     private final GraduatedApplicationRepository graduatedApplicationRepository;
 
+    private final AuthenticationFacade authenticationFacade;
+
     public ProcessResponse getProcess() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email)
+        Integer receiptCode = authenticationFacade.getReceiptCode();
+        User user = userRepository.findByReceiptCode(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
         return ProcessResponse.builder()
@@ -34,13 +36,13 @@ public class ProcessService {
 
     private boolean checkType(User user) {
         if (user.isGed()) {
-            return gedApplicationRepository.findByEmail(user.getEmail())
+            return gedApplicationRepository.findByReceiptCode(user.getReceiptCode())
                     .map(application -> (application.getGedPassDate() != null) && user.isFilledType())
                     .orElse(false);
         }
 
         if (user.isGraduated()) {
-            return graduatedApplicationRepository.findByEmail(user.getEmail())
+            return graduatedApplicationRepository.findByReceiptCode(user.getReceiptCode())
                     .map(application -> (application.getGraduatedDate() != null) && user.isFilledType())
                     .orElse(false);
         }
@@ -64,7 +66,7 @@ public class ProcessService {
         if (!checkType(user)) return false;
 
         if (user.isGed()) {
-            return gedApplicationRepository.findByEmail(user.getEmail())
+            return gedApplicationRepository.findByReceiptCode(user.getReceiptCode())
                     .map(application -> application.getGedAverageScore() != null)
                     .orElse(false);
         } else {
