@@ -1,4 +1,4 @@
-package kr.hs.entrydsm.husky.service.auth;
+package kr.hs.entrydsm.husky.security;
 
 import kr.hs.entrydsm.husky.entities.users.User;
 import lombok.AllArgsConstructor;

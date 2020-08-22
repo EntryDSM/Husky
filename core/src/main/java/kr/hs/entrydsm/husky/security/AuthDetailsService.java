@@ -1,7 +1,7 @@
-package kr.hs.entrydsm.husky.service.auth;
+package kr.hs.entrydsm.husky.security;
 
 import kr.hs.entrydsm.husky.entities.users.repositories.UserRepository;
-import kr.hs.entrydsm.husky.exceptions.UserNotFoundException;
+import kr.hs.entrydsm.husky.error.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,4 +19,5 @@ public class AuthDetailsService implements UserDetailsService {
                 .map(AuthDetails::new)
                 .orElseThrow(UserNotFoundException::new);
     }
+
 }

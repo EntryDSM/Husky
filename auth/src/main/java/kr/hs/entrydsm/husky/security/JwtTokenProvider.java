@@ -1,8 +1,6 @@
 package kr.hs.entrydsm.husky.security;
 
 import io.jsonwebtoken.*;
-import kr.hs.entrydsm.husky.service.auth.AuthDetails;
-import kr.hs.entrydsm.husky.service.auth.AuthDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
