@@ -9,6 +9,6 @@ import java.util.Optional;
 @Repository
 public interface ApplicationBaseRepository<T extends Application> extends CrudRepository<T, String> {
 
-    Optional<T> findByEmail(String email);
+    Optional<T> findByReceiptCode(Integer receiptCode);
 
 }
