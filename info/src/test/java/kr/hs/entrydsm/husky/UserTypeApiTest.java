@@ -98,8 +98,8 @@ class UserTypeApiTest {
 
         //when
         ResultActions resultActions = selectTypeRequest(url, "GRADUATED")
-                .andDo(print())
-                .andExpect(status().isNoContent());
+                .andExpect(status().isNoContent())
+                .andDo(print());
 
 //      then
         mvc.perform(get(url + "/process/me"))
