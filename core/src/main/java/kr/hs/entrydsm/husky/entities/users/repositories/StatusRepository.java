@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface StatusRepository extends CrudRepository<Status, String> {
-    Optional<Status> findByEmail(String email);
+    Optional<Status> findByReceiptCode(Integer receiptCode);
 }
