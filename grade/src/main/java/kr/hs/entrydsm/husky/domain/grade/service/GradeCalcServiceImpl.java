@@ -49,7 +49,7 @@ public class GradeCalcServiceImpl implements GradeCalcService {
     }
 
     private Integer calcAttendanceScore(User user) {
-        if (user.getGradeType() == GradeType.GED) {
+        if (user.isGED()) {
             return DEFAULT_ATTENDANCE_SCORE;
         }
 
@@ -61,7 +61,7 @@ public class GradeCalcServiceImpl implements GradeCalcService {
     }
 
     private BigDecimal calcVolunteerScore(User user) {
-        if (user.getGradeType() == GradeType.GED) {
+        if (user.isGED()) {
             return user.getGedApplication().getGedAverageScore()
                     .subtract(BigDecimal.valueOf(40))
                     .divide(BigDecimal.valueOf(5), 3, HALF_UP)
@@ -87,7 +87,7 @@ public class GradeCalcServiceImpl implements GradeCalcService {
     private GradeScore calcGradeScore(User user) {
         GradeScore gradeScore;
 
-        if (user.getGradeType() == GradeType.GED) {
+        if (user.isGED()) {
             BigDecimal conversionScore = calcGEDConversionScore(user.getGedApplication().getGedAverageScore());
             gradeScore = new GradeScore(conversionScore);
 
