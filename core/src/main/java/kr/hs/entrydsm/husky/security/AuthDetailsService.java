@@ -15,7 +15,11 @@ public class AuthDetailsService implements UserDetailsService {
 
     @Override
     public AuthDetails loadUserByUsername(String receiptCode) throws UsernameNotFoundException {
-        return userRepository.findByReceiptCode(Integer.parseInt(receiptCode))
+        return null;
+    }
+
+    public AuthDetails loadUserByReceiptCode(Integer receiptCode) {
+        return userRepository.findByReceiptCode(receiptCode)
                 .map(AuthDetails::new)
                 .orElseThrow(UserNotFoundException::new);
     }
