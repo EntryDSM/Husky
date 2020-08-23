@@ -19,7 +19,7 @@ public class AuthDetailsService implements UserDetailsService {
     }
 
     public AuthDetails loadUserByReceiptCode(Integer receiptCode) {
-        return userRepository.findByReceiptCode(receiptCode)
+        return userRepository.findById(receiptCode)
                 .map(AuthDetails::new)
                 .orElseThrow(UserNotFoundException::new);
     }

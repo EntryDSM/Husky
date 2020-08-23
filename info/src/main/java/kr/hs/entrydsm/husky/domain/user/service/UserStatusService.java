@@ -22,7 +22,7 @@ public class UserStatusService {
 
     public UserStatusResponse getStatus() {
         Integer receiptCode = authenticationFacade.getReceiptCode();
-        User user = userRepository.findByReceiptCode(receiptCode)
+        User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
         Status status = user.getStatus();
@@ -33,7 +33,7 @@ public class UserStatusService {
 
     public UserStatusResponse finalSubmit() {
         Integer receiptCode = authenticationFacade.getReceiptCode();
-        User user = userRepository.findByReceiptCode(receiptCode)
+        User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
         Status status = user.getStatus();

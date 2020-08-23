@@ -23,7 +23,7 @@ public class ProcessService {
 
     public ProcessResponse getProcess() {
         Integer receiptCode = authenticationFacade.getReceiptCode();
-        User user = userRepository.findByReceiptCode(receiptCode)
+        User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
         return ProcessResponse.builder()

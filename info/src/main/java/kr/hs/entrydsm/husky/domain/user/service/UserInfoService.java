@@ -36,7 +36,7 @@ public class UserInfoService {
     @Transactional
     public UserInfoResponse setUserInfo(SetUserInfoRequest request) {
         Integer receiptCode = authenticationFacade.getReceiptCode();
-        User user = userRepository.findByReceiptCode(receiptCode)
+        User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
         user.setInfo(request.getName(), Sex.valueOf(request.getSex()), request.getBirthDate(),
@@ -76,7 +76,7 @@ public class UserInfoService {
 
     public UserInfoResponse getUserInfo() {
         Integer receiptCode = authenticationFacade.getReceiptCode();
-        User user = userRepository.findByReceiptCode(receiptCode)
+        User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
         if (user.getGradeType() == null) throw new ApplicationNotFoundException();

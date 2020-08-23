@@ -31,7 +31,7 @@ public class ApplicationService {
 
     public void setIntro(SetDocsRequest request) {
         Integer receiptCode = authenticationFacade.getReceiptCode();
-        User user = userRepository.findByReceiptCode(receiptCode)
+        User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
         user.setSelfIntroduction(request.getContent());
@@ -40,7 +40,7 @@ public class ApplicationService {
 
     public IntroResponse getIntro() {
         Integer receiptCode = authenticationFacade.getReceiptCode();
-        User user = userRepository.findByReceiptCode(receiptCode)
+        User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
         return new IntroResponse(user.getSelfIntroduction());
@@ -48,7 +48,7 @@ public class ApplicationService {
 
     public void setPlan(SetDocsRequest request) {
         Integer receiptCode = authenticationFacade.getReceiptCode();
-        User user = userRepository.findByReceiptCode(receiptCode)
+        User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
         user.setStudyPlan(request.getContent());
@@ -57,7 +57,7 @@ public class ApplicationService {
 
     public PlanResponse getPlan() {
         Integer receiptCode = authenticationFacade.getReceiptCode();
-        User user = userRepository.findByReceiptCode(receiptCode)
+        User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
         return new PlanResponse(user.getStudyPlan());
@@ -65,7 +65,7 @@ public class ApplicationService {
 
     public void setGedScore(SetGedScoreRequest request) {
         Integer receiptCode = authenticationFacade.getReceiptCode();
-        User user = userRepository.findByReceiptCode(receiptCode)
+        User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
         if (!user.isGed())
@@ -80,7 +80,7 @@ public class ApplicationService {
 
     public void setScore(SetScoreRequest request) {
         Integer receiptCode = authenticationFacade.getReceiptCode();
-        User user = userRepository.findByReceiptCode(receiptCode)
+        User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
         if (!user.isGraduated() && !user.isUngraduated())
@@ -115,7 +115,7 @@ public class ApplicationService {
 
     public ScoreResponse getScore() {
         Integer receiptCode = authenticationFacade.getReceiptCode();
-        User user = userRepository.findByReceiptCode(receiptCode)
+        User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
         GeneralApplication generalApplication;

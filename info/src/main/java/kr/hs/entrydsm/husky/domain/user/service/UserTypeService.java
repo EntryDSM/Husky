@@ -37,7 +37,7 @@ public class UserTypeService {
     @Transactional
     public void selectUserType(SelectTypeRequest request) {
         Integer receiptCode = authenticationFacade.getReceiptCode();
-        User user = userRepository.findByReceiptCode(receiptCode)
+        User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
         GradeType gradeType = GradeType.valueOf(request.getGradeType().toUpperCase());
@@ -76,7 +76,7 @@ public class UserTypeService {
 
     public UserTypeResponse getUserType() {
         Integer receiptCode = authenticationFacade.getReceiptCode();
-        User user = userRepository.findByReceiptCode(receiptCode)
+        User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
         LocalDate graduatedDate = null;
