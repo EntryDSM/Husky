@@ -14,8 +14,8 @@ import static kr.hs.entrydsm.husky.domain.grade.constant.Semester.*;
 
 public class GradeUtil {
 
-    private User user;
-    private GradeMatrix gradeMatrix;
+    private final User user;
+    private final GradeMatrix gradeMatrix;
 
     public GradeUtil(User user, GradeMatrix gradeMatrix) {
         this.user = user;
