@@ -5,6 +5,9 @@ spring:
   redis:
     host: ${REDIS_HOST}
     password: ${REDIS_PASSWORD}
+    port: ${REDIS_PORT}
+  jpa:
+    generate-ddl: true
 
 aws:
   credential:
