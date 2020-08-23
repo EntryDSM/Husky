@@ -10,6 +10,8 @@ import kr.hs.entrydsm.husky.domain.schedule.domain.Schedule;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -57,7 +59,7 @@ public class ScheduleApiTest {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         scheduleRepository.deleteAll();
     }
 

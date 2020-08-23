@@ -13,15 +13,14 @@ import kr.hs.entrydsm.husky.entities.schools.School;
 import kr.hs.entrydsm.husky.entities.schools.repositories.SchoolRepository;
 import kr.hs.entrydsm.husky.entities.users.User;
 import kr.hs.entrydsm.husky.entities.users.repositories.UserRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -38,6 +37,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = InfoApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DirtiesContext
 @ActiveProfiles("test")
 class UserInfoApiTest {
 
@@ -71,15 +72,7 @@ class UserInfoApiTest {
                 .build();
 
         userRepository.save(User.builder()
-                .receiptCode(3)
-                .email("test3")
-                .createdAt(LocalDateTime.now())
-                .password("1234")
-                .build());
-
-        userRepository.save(User.builder()
-                .receiptCode(4)
-                .email("test4")
+                .email("test")
                 .createdAt(LocalDateTime.now())
                 .password("1234")
                 .build());
@@ -101,7 +94,8 @@ class UserInfoApiTest {
     }
 
     @Test
-    @WithMockUser(username = "test3", password = "1234")
+    @Order(1)
+    @WithMockUser(username = "1", password = "1234")
     public void setAndGetInfoApi() throws Exception {
         //given
         String url = "http://localhost:" + port;
@@ -146,7 +140,8 @@ class UserInfoApiTest {
     }
 
     @Test
-    @WithMockUser(username = "test4", password = "1234")
+    @Order(2)
+    @WithMockUser(username = "2", password = "1234")
     public void setAndGetGedInfoApi() throws Exception {
         //given
         String url = "http://localhost:" + port;
