@@ -51,8 +51,7 @@ public class UserTypeService {
             case GED: {
                 if (request.getGedPassDate() == null) throw new BadRequestException();
 
-                gedRepository.save(GEDApplication.builder()
-                        .receiptCode(receiptCode)
+                gedRepository.save(GEDApplication.gedApplicationBuilder()
                         .user(user)
                         .gedPassDate(request.getGedPassDate())
                         .build());
@@ -61,15 +60,14 @@ public class UserTypeService {
             case GRADUATED: {
                 if (request.getGraduatedDate() == null) throw new BadRequestException();
 
-                graduatedRepository.save(GraduatedApplication.builder()
-                        .receiptCode(receiptCode)
+                graduatedRepository.save(GraduatedApplication.graduatedApplicationBuilder()
                         .user(user)
                         .graduatedDate(request.getGraduatedDate())
                         .build());
                 break;
             }
             case UNGRADUATED: {
-                unGraduatedRepository.save(new UnGraduatedApplication(receiptCode, user));
+                unGraduatedRepository.save(new UnGraduatedApplication(user));
                 break;
             }
         }
@@ -88,14 +86,15 @@ public class UserTypeService {
 
         switch (user.getGradeType()) {
             case GED:
-                GEDApplication ged = gedRepository.findByReceiptCode(receiptCode)
+                GEDApplication ged = gedRepository.findById(user.getReceiptCode())
                         .orElseThrow(ApplicationNotFoundException::new);
                 gedPassDate = ged.getGedPassDate();
                 break;
+
             case GRADUATED:
-                GraduatedApplication gred = graduatedRepository.findByReceiptCode(receiptCode)
+                GraduatedApplication graduatedApplication = graduatedRepository.findById(user.getReceiptCode())
                         .orElseThrow(ApplicationNotFoundException::new);
-                graduatedDate = gred.getGraduatedDate();
+                graduatedDate = graduatedApplication.getGraduatedDate();
                 break;
         }
 

@@ -2,6 +2,8 @@ package kr.hs.entrydsm.husky.entities.applications;
 
 import kr.hs.entrydsm.husky.entities.schools.School;
 import kr.hs.entrydsm.husky.entities.users.User;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,9 +11,10 @@ import javax.persistence.*;
 
 @Getter
 @NoArgsConstructor
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@AllArgsConstructor
 @Entity
-public abstract class GeneralApplication extends Application {
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public class GeneralApplication extends Application {
 
     @Column(length = 5)
     private String studentNumber;
@@ -59,10 +62,6 @@ public abstract class GeneralApplication extends Application {
     @Column(length = 6)
     private String english;                 // 영어
 
-    GeneralApplication(Integer receiptCode, User user) {
-        super(receiptCode, user);
-    }
-
     public void setStudentInfo(String studentNumber, School school, String schoolTel) {
         this.studentNumber = studentNumber;
         this.school = school;
@@ -85,7 +84,7 @@ public abstract class GeneralApplication extends Application {
         this.techAndHome = techAndHome;
         this.english = english;
     }
-
+    
     public boolean isFilledScore() {
         return volunteerTime != null && fullCutCount != null && periodCutCount != null && lateCount != null &&
                 earlyLeaveCount != null && korean != null && social != null && history != null && math != null &&
@@ -94,6 +93,33 @@ public abstract class GeneralApplication extends Application {
 
     public boolean isFilledStudentInfo() {
         return studentNumber != null && school != null && schoolTel != null;
+    }
+    
+    GeneralApplication(User user) {
+        super(user);
+    }
+    
+    @Builder(builderMethodName = "generalApplicationBuilder")
+    public GeneralApplication(User user, String studentNumber, School school, String schoolTel, Integer volunteerTime,
+                              Integer fullCutCount, Integer periodCutCount, Integer lateCount, Integer earlyLeaveCount,
+                              String korean, String social, String history, String math, String science,
+                              String techAndHome, String english) {
+        super(user);
+        this.studentNumber = studentNumber;
+        this.school = school;
+        this.schoolTel = schoolTel;
+        this.volunteerTime = volunteerTime;
+        this.fullCutCount = fullCutCount;
+        this.periodCutCount = periodCutCount;
+        this.lateCount = lateCount;
+        this.earlyLeaveCount = earlyLeaveCount;
+        this.korean = korean;
+        this.social = social;
+        this.history = history;
+        this.math = math;
+        this.science = science;
+        this.techAndHome = techAndHome;
+        this.english = english;
     }
 
 }

@@ -71,7 +71,7 @@ public class ApplicationService {
         if (!user.isGed())
             throw new ApplicationTypeUnmatchedException();
 
-        GEDApplication application = gedApplicationRepository.findByReceiptCode(receiptCode)
+        GEDApplication application = gedApplicationRepository.findById(user.getReceiptCode())
                 .orElseThrow(ApplicationNotFoundException::new);
 
         application.setGedAverageScore(request.getGedAverageScore());
@@ -88,8 +88,7 @@ public class ApplicationService {
 
         switch (user.getGradeType()) {
             case GRADUATED: {
-                GraduatedApplication graduatedApplication =
-                        graduatedApplicationRepository.findByReceiptCode(receiptCode)
+                GraduatedApplication graduatedApplication = graduatedApplicationRepository.findById(user.getReceiptCode())
                         .orElseThrow(ApplicationNotFoundException::new);
 
                 graduatedApplication.setScore(request.getVolunteerTime(), request.getFullCutCount(),
@@ -101,8 +100,7 @@ public class ApplicationService {
             }
 
             case UNGRADUATED: {
-                UnGraduatedApplication unGraduatedApplication =
-                        unGraduatedApplicationRepository.findByReceiptCode(receiptCode)
+                UnGraduatedApplication unGraduatedApplication = unGraduatedApplicationRepository.findById(user.getReceiptCode())
                         .orElseThrow(ApplicationNotFoundException::new);
 
                 unGraduatedApplication.setScore(request.getVolunteerTime(), request.getFullCutCount(),
@@ -126,19 +124,19 @@ public class ApplicationService {
 
         switch (gradeType) {
             case GED: {
-                GEDApplication gedApplication = gedApplicationRepository.findByReceiptCode(receiptCode)
+                GEDApplication gedApplication = gedApplicationRepository.findById(user.getReceiptCode())
                         .orElseThrow(ApplicationNotFoundException::new);
                 return ScoreResponse.gedResponse(gedApplication, gradeType);
             }
 
             case UNGRADUATED: {
-                generalApplication = unGraduatedApplicationRepository.findByReceiptCode(receiptCode)
+                generalApplication = unGraduatedApplicationRepository.findById(user.getReceiptCode())
                         .orElseThrow(ApplicationNotFoundException::new);
                 break;
             }
 
             case GRADUATED: {
-                generalApplication = graduatedApplicationRepository.findByReceiptCode(receiptCode)
+                generalApplication = graduatedApplicationRepository.findById(user.getReceiptCode())
                         .orElseThrow(ApplicationNotFoundException::new);
                 break;
             }

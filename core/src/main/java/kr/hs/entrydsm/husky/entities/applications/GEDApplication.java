@@ -5,6 +5,8 @@ import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.validation.constraints.Digits;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Getter
@@ -12,19 +14,21 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class GEDApplication extends Application {
 
-    @Column
-    private Integer gedAverageScore;
+    @Digits(integer = 3, fraction = 2)
+    private BigDecimal gedAverageScore;
 
     @Column
     private LocalDate gedPassDate;
 
-    @Builder
-    public GEDApplication(LocalDate gedPassDate, Integer receiptCode, User user) {
-        super(receiptCode, user);
+    public void setGedAverageScore(BigDecimal gedAverageScore) {
+        this.gedAverageScore = gedAverageScore;
+    }
+
+    @Builder(builderMethodName = "gedApplicationBuilder")
+    public GEDApplication(User user, BigDecimal gedAverageScore, LocalDate gedPassDate) {
+        super(user);
+        this.gedAverageScore = gedAverageScore;
         this.gedPassDate = gedPassDate;
     }
 
-    public void setGedAverageScore(Integer gedAverageScore) {
-        this.gedAverageScore = gedAverageScore;
-    }
 }

@@ -36,13 +36,13 @@ public class ProcessService {
 
     private boolean checkType(User user) {
         if (user.isGed()) {
-            return gedApplicationRepository.findByReceiptCode(user.getReceiptCode())
+            return gedApplicationRepository.findById(user.getReceiptCode())
                     .map(application -> (application.getGedPassDate() != null) && user.isFilledType())
                     .orElse(false);
         }
 
         if (user.isGraduated()) {
-            return graduatedApplicationRepository.findByReceiptCode(user.getReceiptCode())
+            return graduatedApplicationRepository.findById(user.getReceiptCode())
                     .map(application -> (application.getGraduatedDate() != null) && user.isFilledType())
                     .orElse(false);
         }
@@ -66,7 +66,7 @@ public class ProcessService {
         if (!checkType(user)) return false;
 
         if (user.isGed()) {
-            return gedApplicationRepository.findByReceiptCode(user.getReceiptCode())
+            return gedApplicationRepository.findById(user.getReceiptCode())
                     .map(application -> application.getGedAverageScore() != null)
                     .orElse(false);
         } else {

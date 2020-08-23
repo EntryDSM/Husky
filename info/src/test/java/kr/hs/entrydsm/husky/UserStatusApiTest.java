@@ -81,7 +81,7 @@ class UserStatusApiTest {
         //then
         User user = userRepository.findByEmail("test5")
                 .orElseThrow(UserNotFoundException::new);
-        System.out.println(user.getStatus().getUser().getName() + " final submitted : " +
+        System.out.println(user.getName() + " final submitted : " +
                 user.getStatus().isFinalSubmit());
     }
 }

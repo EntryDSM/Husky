@@ -46,7 +46,7 @@ public class UserInfoService {
 
         switch (user.getGradeType()) {
             case UNGRADUATED: {
-                UnGraduatedApplication unGraduated = unGraduatedRepository.findByReceiptCode(receiptCode)
+                UnGraduatedApplication unGraduated = unGraduatedRepository.findById(user.getReceiptCode())
                         .orElseThrow(ApplicationNotFoundException::new);
                 School school = schoolRepository.findById(request.getSchoolCode())
                         .orElseThrow(SchoolNotFoundException::new);
@@ -58,7 +58,7 @@ public class UserInfoService {
                         unGraduated.getSchool().getSchoolCode(), unGraduated.getSchoolTel());
             }
             case GRADUATED: {
-                GraduatedApplication graduated = graduatedRepository.findByReceiptCode(receiptCode)
+                GraduatedApplication graduated = graduatedRepository.findById(user.getReceiptCode())
                         .orElseThrow(ApplicationNotFoundException::new);
                 School school = schoolRepository.findById(request.getSchoolCode())
                         .orElseThrow(SchoolNotFoundException::new);
@@ -82,15 +82,16 @@ public class UserInfoService {
         if (user.getGradeType() == null) throw new ApplicationNotFoundException();
         switch (user.getGradeType()) {
             case GRADUATED: {
-                GraduatedApplication graduated = graduatedRepository.findByReceiptCode(receiptCode)
+                GraduatedApplication graduated = graduatedRepository.findById(user.getReceiptCode())
                         .orElseThrow(ApplicationNotFoundException::new);
                 if (graduated.getSchool() == null) throw new SchoolNotFoundException();
 
                 return UserInfoResponse.response(user, graduated.getStudentNumber(),
                         graduated.getSchool().getSchoolCode(), graduated.getSchoolTel());
             }
+
             case UNGRADUATED: {
-                UnGraduatedApplication unGraduated = unGraduatedRepository.findByReceiptCode(receiptCode)
+                UnGraduatedApplication unGraduated = unGraduatedRepository.findById(user.getReceiptCode())
                         .orElseThrow(ApplicationNotFoundException::new);
                 if (unGraduated.getSchool() == null) throw new SchoolNotFoundException();
 
