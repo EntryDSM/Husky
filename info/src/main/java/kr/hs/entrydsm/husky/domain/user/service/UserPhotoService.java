@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.util.UUID;
 
 @NoArgsConstructor
 @Service
@@ -44,13 +45,14 @@ public class UserPhotoService {
     }
 
     public String upload(MultipartFile file) throws IOException {
-        String filename = file.getOriginalFilename();
-        String ext = filename.substring( filename.lastIndexOf(".") + 1);
+        String originalFilename = file.getOriginalFilename();
+        String ext = originalFilename.substring( originalFilename.lastIndexOf(".") + 1);
+        String randomName = UUID.randomUUID().toString();
+        String filename = randomName + "." + ext;
 
         s3Client.putObject(new PutObjectRequest(bucket, filename, file.getInputStream(), null)
-        .withCannedAcl(CannedAccessControlList.AuthenticatedRead));
+        .withCannedAcl(CannedAccessControlList.PublicRead));
 
-        System.out.println(s3Client.getUrl(bucket, filename).getAuthority());
         return s3Client.getUrl(bucket, filename).toString();
     }
 
