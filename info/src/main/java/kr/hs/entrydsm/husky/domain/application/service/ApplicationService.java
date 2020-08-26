@@ -68,7 +68,7 @@ public class ApplicationService {
         User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
-        if (!user.isGed())
+        if (!user.isGED())
             throw new ApplicationTypeUnmatchedException();
 
         GEDApplication application = gedApplicationRepository.findById(user.getReceiptCode())

@@ -35,7 +35,7 @@ public class ProcessService {
     }
 
     private boolean checkType(User user) {
-        if (user.isGed()) {
+        if (user.isGED()) {
             return gedApplicationRepository.findById(user.getReceiptCode())
                     .map(application -> (application.getGedPassDate() != null) && user.isFilledType())
                     .orElse(false);
@@ -65,7 +65,7 @@ public class ProcessService {
     private boolean checkScore(User user) {
         if (!checkType(user)) return false;
 
-        if (user.isGed()) {
+        if (user.isGED()) {
             return gedApplicationRepository.findById(user.getReceiptCode())
                     .map(application -> application.getGedAverageScore() != null)
                     .orElse(false);

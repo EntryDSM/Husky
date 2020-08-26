@@ -49,7 +49,7 @@ public class GradeCalcServiceImpl implements GradeCalcService {
     }
 
     private Integer calcAttendanceScore(User user) {
-        if (user.getGradeType() == GradeType.GED) {
+        if (user.isGED()) {
             return DEFAULT_ATTENDANCE_SCORE;
         }
 
@@ -61,7 +61,7 @@ public class GradeCalcServiceImpl implements GradeCalcService {
     }
 
     private BigDecimal calcVolunteerScore(User user) {
-        if (user.getGradeType() == GradeType.GED) {
+        if (user.isGED()) {
             return user.getGedApplication().getGedAverageScore()
                     .subtract(BigDecimal.valueOf(40))
                     .divide(BigDecimal.valueOf(5), 3, HALF_UP)
@@ -87,7 +87,7 @@ public class GradeCalcServiceImpl implements GradeCalcService {
     private GradeScore calcGradeScore(User user) {
         GradeScore gradeScore;
 
-        if (user.getGradeType() == GradeType.GED) {
+        if (user.isGED()) {
             BigDecimal conversionScore = calcGEDConversionScore(user.getGedApplication().getGedAverageScore());
             gradeScore = new GradeScore(conversionScore);
 
@@ -95,13 +95,15 @@ public class GradeCalcServiceImpl implements GradeCalcService {
             gradeScore = this.calcGeneralApplication(user);
         }
 
-        if (user.getApplyType() != ApplyType.COMMON)
+        if (user.getApplyType() != ApplyType.COMMON) {
             gradeScore.multiplyAll(BigDecimal.valueOf(0.6));
+        }
 
         gradeScore.setScaleAll(3, HALF_UP);
 
-        if (user.getGradeType() != GradeType.GED)
+        if (user.getGradeType() != GradeType.GED) {
             gradeScore.setConversionScore();
+        }
 
         return gradeScore;
     }
@@ -137,23 +139,26 @@ public class GradeCalcServiceImpl implements GradeCalcService {
         if (isFirstGradeEmpty && isSecondGradeEmpty) {
             firstGradeScore = matrixUtil.getAverageScoreIf3rdGradeLeft();
             secondGradeScore = firstGradeScore;
-        } else if (isFirstGradeEmpty && !isSecondGradeEmpty)
+
+        } else if (isFirstGradeEmpty && !isSecondGradeEmpty) {
             firstGradeScore = matrixUtil.getAverageScoreIf1stGradeEmpty();
 
-        else if (!isFirstGradeEmpty && isSecondGradeEmpty)
+        } else if (!isFirstGradeEmpty && isSecondGradeEmpty) {
             secondGradeScore = matrixUtil.getAverageScoreIf2ndGradeEmpty();
+        }
 
-        if (!isFirstGradeEmpty)
+        if (!isFirstGradeEmpty) {
             firstGradeScore = matrixUtil.getScore(SEMESTER_1_1, SEMESTER_1_2);
+        }
 
-        if (!isSecondGradeEmpty)
+        if (!isSecondGradeEmpty) {
             secondGradeScore = matrixUtil.getScore(SEMESTER_2_1, SEMESTER_2_2);
-
-        thirdGradeScore = matrixUtil.getScore(SEMESTER_3_1, SEMESTER_3_2);
+        }
 
         firstGradeScore = firstGradeScore.multiply(BigDecimal.valueOf(4.5)).setScale(6, DOWN);
         secondGradeScore = secondGradeScore.multiply(BigDecimal.valueOf(4.5)).setScale(6, DOWN);
-        thirdGradeScore = thirdGradeScore.multiply(SIX).setScale(6, DOWN);
+        thirdGradeScore = matrixUtil.getScore(SEMESTER_3_1, SEMESTER_3_2)
+                .multiply(SIX).setScale(6, DOWN);
 
         return GradeScore.builder()
                 .firstGradeScore(firstGradeScore)

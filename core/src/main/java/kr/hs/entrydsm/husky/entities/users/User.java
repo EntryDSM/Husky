@@ -153,7 +153,7 @@ public class User {
         this.studyPlan = plan;
     }
 
-    public boolean isGed() {
+    public boolean isGED() {
         return gradeType == GradeType.GED;
     }
 
