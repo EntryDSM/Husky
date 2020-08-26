@@ -1,10 +1,8 @@
 package kr.hs.entrydsm.husky.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import kr.hs.entrydsm.husky.AuthApplication;
-import kr.hs.entrydsm.husky.config.RedisConfig;
 import kr.hs.entrydsm.husky.dto.request.AccountRequest;
 import kr.hs.entrydsm.husky.dto.response.TokenResponse;
 import kr.hs.entrydsm.husky.entities.users.User;
@@ -16,7 +14,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
@@ -85,7 +82,9 @@ class AuthApiTest {
         String url = "http://localhost:" + port;
 
         String content = signIn().getResponse().getContentAsString();
-        TokenResponse response = new ObjectMapper().readValue(content, TokenResponse.class);
+        TokenResponse response = new ObjectMapper()
+                .setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
+                .readValue(content, TokenResponse.class);
         String refreshToken = response.getRefreshToken();
 
         mvc.perform(put(url + "/auth")
@@ -100,8 +99,7 @@ class AuthApiTest {
 
         return mvc.perform(post(url + "/auth")
                 .content(new ObjectMapper()
-                        .registerModule(new JavaTimeModule())
-                        .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                        .setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
                         .writeValueAsString(accountRequest))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andDo(print())

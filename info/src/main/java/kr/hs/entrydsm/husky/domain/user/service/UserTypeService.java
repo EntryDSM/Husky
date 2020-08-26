@@ -16,8 +16,8 @@ import kr.hs.entrydsm.husky.entities.users.enums.ApplyType;
 import kr.hs.entrydsm.husky.entities.users.enums.GradeType;
 import kr.hs.entrydsm.husky.entities.users.repositories.UserRepository;
 import kr.hs.entrydsm.husky.domain.user.exception.BadRequestException;
+import kr.hs.entrydsm.husky.security.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -32,10 +32,12 @@ public class UserTypeService {
     private final GraduatedApplicationRepository graduatedRepository;
     private final UnGraduatedApplicationRepository unGraduatedRepository;
 
+    private final AuthenticationFacade authenticationFacade;
+
     @Transactional
     public void selectUserType(SelectTypeRequest request) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email)
+        Integer receiptCode = authenticationFacade.getReceiptCode();
+        User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
         GradeType gradeType = GradeType.valueOf(request.getGradeType().toUpperCase());
@@ -73,8 +75,8 @@ public class UserTypeService {
     }
 
     public UserTypeResponse getUserType() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email)
+        Integer receiptCode = authenticationFacade.getReceiptCode();
+        User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
         LocalDate graduatedDate = null;

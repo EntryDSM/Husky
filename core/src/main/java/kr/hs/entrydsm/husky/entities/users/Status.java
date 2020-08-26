@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 public class Status {
 
     @Id
-    @Column(name = "user_receipt_code")
     private Integer receiptCode;
 
     @Column

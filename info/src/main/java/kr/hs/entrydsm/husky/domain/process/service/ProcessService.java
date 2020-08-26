@@ -7,8 +7,8 @@ import kr.hs.entrydsm.husky.entities.applications.repositories.GEDApplicationRep
 import kr.hs.entrydsm.husky.entities.applications.repositories.GraduatedApplicationRepository;
 import kr.hs.entrydsm.husky.entities.users.User;
 import kr.hs.entrydsm.husky.entities.users.repositories.UserRepository;
+import kr.hs.entrydsm.husky.security.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -19,9 +19,11 @@ public class ProcessService {
     private final GEDApplicationRepository gedApplicationRepository;
     private final GraduatedApplicationRepository graduatedApplicationRepository;
 
+    private final AuthenticationFacade authenticationFacade;
+
     public ProcessResponse getProcess() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email)
+        Integer receiptCode = authenticationFacade.getReceiptCode();
+        User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
         return ProcessResponse.builder()

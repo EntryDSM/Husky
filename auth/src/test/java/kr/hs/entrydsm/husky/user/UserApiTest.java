@@ -1,10 +1,8 @@
 package kr.hs.entrydsm.husky.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import kr.hs.entrydsm.husky.AuthApplication;
-import kr.hs.entrydsm.husky.config.RedisConfig;
 import kr.hs.entrydsm.husky.dto.request.AccountRequest;
 import kr.hs.entrydsm.husky.dto.request.ChangePasswordRequest;
 import kr.hs.entrydsm.husky.dto.request.VerifyCodeRequest;
@@ -20,7 +18,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
@@ -111,8 +108,7 @@ class UserApiTest {
 
         mvc.perform(method
                 .content(new ObjectMapper()
-                        .registerModule(new JavaTimeModule())
-                        .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                        .setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
                         .writeValueAsString(obj))
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk());

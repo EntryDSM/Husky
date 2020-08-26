@@ -6,6 +6,9 @@ spring:
   redis:
     port: ${REDIS_PORT:6379}
     host: ${REDIS_HOST:localhost}
+    password: ${REDIS_PASSWORD}
+  jackson:
+    property-naming-strategy: SNAKE_CASE
 
 #AWS Setting
 aws:

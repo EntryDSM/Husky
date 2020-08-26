@@ -31,7 +31,7 @@ public class GradeCalcServiceImpl implements GradeCalcService {
 
     @Override
     public CalculatedScore calcStudentGrade(int receiptCode) {
-        User user = userRepository.findByReceiptCode(receiptCode)
+        User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
         int attendanceScore = calcAttendanceScore(user);

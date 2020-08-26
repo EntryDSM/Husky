@@ -11,15 +11,14 @@ import kr.hs.entrydsm.husky.entities.applications.repositories.GraduatedApplicat
 import kr.hs.entrydsm.husky.entities.applications.repositories.UnGraduatedApplicationRepository;
 import kr.hs.entrydsm.husky.entities.users.User;
 import kr.hs.entrydsm.husky.entities.users.repositories.UserRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -38,6 +37,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = InfoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DirtiesContext
 @ActiveProfiles("test")
 class UserTypeApiTest {
 
@@ -68,15 +69,7 @@ class UserTypeApiTest {
                 .build();
 
         userRepository.save(User.builder()
-                .receiptCode(1)
                 .email("test")
-                .createdAt(LocalDateTime.now())
-                .password("1234")
-                .build());
-
-        userRepository.save(User.builder()
-                .receiptCode(2)
-                .email("test2")
                 .createdAt(LocalDateTime.now())
                 .password("1234")
                 .build());
@@ -91,24 +84,26 @@ class UserTypeApiTest {
     }
 
     @Test
-    @WithMockUser(username = "test", password = "1234")
+    @Order(1)
+    @WithMockUser(username = "1", password = "1234")
     public void selectTypeApi() throws Exception {
         // given
         String url = "http://localhost:" + port;
 
         // when
-//        ResultActions resultActions = selectTypeRequest(url, "GRADUATED")
-//                .andExpect(status().isNoContent())
-//                .andDo(print());
+        ResultActions resultActions = selectTypeRequest(url, "GRADUATED")
+                .andExpect(status().isNoContent())
+                .andDo(print());
 
         // then
-//        mvc.perform(get(url + "/process/me"))
-//                .andExpect(status().isOk())
-//                .andDo(print());
+        mvc.perform(get(url + "/process/me"))
+                .andExpect(status().isOk())
+                .andDo(print());
     }
 
     @Test
-    @WithMockUser(username = "test2", password = "1234")
+    @Order(2)
+    @WithMockUser(username = "2", password = "1234")
     public void getTypeApi() throws Exception {
         //given
         String url = "http://localhost:" + port;
@@ -116,10 +111,10 @@ class UserTypeApiTest {
         //when
         selectTypeRequest(url, "GED");
 
-//        //then
-//        mvc.perform(get(url + "/users/me/type"))
-//                .andDo(print())
-//                .andExpect(status().isOk());
+        //then
+        mvc.perform(get(url + "/users/me/type"))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
     private ResultActions selectTypeRequest(String url, String gradeType) throws Exception {

@@ -14,8 +14,8 @@ import kr.hs.entrydsm.husky.entities.applications.repositories.UnGraduatedApplic
 import kr.hs.entrydsm.husky.entities.users.User;
 import kr.hs.entrydsm.husky.entities.users.enums.GradeType;
 import kr.hs.entrydsm.husky.entities.users.repositories.UserRepository;
+import kr.hs.entrydsm.husky.security.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -27,9 +27,11 @@ public class ApplicationService {
     private final GraduatedApplicationRepository graduatedApplicationRepository;
     private final UnGraduatedApplicationRepository unGraduatedApplicationRepository;
 
+    private final AuthenticationFacade authenticationFacade;
+
     public void setIntro(SetDocsRequest request) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email)
+        Integer receiptCode = authenticationFacade.getReceiptCode();
+        User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
         user.setSelfIntroduction(request.getContent());
@@ -37,16 +39,16 @@ public class ApplicationService {
     }
 
     public IntroResponse getIntro() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email)
+        Integer receiptCode = authenticationFacade.getReceiptCode();
+        User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
         return new IntroResponse(user.getSelfIntroduction());
     }
 
     public void setPlan(SetDocsRequest request) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email)
+        Integer receiptCode = authenticationFacade.getReceiptCode();
+        User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
         user.setStudyPlan(request.getContent());
@@ -54,16 +56,16 @@ public class ApplicationService {
     }
 
     public PlanResponse getPlan() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email)
+        Integer receiptCode = authenticationFacade.getReceiptCode();
+        User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
         return new PlanResponse(user.getStudyPlan());
     }
 
     public void setGedScore(SetGedScoreRequest request) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email)
+        Integer receiptCode = authenticationFacade.getReceiptCode();
+        User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
         if (!user.isGED())
@@ -77,8 +79,8 @@ public class ApplicationService {
     }
 
     public void setScore(SetScoreRequest request) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email)
+        Integer receiptCode = authenticationFacade.getReceiptCode();
+        User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
         if (!user.isGraduated() && !user.isUngraduated())
@@ -112,8 +114,8 @@ public class ApplicationService {
     }
 
     public ScoreResponse getScore() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email)
+        Integer receiptCode = authenticationFacade.getReceiptCode();
+        User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
         GeneralApplication generalApplication;

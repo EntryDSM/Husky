@@ -15,8 +15,8 @@ import kr.hs.entrydsm.husky.entities.schools.repositories.SchoolRepository;
 import kr.hs.entrydsm.husky.entities.users.User;
 import kr.hs.entrydsm.husky.entities.users.enums.Sex;
 import kr.hs.entrydsm.husky.entities.users.repositories.UserRepository;
+import kr.hs.entrydsm.husky.security.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -31,10 +31,13 @@ public class UserInfoService {
     private final UnGraduatedApplicationRepository unGraduatedRepository;
     private final SchoolRepository schoolRepository;
 
+    private final AuthenticationFacade authenticationFacade;
+
     @Transactional
     public UserInfoResponse setUserInfo(SetUserInfoRequest request) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        Integer receiptCode = authenticationFacade.getReceiptCode();
+        User user = userRepository.findById(receiptCode)
+                .orElseThrow(UserNotFoundException::new);
 
         user.setInfo(request.getName(), Sex.valueOf(request.getSex()), request.getBirthDate(),
                 request.getApplicantTel(), request.getParentTel(), request.getParentName(), request.getAddress(),
@@ -72,8 +75,8 @@ public class UserInfoService {
     }
 
     public UserInfoResponse getUserInfo() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email)
+        Integer receiptCode = authenticationFacade.getReceiptCode();
+        User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
         if (user.getGradeType() == null) throw new ApplicationNotFoundException();

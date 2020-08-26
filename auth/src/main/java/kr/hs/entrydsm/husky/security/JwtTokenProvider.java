@@ -1,8 +1,6 @@
 package kr.hs.entrydsm.husky.security;
 
 import io.jsonwebtoken.*;
-import kr.hs.entrydsm.husky.service.auth.AuthDetails;
-import kr.hs.entrydsm.husky.service.auth.AuthDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,21 +31,21 @@ public class JwtTokenProvider {
 
     private final AuthDetailsService authDetailsService;
 
-    public String generateAccessToken(String data) {
+    public String generateAccessToken(Integer receiptCode) {
         return Jwts.builder()
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + accessTokenExpiration * 1000))
-                .setSubject(data)
+                .setSubject(receiptCode.toString())
                 .claim("type", "access_token")
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
 
-    public String generateRefreshToken(String data) {
+    public String generateRefreshToken(Integer receiptCode) {
         return Jwts.builder()
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpiration * 1000))
-                .setSubject(data)
+                .setSubject(receiptCode.toString())
                 .claim("type", "refresh_token")
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
@@ -72,12 +70,13 @@ public class JwtTokenProvider {
     }
 
     public Authentication getAuthentication(String token) {
-        AuthDetails authDetails = authDetailsService.loadUserByUsername(getUserEmail(token));
-        return new UsernamePasswordAuthenticationToken(authDetails, "", authDetails.getAuthorities());
+        AuthDetails authDetails = authDetailsService.loadUserByReceiptCode(getReceiptCode(token));
+        return new UsernamePasswordAuthenticationToken(authDetails, null, authDetails.getAuthorities());
     }
 
-    public String getUserEmail(String token) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+    public Integer getReceiptCode(String token) {
+        return Integer.parseInt(
+                Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject());
     }
 
     public boolean isRefreshToken(String token) {
