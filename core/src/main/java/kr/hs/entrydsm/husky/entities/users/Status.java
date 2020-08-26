@@ -13,8 +13,7 @@ import java.time.LocalDateTime;
 public class Status {
 
     @Id
-    @Column(name = "user_email")
-    private String email;
+    private Integer receiptCode;
 
     @Column
     private boolean isPaid;                         // 전형료 납부 여부
@@ -37,7 +36,9 @@ public class Status {
     @Column(length = 6)
     private String examCode;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @MapsId
+    @OneToOne
+    @JoinColumn
     private User user;
 
     public void finalSubmit() {

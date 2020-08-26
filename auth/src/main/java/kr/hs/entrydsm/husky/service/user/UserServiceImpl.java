@@ -8,6 +8,7 @@ import kr.hs.entrydsm.husky.entities.verification.EmailVerificationStatus;
 import kr.hs.entrydsm.husky.entities.verification.EmailVerificationRepository;
 import kr.hs.entrydsm.husky.entities.users.User;
 import kr.hs.entrydsm.husky.entities.users.repositories.UserRepository;
+import kr.hs.entrydsm.husky.error.exception.UserNotFoundException;
 import kr.hs.entrydsm.husky.exceptions.*;
 import kr.hs.entrydsm.husky.security.AuthenticationFacade;
 import kr.hs.entrydsm.husky.service.email.EmailService;

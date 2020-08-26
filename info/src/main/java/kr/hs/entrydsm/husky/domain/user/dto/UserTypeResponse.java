@@ -24,7 +24,6 @@ public class UserTypeResponse {
     private LocalDate gedPassDate;
 
     public static UserTypeResponse response(User user, LocalDate graduatedDate, LocalDate gedPassDate) {
-        System.out.println(user.getGradeType());
         return UserTypeResponse.builder()
                 .applyType(user.getApplyType())
                 .additionalType(user.getAdditionalType())

@@ -11,8 +11,8 @@ public class AuthenticationFacade {
         return SecurityContextHolder.getContext().getAuthentication();
     }
 
-    public String getUserEmail() {
-        return this.getAuthentication().getName();
+    public Integer getReceiptCode() {
+        return Integer.parseInt(this.getAuthentication().getName());
     }
 
 }

@@ -15,8 +15,8 @@ import kr.hs.entrydsm.husky.entities.schools.repositories.SchoolRepository;
 import kr.hs.entrydsm.husky.entities.users.User;
 import kr.hs.entrydsm.husky.entities.users.enums.Sex;
 import kr.hs.entrydsm.husky.entities.users.repositories.UserRepository;
+import kr.hs.entrydsm.husky.security.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -31,10 +31,13 @@ public class UserInfoService {
     private final UnGraduatedApplicationRepository unGraduatedRepository;
     private final SchoolRepository schoolRepository;
 
+    private final AuthenticationFacade authenticationFacade;
+
     @Transactional
     public UserInfoResponse setUserInfo(SetUserInfoRequest request) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        Integer receiptCode = authenticationFacade.getReceiptCode();
+        User user = userRepository.findById(receiptCode)
+                .orElseThrow(UserNotFoundException::new);
 
         user.setInfo(request.getName(), Sex.valueOf(request.getSex()), request.getBirthDate(),
                 request.getApplicantTel(), request.getParentTel(), request.getParentName(), request.getAddress(),
@@ -43,7 +46,7 @@ public class UserInfoService {
 
         switch (user.getGradeType()) {
             case UNGRADUATED: {
-                UnGraduatedApplication unGraduated = unGraduatedRepository.findByEmail(email)
+                UnGraduatedApplication unGraduated = unGraduatedRepository.findById(user.getReceiptCode())
                         .orElseThrow(ApplicationNotFoundException::new);
                 School school = schoolRepository.findById(request.getSchoolCode())
                         .orElseThrow(SchoolNotFoundException::new);
@@ -55,7 +58,7 @@ public class UserInfoService {
                         unGraduated.getSchool().getSchoolCode(), unGraduated.getSchoolTel());
             }
             case GRADUATED: {
-                GraduatedApplication graduated = graduatedRepository.findByEmail(email)
+                GraduatedApplication graduated = graduatedRepository.findById(user.getReceiptCode())
                         .orElseThrow(ApplicationNotFoundException::new);
                 School school = schoolRepository.findById(request.getSchoolCode())
                         .orElseThrow(SchoolNotFoundException::new);
@@ -72,22 +75,23 @@ public class UserInfoService {
     }
 
     public UserInfoResponse getUserInfo() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByEmail(email)
+        Integer receiptCode = authenticationFacade.getReceiptCode();
+        User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
         if (user.getGradeType() == null) throw new ApplicationNotFoundException();
         switch (user.getGradeType()) {
             case GRADUATED: {
-                GraduatedApplication graduated = graduatedRepository.findByEmail(email)
+                GraduatedApplication graduated = graduatedRepository.findById(user.getReceiptCode())
                         .orElseThrow(ApplicationNotFoundException::new);
                 if (graduated.getSchool() == null) throw new SchoolNotFoundException();
 
                 return UserInfoResponse.response(user, graduated.getStudentNumber(),
                         graduated.getSchool().getSchoolCode(), graduated.getSchoolTel());
             }
+
             case UNGRADUATED: {
-                UnGraduatedApplication unGraduated = unGraduatedRepository.findByEmail(email)
+                UnGraduatedApplication unGraduated = unGraduatedRepository.findById(user.getReceiptCode())
                         .orElseThrow(ApplicationNotFoundException::new);
                 if (unGraduated.getSchool() == null) throw new SchoolNotFoundException();
 

@@ -3,14 +3,22 @@ package kr.hs.entrydsm.husky.domain.application.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Range;
 
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class SetGedScoreRequest {
-    @NotNull @Range(min = 1, max = 100)
-    private int gedAverageScore;
+
+    @NotNull
+    @DecimalMin(value = "60.0")
+    @DecimalMax(value = "100.0")
+    @Digits(integer = 3, fraction = 2)
+    private BigDecimal gedAverageScore;
+
 }

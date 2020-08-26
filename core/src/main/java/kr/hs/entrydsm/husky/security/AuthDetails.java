@@ -1,4 +1,4 @@
-package kr.hs.entrydsm.husky.service.auth;
+package kr.hs.entrydsm.husky.security;
 
 import kr.hs.entrydsm.husky.entities.users.User;
 import lombok.AllArgsConstructor;
@@ -25,7 +25,7 @@ public class AuthDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getEmail();
+        return user.getReceiptCode().toString();
     }
 
     @Override

@@ -4,14 +4,13 @@ import kr.hs.entrydsm.husky.domain.user.exception.UserNotFoundException;
 import kr.hs.entrydsm.husky.entities.users.User;
 import kr.hs.entrydsm.husky.entities.users.enums.Sex;
 import kr.hs.entrydsm.husky.entities.users.repositories.UserRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,6 +26,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = InfoApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DirtiesContext
 @ActiveProfiles("test")
 class UserStatusApiTest {
 
@@ -48,10 +49,9 @@ class UserStatusApiTest {
                 .build();
 
         userRepository.save(User.builder()
-                .receiptCode(5)
                 .name("huewilliams")
                 .sex(Sex.MALE)
-                .email("test5")
+                .email("test")
                 .createdAt(LocalDateTime.now())
                 .password("1234")
                 .build());
@@ -64,7 +64,8 @@ class UserStatusApiTest {
     }
 
     @Test
-    @WithMockUser(username = "test5", password = "1234")
+    @Order(1)
+    @WithMockUser(username = "1", password = "1234")
     public void getUserStatus() throws Exception {
         //given
         String url = "http://localhost:" + port;
@@ -79,9 +80,9 @@ class UserStatusApiTest {
                 .andExpect(status().isOk());
 
         //then
-        User user = userRepository.findByEmail("test5")
+        User user = userRepository.findByEmail("test")
                 .orElseThrow(UserNotFoundException::new);
-        System.out.println(user.getStatus().getUser().getName() + " final submitted : " +
+        System.out.println(user.getName() + " final submitted : " +
                 user.getStatus().isFinalSubmit());
     }
 }

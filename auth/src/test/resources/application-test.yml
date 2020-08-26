@@ -1,13 +1,17 @@
-# H2 Setting
 spring:
+  # H2 Setting
   h2:
     console:
       enabled: true
       path: /h2
-# Redis Setting
+  # Redis Setting
   redis:
     port: ${REDIS_PORT:6379}
     host: ${REDIS_HOST:localhost}
+  # Json Naming Setting
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
 
 spring.datasource:
     driver-class-name: org.h2.Driver

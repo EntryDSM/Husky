@@ -10,7 +10,6 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Getter
 @Builder
@@ -83,7 +82,7 @@ public class User {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Status status;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
