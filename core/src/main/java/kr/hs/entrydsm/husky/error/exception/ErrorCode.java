@@ -27,7 +27,11 @@ public enum ErrorCode {
     APPLICATION_TYPE_UNMATCHED(403, "", "Application Type is unmatched"),
 
     //School
-    SCHOOL_NOT_FOUND(404, "", "School Not Found.");
+    SCHOOL_NOT_FOUND(404, "", "School Not Found."),
+
+    // Grade
+    FINAL_SUBMIT_REQUIRED(406, "", "Final Submit Required."),
+    UNPROCESSABLE_APPLICATION(422, "", "Cannot Generate Application");
 
     private final int status;
     private final String code;
