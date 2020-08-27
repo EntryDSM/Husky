@@ -1,0 +1,6 @@
+logging:
+  level:
+    org:
+      docx4j: OFF
+      apache:
+        fop: OFF
