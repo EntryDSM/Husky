@@ -174,4 +174,12 @@ public class User {
         return gradeType != null && applyType != null && additionalType != null && getApplication() != null;
     }
 
+    public boolean isMale() {
+        return this.sex.equals(Sex.MALE);
+    }
+
+    public boolean isFemale() {
+        return this.sex.equals(Sex.FEMALE);
+    }
+
 }
