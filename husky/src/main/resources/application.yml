@@ -8,6 +8,8 @@ spring:
     port: ${REDIS_PORT}
   jpa:
     generate-ddl: true
+  jackson:
+    property-naming-strategy: SNAKE_CASE
 
 aws:
   credential:
