@@ -49,10 +49,6 @@ subprojects {
         compile 'junit:junit:4.12'
     }
 
-    configurations {
-        all*.exclude module : 'spring-boot-starter-logging'
-    }
-
     task initSourceFolders {
         sourceSets*.java.srcDirs*.each {
             if (!it.exists()) {
