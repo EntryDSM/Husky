@@ -9,6 +9,19 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - name: create resource folder
+        run: |
+          mkdir -p ./husky/src/main/resources
+      - name: download font archieve for pdf generating
+        run: |
+          wget --no-check-certificate \
+          --http-user=${{ secrets.STATIC_USERNAME }} \
+          --http-password=${{ secrets.STATIC_PASSWORD }} \
+          https://static.entrydsm.hs.kr/fonts/husky_fonts.zip
+        working-directory: ./husky/src/main/resources
+      - name: upzip the font archieve
+        run: unzip husky_fonts.zip && rm husky_fonts.zip
+        working-directory: ./husky/src/main/resources
       - name: Set up JDK 11
         uses: actions/setup-java@v1
         with:
