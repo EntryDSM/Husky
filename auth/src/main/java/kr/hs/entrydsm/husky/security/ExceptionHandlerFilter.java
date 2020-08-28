@@ -1,7 +1,9 @@
 package kr.hs.entrydsm.husky.security;
 
-import kr.hs.entrydsm.husky.error.exception.BusinessException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.hs.entrydsm.husky.error.exception.ErrorCode;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -13,11 +15,17 @@ import java.io.IOException;
 public class ExceptionHandlerFilter extends OncePerRequestFilter {
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException {
         try {
             filterChain.doFilter(request, response);
         } catch (ServletException | IOException e) {
-            throw new BusinessException(ErrorCode.UNAUTHORIZED);
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonValue = objectMapper.writer()
+                    .writeValueAsString(ErrorCode.EXPIRED_TOKEN);
+            response.getWriter().write(jsonValue);
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            e.printStackTrace();
         }
     }
 

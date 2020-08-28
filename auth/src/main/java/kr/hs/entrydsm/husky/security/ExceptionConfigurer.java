@@ -11,4 +11,5 @@ public class ExceptionConfigurer extends SecurityConfigurerAdapter<DefaultSecuri
         ExceptionHandlerFilter handlerFilter = new ExceptionHandlerFilter();
         http.addFilterBefore(handlerFilter, JwtTokenFilter.class);
     }
+
 }
