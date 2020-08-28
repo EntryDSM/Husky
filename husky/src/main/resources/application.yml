@@ -3,7 +3,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${MYSQL_URL}
   redis:
-    host: ${REDIS_HOST}
+    host: ${REDIS_HOST:localhost}
     password: ${REDIS_PASSWORD}
     port: ${REDIS_PORT}
   jpa:
