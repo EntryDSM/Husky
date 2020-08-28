@@ -2,12 +2,14 @@ package kr.hs.entrydsm.husky.security;
 
 import kr.hs.entrydsm.husky.entities.users.User;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
+@Getter
 @AllArgsConstructor
 public class AuthDetails implements UserDetails {
 
@@ -47,4 +49,5 @@ public class AuthDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }
