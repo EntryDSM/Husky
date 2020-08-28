@@ -46,7 +46,7 @@ public class PDFExportServiceImpl implements PDFExportService {
     public byte[] getFinalPDFApplication() {
         return userRepository.findById(authFacade.getReceiptCode())
                 .map(user -> {
-                    if (!user.getStatus().isFinalSubmit())
+                    if (user.getStatus() == null || !user.getStatus().isFinalSubmit())
                         throw new FinalSubmitRequiredException();
 
                     return generatePDFApplication(user, gradeCalcService.calcStudentGrade(user.getReceiptCode()));
