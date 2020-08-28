@@ -58,7 +58,7 @@ class SchoolApiTest {
                 .param("page", "0")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("content[0].schoolCode").value("1234"));
+                .andExpect(jsonPath("content[0].school_code").value("1234"));
 
     }
 
