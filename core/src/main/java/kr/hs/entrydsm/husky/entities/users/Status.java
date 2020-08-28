@@ -37,11 +37,6 @@ public class Status {
     @Column(length = 6)
     private String examCode;
 
-    @MapsId
-    @OneToOne
-    @JoinColumn
-    private User user;
-
     public void finalSubmit() {
         this.isFinalSubmit = true;
     }

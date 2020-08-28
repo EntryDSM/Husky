@@ -18,13 +18,9 @@ public class Application extends BaseTimeEntity {
     @Id
     private Integer receiptCode;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private User user;
-
     @Builder(builderMethodName = "applicationBuilder")
     public Application(User user) {
         this.receiptCode = user.getReceiptCode();
-        this.user = user;
     }
 
 }

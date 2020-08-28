@@ -48,7 +48,6 @@ public class UserStatusService {
     private Status createStatus(User user) {
         Status status = Status.builder()
                 .receiptCode(user.getReceiptCode())
-                .user(user)
                 .isFinalSubmit(false)
                 .isPaid(false)
                 .isPrintedApplicationArrived(false)
