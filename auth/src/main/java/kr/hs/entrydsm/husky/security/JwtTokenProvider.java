@@ -70,13 +70,13 @@ public class JwtTokenProvider {
     }
 
     public Authentication getAuthentication(String token) {
-        AuthDetails authDetails = authDetailsService.loadUserByReceiptCode(getReceiptCode(token));
-        return new UsernamePasswordAuthenticationToken(authDetails, null, authDetails.getAuthorities());
+        AuthDetails authDetails = authDetailsService.loadUserByUsername(getReceiptCode(token));
+        return new UsernamePasswordAuthenticationToken(authDetails, "", authDetails.getAuthorities());
     }
 
-    public Integer getReceiptCode(String token) {
-        return Integer.parseInt(
-                Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject());
+    public String getReceiptCode(String token) {
+        return  Jwts.parser().setSigningKey(secretKey)
+                .parseClaimsJws(token).getBody().getSubject();
     }
 
     public boolean isRefreshToken(String token) {

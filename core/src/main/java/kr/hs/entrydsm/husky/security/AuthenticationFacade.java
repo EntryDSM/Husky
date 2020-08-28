@@ -12,7 +12,12 @@ public class AuthenticationFacade {
     }
 
     public Integer getReceiptCode() {
-        return Integer.parseInt(this.getAuthentication().getName());
+        Authentication auth = this.getAuthentication();
+        if (auth.getPrincipal() instanceof AuthDetails) {
+            return ((AuthDetails) auth.getPrincipal()).getUser().getReceiptCode();
+        } else {
+            return Integer.parseInt(this.getAuthentication().getName());
+        }
     }
 
 }
