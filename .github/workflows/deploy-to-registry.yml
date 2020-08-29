@@ -12,10 +12,10 @@ jobs:
     steps:
       - name: prepare download fonts
         run: |
-          mkdir -p ./grade/src/main/resources/fonts
+          mkdir -p ./src/main/resources/fonts
 
       - name: download font archieve for pdf generating
-        working-directory: ./grade/src/main/resources
+        working-directory: ./src/main/resources
         run: |
           wget --no-check-certificate \
           --http-user=${{ secrets.STATIC_USERNAME }} \
@@ -23,7 +23,7 @@ jobs:
           https://static.entrydsm.hs.kr/fonts/husky_fonts.zip
 
       - name: upzip the font archieve
-        working-directory: ./grade/src/main/resources
+        working-directory: ./src/main/resources
         run: |
           unzip husky_fonts.zip -d ./fonts && rm husky_fonts.zip
 
