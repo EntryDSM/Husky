@@ -1,0 +1,37 @@
+spring:
+  jpa:
+    generate-ddl: true
+    datasource:
+      url: ${MYSQL_URL}
+
+  redis:
+    port: ${REDIS_PORT:6379}
+    host: ${REDIS_HOST:localhost}
+    password: ${REDIS_PASSWORD:}
+
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
+aws:
+  credential:
+    access_key_id: ${AWS_ACCESS_KEY:access_key}
+    secret_key: ${AWS_SECRET_KEY:secret_key}
+    region: ${AWS_REGION:us-east-1}
+
+auth:
+  jwt:
+    secret: ${JWT_SECRET_KEY:dGVzdA==}
+    exp:
+      access: ${JWT_ACCESS_EXP:3600}
+      refresh: ${JWT_REFRESH_EXP:3600}
+    header: ${JWT_HEADER:header}
+    prefix: ${JWT_PREFIX:prefix}
+  maintenance:
+    key: dGVzdA==
+
+logging:
+  level:
+    org:
+      docx4j: OFF
+      apache:
+        fop: OFF

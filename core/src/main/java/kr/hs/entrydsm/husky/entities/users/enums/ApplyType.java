@@ -1,6 +1,0 @@
-package kr.hs.entrydsm.husky.entities.users.enums;
-
-public enum ApplyType {
-    COMMON, MEISTER, SOCIAL_ONE_PARENT, SOCIAL_FROM_NORTH, SOCIAL_MULTICULTURAL,
-    SOCIAL_BASIC_LIVING, SOCIAL_LOWEST_INCOME, SOCIAL_TEEN_HOUSEHOLDER
-}
