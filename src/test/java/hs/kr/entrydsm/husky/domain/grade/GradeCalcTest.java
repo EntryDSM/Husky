@@ -1,5 +1,6 @@
 package hs.kr.entrydsm.husky.domain.grade;
 
+import kr.hs.entrydsm.husky.infra.redis.EmbeddedRedisConfig;
 import kr.hs.entrydsm.husky.HuskyApplication;
 import kr.hs.entrydsm.husky.domain.application.domain.CalculatedScore;
 import kr.hs.entrydsm.husky.domain.application.domain.GEDApplication;
@@ -32,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = HuskyApplication.class)
+@SpringBootTest(classes = {HuskyApplication.class, EmbeddedRedisConfig.class})
 public class GradeCalcTest {
 
     @Autowired

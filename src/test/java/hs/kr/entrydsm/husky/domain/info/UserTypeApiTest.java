@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import kr.hs.entrydsm.husky.infra.redis.EmbeddedRedisConfig;
 import kr.hs.entrydsm.husky.HuskyApplication;
 import kr.hs.entrydsm.husky.domain.user.dto.SelectTypeRequest;
 import kr.hs.entrydsm.husky.domain.application.domain.repositories.GEDApplicationRepository;
@@ -35,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = HuskyApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = {HuskyApplication.class, EmbeddedRedisConfig.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DirtiesContext
 @ActiveProfiles("test")

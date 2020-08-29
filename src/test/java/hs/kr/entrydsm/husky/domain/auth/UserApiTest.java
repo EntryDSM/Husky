@@ -2,6 +2,7 @@ package hs.kr.entrydsm.husky.domain.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import kr.hs.entrydsm.husky.infra.redis.EmbeddedRedisConfig;
 import kr.hs.entrydsm.husky.HuskyApplication;
 import kr.hs.entrydsm.husky.domain.auth.dto.request.AccountRequest;
 import kr.hs.entrydsm.husky.domain.auth.dto.request.ChangePasswordRequest;
@@ -21,7 +22,6 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -32,10 +32,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
-@ContextConfiguration(classes = HuskyApplication.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles({"test", "local"})
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = {HuskyApplication.class, EmbeddedRedisConfig.class},
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserApiTest {
 
     @LocalServerPort

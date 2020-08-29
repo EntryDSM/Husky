@@ -1,5 +1,6 @@
 package hs.kr.entrydsm.husky.domain.school;
 
+import kr.hs.entrydsm.husky.infra.redis.EmbeddedRedisConfig;
 import kr.hs.entrydsm.husky.HuskyApplication;
 import kr.hs.entrydsm.husky.domain.school.domain.School;
 import kr.hs.entrydsm.husky.domain.school.domain.repositories.SchoolRepository;
@@ -20,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("test")
-@ContextConfiguration(classes = HuskyApplication.class)
+@ContextConfiguration(classes = {HuskyApplication.class, EmbeddedRedisConfig.class})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class SchoolApiTest {
 

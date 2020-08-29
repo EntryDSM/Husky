@@ -1,4 +1,4 @@
-package hs.kr.entrydsm.husky.config;
+package kr.hs.entrydsm.husky.infra.redis;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -8,26 +8,24 @@ import redis.embedded.RedisServer;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-@Profile("local")
 @Configuration
+@Profile("local")
 public class EmbeddedRedisConfig {
-
-    @Value("${spring.redis.port}")
-    private int redisPort;
 
     private RedisServer redisServer;
 
+    public EmbeddedRedisConfig(@Value("${spring.redis.port}") int redisPort) {
+        this.redisServer = new RedisServer(redisPort);
+    }
+
     @PostConstruct
     public void runRedis() {
-        redisServer = new RedisServer(redisPort);
         redisServer.start();
     }
 
     @PreDestroy
     public void stopRedis() {
-        if (redisServer != null) {
-            redisServer.stop();
-        }
+        redisServer.stop();
     }
 
 }

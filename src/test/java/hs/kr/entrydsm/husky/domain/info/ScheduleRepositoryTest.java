@@ -1,5 +1,6 @@
 package hs.kr.entrydsm.husky.domain.info;
 
+import kr.hs.entrydsm.husky.infra.redis.EmbeddedRedisConfig;
 import kr.hs.entrydsm.husky.HuskyApplication;
 import kr.hs.entrydsm.husky.domain.schedule.domain.Schedule;
 import kr.hs.entrydsm.husky.domain.schedule.dao.ScheduleRepository;
@@ -17,7 +18,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = HuskyApplication.class)
+@SpringBootTest(classes = {HuskyApplication.class, EmbeddedRedisConfig.class})
 @ActiveProfiles({"test", "local"})
 public class ScheduleRepositoryTest {
 
