@@ -8,6 +8,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v2
+
       - name: prepare download fonts
         run: |
           mkdir -p ./src/main/resources/fonts
@@ -24,8 +26,6 @@ jobs:
         working-directory: ./src/main/resources
         run: |
           unzip husky_fonts.zip -d ./fonts && rm husky_fonts.zip
-
-      - uses: actions/checkout@v2
 
       - name: Set up JDK 11
         uses: actions/setup-java@v1
