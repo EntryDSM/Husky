@@ -1,8 +1,8 @@
 spring:
   jpa:
     generate-ddl: true
-    datasource:
-      url: ${MYSQL_URL}
+  datasource:
+    url: ${MYSQL_URL}
 
   redis:
     port: ${REDIS_PORT:6379}
