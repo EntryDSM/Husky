@@ -32,6 +32,9 @@ jobs:
         with:
           java-version: 11
 
+      - name: Start Redis
+        uses: supercharge/redis-github-action@1.1.0
+
       - name: Cache Gradle packages
         uses: actions/cache@v2
         with:
