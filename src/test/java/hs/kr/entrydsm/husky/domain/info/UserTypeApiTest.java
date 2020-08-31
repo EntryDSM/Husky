@@ -108,6 +108,10 @@ class UserTypeApiTest {
         //given
         String url = "http://localhost:" + port;
 
+        mvc.perform(get(url + "/users/me/type"))
+                .andDo(print())
+                .andExpect(status().isOk());
+
         //when
         selectTypeRequest(url, "GED");
 

@@ -38,8 +38,4 @@ public class UserTypeResponse {
                 .gedPassDate(gedPass)
                 .build();
     }
-
-    public static UserTypeResponse nullResponse() {
-        return UserTypeResponse.builder().build();
-    }
 }
