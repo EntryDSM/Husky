@@ -51,18 +51,22 @@ public class UserTypeService {
             case GED: {
                 if (request.getGedPassDate() == null) throw new BadRequestException();
 
+                String[] date = request.getGedPassDate().split("-");
+
                 gedRepository.save(GEDApplication.gedApplicationBuilder()
                         .user(user)
-                        .gedPassDate(request.getGedPassDate())
+                        .gedPassDate(LocalDate.of(Integer.parseInt(date[0]), Integer.parseInt(date[1]), 1))
                         .build());
                 break;
             }
             case GRADUATED: {
                 if (request.getGraduatedDate() == null) throw new BadRequestException();
 
+                String[] date = request.getGraduatedDate().split("-");
+
                 graduatedRepository.save(GraduatedApplication.graduatedApplicationBuilder()
                         .user(user)
-                        .graduatedDate(request.getGraduatedDate())
+                        .graduatedDate(LocalDate.of(Integer.parseInt(date[0]), Integer.parseInt(date[1]), 1))
                         .build());
                 break;
             }
