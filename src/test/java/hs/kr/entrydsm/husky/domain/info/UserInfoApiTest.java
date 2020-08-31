@@ -37,10 +37,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {HuskyApplication.class, EmbeddedRedisConfig.class},
+@SpringBootTest(classes = {HuskyApplication.class},
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@DirtiesContext
 @ActiveProfiles("test")
 class UserInfoApiTest {
 
@@ -204,5 +203,21 @@ class UserInfoApiTest {
                                 .graduatedDate("2020-02")
                                 .build()))
         );
+    }
+
+    @Test
+    @WithMockUser(username = "3", password = "1234")
+    public void getUserStatus() throws Exception {
+        //given
+        String url = "http://localhost:" + port;
+
+        //when
+        mvc.perform(get(url + "/users/me/status"))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mvc.perform(patch(url + "/users/me/status"))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 }
