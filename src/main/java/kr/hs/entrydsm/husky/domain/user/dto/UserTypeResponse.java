@@ -20,17 +20,22 @@ public class UserTypeResponse {
     private ApplyType applyType;
     private AdditionalType additionalType;
     private boolean isDaejeon;
-    private LocalDate graduatedDate;
-    private LocalDate gedPassDate;
+    private String graduatedDate;
+    private String gedPassDate;
 
     public static UserTypeResponse response(User user, LocalDate graduatedDate, LocalDate gedPassDate) {
+        String graduated =
+                graduatedDate != null ? graduatedDate.getYear() + "-" + graduatedDate.getMonthValue() : null;
+        String gedPass =
+                gedPassDate != null ? gedPassDate.getYear() + "-" + gedPassDate.getMonthValue() : null;
+
         return UserTypeResponse.builder()
                 .applyType(user.getApplyType())
                 .additionalType(user.getAdditionalType())
                 .gradeType(user.getGradeType())
                 .isDaejeon(user.isDaejeon())
-                .graduatedDate(graduatedDate)
-                .gedPassDate(gedPassDate)
+                .graduatedDate(graduated)
+                .gedPassDate(gedPass)
                 .build();
     }
 }
