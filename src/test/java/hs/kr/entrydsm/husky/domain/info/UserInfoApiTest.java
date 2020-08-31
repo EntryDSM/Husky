@@ -200,8 +200,8 @@ class UserInfoApiTest {
                                 .applyType("COMMON")
                                 .additionalType("NOT_APPLICABLE")
                                 .isDaejeon(true)
-                                .gedPassDate("2020-02-20")
-                                .graduatedDate("2020-02-20")
+                                .gedPassDate("2020-02")
+                                .graduatedDate("2020-02")
                                 .build()))
         );
     }
