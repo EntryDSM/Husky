@@ -36,9 +36,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {HuskyApplication.class, EmbeddedRedisConfig.class},
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext
 @ActiveProfiles({"test", "local"})
-class AuthApiTest {
+public class AuthApiTest {
 
     @LocalServerPort
     private int port;
