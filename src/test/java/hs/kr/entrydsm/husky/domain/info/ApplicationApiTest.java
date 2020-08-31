@@ -217,8 +217,8 @@ class ApplicationApiTest {
                                 .applyType("COMMON")
                                 .additionalType("NOT_APPLICABLE")
                                 .isDaejeon(true)
-                                .gedPassDate(LocalDate.parse("2020-02-20"))
-                                .graduatedDate(LocalDate.parse("2020-02-20"))
+                                .gedPassDate("2020-02-20")
+                                .graduatedDate("2020-02-20")
                                 .build()))
         );
     }

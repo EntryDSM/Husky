@@ -123,8 +123,8 @@ class UserTypeApiTest {
                 .applyType("COMMON")
                 .additionalType("NOT_APPLICABLE")
                 .isDaejeon(true)
-                .gedPassDate(LocalDate.parse("2020-02-20"))
-                .graduatedDate(LocalDate.parse("2020-02-20"))
+                .gedPassDate("2020-02")
+                .graduatedDate("2020-02")
                 .build();
 
         return mvc.perform(patch(url + "/users/me/type")
