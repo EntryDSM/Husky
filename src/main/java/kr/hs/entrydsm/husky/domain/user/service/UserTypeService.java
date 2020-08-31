@@ -86,7 +86,7 @@ public class UserTypeService {
         LocalDate graduatedDate = null;
         LocalDate gedPassDate = null;
 
-        if (user.getGradeType() == null) throw new ApplicationNotFoundException();
+        if (user.getGradeType() == null) return UserTypeResponse.nullResponse();
 
         switch (user.getGradeType()) {
             case GED:
