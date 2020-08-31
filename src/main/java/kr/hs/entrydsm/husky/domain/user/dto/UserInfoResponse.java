@@ -48,4 +48,8 @@ public class UserInfoResponse {
                 .build();
     }
 
+    public static UserInfoResponse nullResponse() {
+        return UserInfoResponse.builder().build();
+    }
+
 }

@@ -79,7 +79,8 @@ public class UserInfoService {
         User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
-        if (user.getGradeType() == null) throw new ApplicationNotFoundException();
+        if (user.getGradeType() == null) return UserInfoResponse.nullResponse();
+
         switch (user.getGradeType()) {
             case GRADUATED: {
                 GraduatedApplication graduated = graduatedRepository.findById(user.getReceiptCode())
