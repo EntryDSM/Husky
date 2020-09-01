@@ -16,10 +16,11 @@ import javax.persistence.*;
 public class Application extends BaseTimeEntity {
 
     @Id
-//    @Column(name = "user_receipt_code", insertable = false, updatable = false)
+    @Column(name = "user_receipt_code")
     private Integer receiptCode;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
     private User user;
 
     @Builder(builderMethodName = "applicationBuilder")
