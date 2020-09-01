@@ -4,17 +4,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import kr.hs.entrydsm.husky.infra.redis.EmbeddedRedisConfig;
 import kr.hs.entrydsm.husky.HuskyApplication;
-import kr.hs.entrydsm.husky.domain.user.dto.SelectTypeRequest;
-import kr.hs.entrydsm.husky.domain.user.dto.SetUserInfoRequest;
 import kr.hs.entrydsm.husky.domain.application.domain.repositories.GEDApplicationRepository;
 import kr.hs.entrydsm.husky.domain.application.domain.repositories.GraduatedApplicationRepository;
 import kr.hs.entrydsm.husky.domain.application.domain.repositories.UnGraduatedApplicationRepository;
 import kr.hs.entrydsm.husky.domain.school.domain.School;
 import kr.hs.entrydsm.husky.domain.school.domain.repositories.SchoolRepository;
 import kr.hs.entrydsm.husky.domain.user.domain.User;
+import kr.hs.entrydsm.husky.domain.user.domain.enums.Sex;
 import kr.hs.entrydsm.husky.domain.user.domain.repositories.UserRepository;
+import kr.hs.entrydsm.husky.domain.user.dto.SelectTypeRequest;
+import kr.hs.entrydsm.husky.domain.user.dto.SetUserInfoRequest;
 import org.junit.jupiter.api.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -104,7 +103,7 @@ class UserInfoApiTest {
         //when
         SetUserInfoRequest request = SetUserInfoRequest.builder()
                 .name("test")
-                .sex("MALE")
+                .sex(Sex.MALE)
                 .birthDate(LocalDate.parse("2020-01-23"))
                 .studentNumber("30120")
                 .schoolCode("1")
@@ -150,7 +149,7 @@ class UserInfoApiTest {
         //when
         SetUserInfoRequest request = SetUserInfoRequest.builder()
                 .name("test2")
-                .sex("FEMALE")
+                .sex(Sex.FEMALE)
                 .birthDate(LocalDate.parse("2020-01-23"))
                 .parentName("test2")
                 .parentTel("010-1111-1111")
