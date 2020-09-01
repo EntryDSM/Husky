@@ -1,6 +1,5 @@
 package kr.hs.entrydsm.husky.domain.auth.controllers;
 
-import kr.hs.entrydsm.husky.domain.auth.dto.request.AccountRequest;
 import kr.hs.entrydsm.husky.domain.auth.dto.request.SignInRequest;
 import kr.hs.entrydsm.husky.domain.auth.dto.response.TokenResponse;
 import kr.hs.entrydsm.husky.domain.auth.service.auth.AuthServiceImpl;
