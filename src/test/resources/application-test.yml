@@ -22,7 +22,7 @@ spring:
 # AWS Setting
 aws:
   credential:
-    access_key_id: ${AWS_ACCESS_KEY:access_key}
+    access_key: ${AWS_ACCESS_KEY:access_key}
     secret_key: ${AWS_SECRET_KEY:secret_key}
     region: ${AWS_REGION:us-east-1}
 
