@@ -38,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = "value=test")
 @ActiveProfiles({"test", "local"})
-public class ScheduleApiTest {
+class ScheduleApiTest {
 
     @Autowired
     private ScheduleRepository scheduleRepository;

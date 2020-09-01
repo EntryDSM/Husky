@@ -86,7 +86,7 @@ public class UserTypeService {
         LocalDate graduatedDate = null;
         LocalDate gedPassDate = null;
 
-        if (user.getGradeType() == null) return UserTypeResponse.nullResponse();
+        if (user.getGradeType() == null) return UserTypeResponse.response(user, null, null);
 
         switch (user.getGradeType()) {
             case GED:

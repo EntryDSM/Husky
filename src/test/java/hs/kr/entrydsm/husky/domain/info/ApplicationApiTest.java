@@ -43,7 +43,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = {HuskyApplication.class, EmbeddedRedisConfig.class},
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@DirtiesContext
 @ActiveProfiles("test")
 class ApplicationApiTest {
 
@@ -217,8 +216,8 @@ class ApplicationApiTest {
                                 .applyType("COMMON")
                                 .additionalType("NOT_APPLICABLE")
                                 .isDaejeon(true)
-                                .gedPassDate("2020-02-20")
-                                .graduatedDate("2020-02-20")
+                                .gedPassDate("2020-02")
+                                .graduatedDate("2020-02")
                                 .build()))
         );
     }

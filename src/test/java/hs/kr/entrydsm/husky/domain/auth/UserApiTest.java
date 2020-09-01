@@ -33,11 +33,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ActiveProfiles("test")
+@ActiveProfiles({"test", "local"})
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {HuskyApplication.class, EmbeddedRedisConfig.class},
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext
 class UserApiTest {
 
     @LocalServerPort

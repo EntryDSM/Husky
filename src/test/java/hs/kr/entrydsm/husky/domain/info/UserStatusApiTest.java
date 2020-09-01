@@ -28,8 +28,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {HuskyApplication.class, EmbeddedRedisConfig.class},
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@DirtiesContext
 @ActiveProfiles("test")
 class UserStatusApiTest {
 
@@ -51,7 +49,6 @@ class UserStatusApiTest {
                 .build();
 
         userRepository.save(User.builder()
-                .name("huewilliams")
                 .sex(Sex.MALE)
                 .email("test")
                 .createdAt(LocalDateTime.now())
@@ -65,26 +62,19 @@ class UserStatusApiTest {
         userRepository.deleteAll();
     }
 
-    @Test
-    @Order(1)
-    @WithMockUser(username = "1", password = "1234")
-    public void getUserStatus() throws Exception {
-        //given
-        String url = "http://localhost:" + port;
-
-        //when
-        mvc.perform(get(url + "/users/me/status"))
-                .andDo(print())
-                .andExpect(status().isOk());
-
-        mvc.perform(patch(url + "/users/me/status"))
-                .andDo(print())
-                .andExpect(status().isOk());
-
-        //then
-        User user = userRepository.findByEmail("test")
-                .orElseThrow(UserNotFoundException::new);
-        System.out.println(user.getName() + " final submitted : " +
-                user.getStatus().isFinalSubmit());
-    }
+//    @Test
+//    @WithMockUser(username = "1", password = "1234")
+//    public void getUserStatus() throws Exception {
+//        //given
+//        String url = "http://localhost:" + port;
+//
+//        //when
+//        mvc.perform(get(url + "/users/me/status"))
+//                .andDo(print())
+//                .andExpect(status().isOk());
+//
+//        mvc.perform(patch(url + "/users/me/status"))
+//                .andDo(print())
+//                .andExpect(status().isOk());
+//    }
 }

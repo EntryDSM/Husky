@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {HuskyApplication.class, EmbeddedRedisConfig.class})
 @ActiveProfiles({"test", "local"})
-public class ScheduleRepositoryTest {
+class ScheduleRepositoryTest {
 
     @Autowired
     private ScheduleRepository scheduleRepository;

@@ -1,5 +1,6 @@
 package kr.hs.entrydsm.husky.domain.user.service;
 
+import kr.hs.entrydsm.husky.domain.application.domain.GeneralApplication;
 import kr.hs.entrydsm.husky.domain.application.exception.ApplicationNotFoundException;
 import kr.hs.entrydsm.husky.domain.user.dto.SetUserInfoRequest;
 import kr.hs.entrydsm.husky.domain.user.dto.UserInfoResponse;
@@ -79,28 +80,15 @@ public class UserInfoService {
         User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
-        if (user.getGradeType() == null) return UserInfoResponse.nullResponse();
-
-        switch (user.getGradeType()) {
-            case GRADUATED: {
-                GraduatedApplication graduated = graduatedRepository.findById(user.getReceiptCode())
-                        .orElseThrow(ApplicationNotFoundException::new);
-                if (graduated.getSchool() == null) throw new SchoolNotFoundException();
-
-                return UserInfoResponse.response(user, graduated.getStudentNumber(),
-                        graduated.getSchool().getSchoolCode(), graduated.getSchoolTel());
-            }
-
-            case UNGRADUATED: {
-                UnGraduatedApplication unGraduated = unGraduatedRepository.findById(user.getReceiptCode())
-                        .orElseThrow(ApplicationNotFoundException::new);
-                if (unGraduated.getSchool() == null) throw new SchoolNotFoundException();
-
-                return UserInfoResponse.response(user, unGraduated.getStudentNumber(),
-                        unGraduated.getSchool().getSchoolCode(), unGraduated.getSchoolTel());
-            }
+        if (user.getGradeType() == null || user.isGED()) {
+            return UserInfoResponse.response(user, null, null, null);
         }
-        return UserInfoResponse.response(user, null, null, null);
+
+        GeneralApplication application = user.getGeneralApplication();
+        if(application == null) throw new ApplicationNotFoundException();
+
+        return UserInfoResponse.response(user, application.getStudentNumber(),
+                application.getSchool().getSchoolCode(), application.getSchoolTel());
     }
 
 }
