@@ -16,6 +16,7 @@ import javax.persistence.*;
 public class Application extends BaseTimeEntity {
 
     @Id
+//    @Column(name = "user_receipt_code", insertable = false, updatable = false)
     private Integer receiptCode;
 
     @OneToOne(cascade = CascadeType.ALL)

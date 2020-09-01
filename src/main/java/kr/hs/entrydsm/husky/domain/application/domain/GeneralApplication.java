@@ -2,15 +2,17 @@ package kr.hs.entrydsm.husky.domain.application.domain;
 
 import kr.hs.entrydsm.husky.domain.school.domain.School;
 import kr.hs.entrydsm.husky.domain.user.domain.User;
+import kr.hs.entrydsm.husky.domain.user.dto.SetUserInfoRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.function.Consumer;
 
 @Getter
-@NoArgsConstructor
+@Setter
 @AllArgsConstructor
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
@@ -68,6 +70,21 @@ public class GeneralApplication extends Application {
         this.schoolTel = schoolTel;
     }
 
+    public void update(SetUserInfoRequest dto) {
+        setIfNotNull(this::setStudentNumber, dto.getStudentNumber());
+        setIfNotNull(this::setSchoolTel, dto.getSchoolTel());
+    }
+
+    public void update(School school) {
+        this.school = school;
+    }
+
+    private <T> void setIfNotNull(Consumer<T> setter, T value) {
+        if (value != null) {
+            setter.accept(value);
+        }
+    }
+
     public void setScore(Integer volunteerTime, Integer fullCutCount, Integer periodCutCount, Integer lateCount,
                          Integer earlyLeaveCount, String korean, String social, String history, String math,
                          String science, String techAndHome, String english) {
@@ -94,7 +111,9 @@ public class GeneralApplication extends Application {
     public boolean isFilledStudentInfo() {
         return studentNumber != null && school != null && schoolTel != null;
     }
-    
+
+    protected GeneralApplication() {}
+
     GeneralApplication(User user) {
         super(user);
     }

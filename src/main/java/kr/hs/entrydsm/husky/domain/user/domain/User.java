@@ -5,15 +5,18 @@ import kr.hs.entrydsm.husky.domain.user.domain.enums.AdditionalType;
 import kr.hs.entrydsm.husky.domain.user.domain.enums.ApplyType;
 import kr.hs.entrydsm.husky.domain.user.domain.enums.GradeType;
 import kr.hs.entrydsm.husky.domain.user.domain.enums.Sex;
+import kr.hs.entrydsm.husky.domain.user.dto.SetUserInfoRequest;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.function.Consumer;
 
 import static kr.hs.entrydsm.husky.domain.user.domain.enums.GradeType.*;
 
 @Getter
+@Setter
 @Builder
 @Entity(name = "user")
 @NoArgsConstructor
@@ -132,19 +135,22 @@ public class User {
         this.isDaejeon = isDaejeon;
     }
 
+    public void update(SetUserInfoRequest dto) {
+        setIfNotNull(this::setName, dto.getName());
+        setIfNotNull(this::setSex, dto.getSex());
+        setIfNotNull(this::setBirthDate, dto.getBirthDate());
+        setIfNotNull(this::setParentName, dto.getParentName());
+        setIfNotNull(this::setParentTel, dto.getParentTel());
+        setIfNotNull(this::setApplicantTel, dto.getApplicantTel());
+        setIfNotNull(this::setAddress, dto.getAddress());
+        setIfNotNull(this::setDetailAddress, dto.getDetailAddress());
+        setIfNotNull(this::setPostCode, dto.getPostCode());
+        setIfNotNull(this::setUserPhoto, dto.getPhoto());
+    }
 
-    public void setInfo(String name, Sex sex, LocalDate birthDate, String applicantTel, String parentTel,
-                        String parentName, String address, String detailAddress, String postCode, String photo) {
-        this.name = name;
-        this.sex = sex;
-        this.birthDate = birthDate;
-        this.applicantTel = applicantTel;
-        this.parentTel = parentTel;
-        this.parentName = parentName;
-        this.address = address;
-        this.detailAddress = detailAddress;
-        this.postCode = postCode;
-        this.userPhoto = photo;
+    private <T> void setIfNotNull(final Consumer<T> setter, final T value) {
+        if (value != null)
+            setter.accept(value);
     }
 
     public void setSelfIntroduction(String introduction) {
