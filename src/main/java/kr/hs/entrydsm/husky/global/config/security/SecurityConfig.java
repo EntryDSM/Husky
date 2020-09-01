@@ -20,7 +20,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     @Override
-    public AuthenticationManager authenticationManager() throws Exception {
+    public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
 
@@ -33,15 +33,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                     .antMatchers("/auth").permitAll()
-                    .antMatchers("/user/**").permitAll()
-                    .anyRequest().authenticated()
-                .and()
-                    .apply(new JwtConfigurer(jwtTokenProvider)).and()
-                    .apply(new ExceptionConfigurer());
+                    .antMatchers("/users").permitAll()
+                    .antMatchers("/users/email/verify").permitAll()
+                    .antMatchers("/users/email/password/verify").permitAll()
+                    .anyRequest().authenticated().and()
+                .apply(new JwtConfigurer(jwtTokenProvider)).and()
+                .apply(new ExceptionConfigurer());
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 }
