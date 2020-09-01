@@ -1,4 +1,4 @@
-package kr.hs.entrydsm.husky.domain.auth.entities.refresh_token;
+package kr.hs.entrydsm.husky.domain.auth.domain.refreshtoken;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

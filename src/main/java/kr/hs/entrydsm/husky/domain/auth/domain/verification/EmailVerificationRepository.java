@@ -1,4 +1,4 @@
-package kr.hs.entrydsm.husky.domain.auth.entities.verification;
+package kr.hs.entrydsm.husky.domain.auth.domain.verification;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
