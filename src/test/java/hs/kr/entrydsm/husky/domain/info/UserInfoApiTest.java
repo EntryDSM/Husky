@@ -107,10 +107,10 @@ class UserInfoApiTest {
                 .birthDate(LocalDate.parse("2020-01-23"))
                 .studentNumber("30120")
                 .schoolCode("1")
-                .schoolTel("010-0000-0000")
+                .schoolTel("010-1234-5678")
                 .parentName("test2")
-                .parentTel("010-1111-1111")
-                .applicantTel("010-0000-1111")
+                .parentTel("010-1234-5678")
+                .applicantTel("010-1234-5678")
                 .address("대전 유성구")
                 .detailAddress("대덕 소프트웨어마이스터 고등학교")
                 .postCode("11111")
@@ -120,7 +120,7 @@ class UserInfoApiTest {
         select_user_type(url, "UNGRADUATED");
 
         //then
-        mvc.perform(post(url + "/users/me")
+        mvc.perform(patch(url + "/users/me")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper()
                         .registerModule(new JavaTimeModule())
@@ -128,7 +128,7 @@ class UserInfoApiTest {
                         .setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
                         .writeValueAsString(request)))
                 .andDo(print())
-                .andExpect(status().isCreated());
+                .andExpect(status().isAccepted());
 
         mvc.perform(get(url + "/users/me"))
                 .andDo(print())
@@ -153,9 +153,9 @@ class UserInfoApiTest {
                 .birthDate(LocalDate.parse("2020-01-23"))
                 .parentName("test2")
                 .parentTel("010-1111-1111")
-                .applicantTel("010-0000-1111")
+                .applicantTel("010-1234-5678")
                 .address("대전 유성구")
-                .detailAddress("대덕 소프트웨어마이스터 고등학교")
+                .detailAddress("대덕소프트웨어마이스터고등학교")
                 .postCode("11111")
                 .photo("test.png")
                 .build();
