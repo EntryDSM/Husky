@@ -1,6 +1,7 @@
 package kr.hs.entrydsm.husky.global.config.security;
 
 import io.jsonwebtoken.*;
+import kr.hs.entrydsm.husky.domain.auth.exceptions.ExpiredTokenException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -64,8 +65,8 @@ public class JwtTokenProvider {
             Jwts.parser().setSigningKey(secretKey)
                     .parseClaimsJws(token).getBody().getSubject();
             return true;
-        } catch (Exception e) {
-            return false;
+        } catch (ExpiredJwtException e) {
+            throw new ExpiredTokenException();
         }
     }
 
