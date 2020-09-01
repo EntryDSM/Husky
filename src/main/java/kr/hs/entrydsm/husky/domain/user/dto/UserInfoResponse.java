@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserInfoResponse {
@@ -29,27 +28,22 @@ public class UserInfoResponse {
     private String postCode;
     private String photo;
 
-    public static UserInfoResponse response(User user, String studentNumber, String schoolCode, String schoolTel) {
-        return UserInfoResponse.builder()
-                .gradeType(user.getGradeType())
-                .name(user.getName())
-                .sex(user.getSex())
-                .birthDate(user.getBirthDate().toString())
-                .parentName(user.getParentName())
-                .parentTel(user.getParentTel())
-                .applicantTel(user.getApplicantTel())
-                .address(user.getAddress())
-                .detailAddress(user.getDetailAddress())
-                .postCode(user.getPostCode())
-                .photo(user.getUserPhoto())
-                .studentNumber(studentNumber)
-                .schoolCode(schoolCode)
-                .schoolTel(schoolTel)
-                .build();
-    }
-
-    public static UserInfoResponse nullResponse() {
-        return UserInfoResponse.builder().build();
+    @Builder
+    public UserInfoResponse(User user, String studentNumber, String schoolCode, String schoolTel) {
+        this.gradeType = user.getGradeType();
+        this.name = user.getName();
+        this.sex = user.getSex();
+        this.birthDate = (user.getBirthDate() != null) ? user.getBirthDate().toString() : null;
+        this.studentNumber = studentNumber;
+        this.schoolCode = schoolCode;
+        this.schoolTel = schoolTel;
+        this.parentName = user.getParentName();
+        this.parentTel = user.getParentTel();
+        this.applicantTel = user.getApplicantTel();
+        this.address = user.getAddress();
+        this.detailAddress = user.getDetailAddress();
+        this.postCode = user.getPostCode();
+        this.photo = user.getUserPhoto();
     }
 
 }
