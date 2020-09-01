@@ -16,7 +16,7 @@ import java.io.IOException;
 public class ExceptionHandlerFilter extends OncePerRequestFilter {
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
         try {
             filterChain.doFilter(request, response);
         } catch (ExpiredTokenException e) {
@@ -26,7 +26,6 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
             response.getWriter().write(jsonValue);
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            e.printStackTrace();
         }
     }
 
