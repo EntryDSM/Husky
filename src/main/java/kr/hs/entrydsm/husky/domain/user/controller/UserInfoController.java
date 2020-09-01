@@ -30,8 +30,8 @@ public class UserInfoController {
         return userTypeService.getUserType();
     }
 
-    @PostMapping
-    @ResponseStatus(value = HttpStatus.CREATED)
+    @PatchMapping
+    @ResponseStatus(value = HttpStatus.ACCEPTED)
     public UserInfoResponse serUserInfo(@RequestBody @Valid SetUserInfoRequest request) {
         return userInfoService.setUserInfo(request);
     }
