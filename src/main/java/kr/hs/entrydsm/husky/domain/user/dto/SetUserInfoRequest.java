@@ -1,43 +1,65 @@
 package kr.hs.entrydsm.husky.domain.user.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import kr.hs.entrydsm.husky.domain.user.domain.enums.Sex;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class SetUserInfoRequest {
 
-    @NotEmpty @NotBlank
+    private static final String PHONE_NUMBER_REGEX = "(^\\+82[.-][1-9]\\d?[.-]|^\\(?0[1-9]\\d?\\)?[.-]?)?[1-9]\\d{2,3}[.-]\\d{4}$";
+
+    @Size(max = 15)
     private String name;
-    @NotEmpty @NotBlank
-    private String sex;
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+
+    private Sex sex;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate birthDate;
+
+    @Size(max = 5)
     private String studentNumber;
+
+    @Size(max = 10)
     private String schoolCode;
+
+    @Size(max = 20)
+    @Pattern(regexp = PHONE_NUMBER_REGEX)
     private String schoolTel;
-    @NotEmpty @NotBlank
+
+    @Size(max = 15)
     private String parentName;
-    @NotEmpty @NotBlank
+
+    @Size(max = 20)
+    @Pattern(regexp = PHONE_NUMBER_REGEX)
     private String parentTel;
-    @NotEmpty @NotBlank
+
+    @Size(max = 20)
+    @Pattern(regexp = PHONE_NUMBER_REGEX)
     private String applicantTel;
-    @NotEmpty @NotBlank
+
+    @Size(max = 250)
     private String address;
-    @NotEmpty @NotBlank
+
+    @Size(max = 250)
     private String detailAddress;
-    @NotEmpty @NotBlank
+
+    @Size(max = 5)
     private String postCode;
-    @NotEmpty @NotBlank
+
+    @Size(max = 45)
     private String photo;
 
 }
