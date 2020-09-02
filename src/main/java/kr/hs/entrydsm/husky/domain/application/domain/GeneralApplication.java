@@ -3,8 +3,6 @@ package kr.hs.entrydsm.husky.domain.application.domain;
 import kr.hs.entrydsm.husky.domain.school.domain.School;
 import kr.hs.entrydsm.husky.domain.user.domain.User;
 import kr.hs.entrydsm.husky.domain.user.dto.SetUserInfoRequest;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,10 +11,9 @@ import java.util.function.Consumer;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class GeneralApplication extends Application {
+public abstract class GeneralApplication extends Application {
 
     @Column(length = 5)
     private String studentNumber;
@@ -117,8 +114,7 @@ public class GeneralApplication extends Application {
     GeneralApplication(User user) {
         super(user);
     }
-    
-    @Builder(builderMethodName = "generalApplicationBuilder")
+
     public GeneralApplication(User user, String studentNumber, School school, String schoolTel, Integer volunteerTime,
                               Integer fullCutCount, Integer periodCutCount, Integer lateCount, Integer earlyLeaveCount,
                               String korean, String social, String history, String math, String science,
