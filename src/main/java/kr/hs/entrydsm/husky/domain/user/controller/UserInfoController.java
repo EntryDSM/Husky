@@ -39,8 +39,8 @@ public class UserInfoController {
         return userInfoService.setUserInfo(request);
     }
 
-    @PostMapping("/ged")
-    @ResponseStatus(value = HttpStatus.CREATED)
+    @PatchMapping("/ged")
+    @ResponseStatus(value = HttpStatus.ACCEPTED)
     public UserInfoResponse serGEDUserInfo(@RequestBody @Valid SetUserInfoRequest request) {
         return userInfoService.setUserInfo(request);
     }
