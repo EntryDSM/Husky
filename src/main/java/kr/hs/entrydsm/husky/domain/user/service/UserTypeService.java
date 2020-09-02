@@ -45,7 +45,7 @@ public class UserTypeService {
         AdditionalType additionalType =
                 AdditionalType.valueOf(request.getAdditionalType().toUpperCase());
 
-        user.setClassification(gradeType, applyType, additionalType, request.isDaejeon());
+        user.setClassification(gradeType, applyType, additionalType, request.getIsDaejeon());
 
         switch (gradeType) {
             case GED: {
