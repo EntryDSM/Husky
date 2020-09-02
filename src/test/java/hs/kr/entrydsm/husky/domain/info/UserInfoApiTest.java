@@ -163,7 +163,7 @@ class UserInfoApiTest {
         select_user_type(url, "GED");
 
         //then
-        mvc.perform(post(url + "/users/me/ged")
+        mvc.perform(patch(url + "/users/me/ged")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper()
                         .registerModule(new JavaTimeModule())
@@ -171,9 +171,9 @@ class UserInfoApiTest {
                         .setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
                         .writeValueAsString(request)))
                 .andDo(print())
-                .andExpect(status().isCreated());
+                .andExpect(status().isAccepted());
 
-        mvc.perform(post(url + "/users/me/ged"))
+        mvc.perform(patch(url + "/users/me/ged"))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
 

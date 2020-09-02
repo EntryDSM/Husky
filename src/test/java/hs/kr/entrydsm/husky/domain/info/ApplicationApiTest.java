@@ -148,7 +148,7 @@ class ApplicationApiTest {
         mvc.perform(patch(url + "/applications/me/score/ged")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(convertToJson(new SetGedScoreRequest(BigDecimal.valueOf(100)))))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isAccepted());
 
         //then
         mvc.perform(get(url + "/applications/me/score"))
