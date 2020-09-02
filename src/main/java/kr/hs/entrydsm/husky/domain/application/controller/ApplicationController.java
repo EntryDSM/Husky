@@ -49,7 +49,7 @@ public class ApplicationController {
     }
 
     @PatchMapping("/score/ged")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @ResponseStatus(value = HttpStatus.ACCEPTED)
     public void setGedScore(@RequestBody @Valid SetGedScoreRequest request) {
         applicationService.setGedScore(request);
     }
