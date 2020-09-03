@@ -11,6 +11,9 @@ import kr.hs.entrydsm.husky.domain.application.domain.repositories.UnGraduatedAp
 import kr.hs.entrydsm.husky.domain.school.domain.School;
 import kr.hs.entrydsm.husky.domain.school.domain.repositories.SchoolRepository;
 import kr.hs.entrydsm.husky.domain.user.domain.User;
+import kr.hs.entrydsm.husky.domain.user.domain.enums.AdditionalType;
+import kr.hs.entrydsm.husky.domain.user.domain.enums.ApplyType;
+import kr.hs.entrydsm.husky.domain.user.domain.enums.GradeType;
 import kr.hs.entrydsm.husky.domain.user.domain.enums.Sex;
 import kr.hs.entrydsm.husky.domain.user.domain.repositories.UserRepository;
 import kr.hs.entrydsm.husky.domain.user.dto.SelectTypeRequest;
@@ -30,6 +33,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -112,7 +116,7 @@ class UserInfoApiTest {
                 .parentTel("01012345678")
                 .applicantTel("01012345678")
                 .address("대전 유성구")
-                .detailAddress("대덕 소프트웨어마이스터 고등학교")
+                .detailAddress("대덕 소프트웨어 마이스터 고등학교")
                 .postCode("11111")
                 .photo("test.png")
                 .build();
@@ -194,12 +198,12 @@ class UserInfoApiTest {
                         .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
                         .setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
                         .writeValueAsString(SelectTypeRequest.builder()
-                                .gradeType(gradeType)
-                                .applyType("COMMON")
-                                .additionalType("NOT_APPLICABLE")
+                                .gradeType(GradeType.valueOf(gradeType))
+                                .applyType(ApplyType.COMMON)
+                                .additionalType(AdditionalType.NOT_APPLICABLE)
                                 .isDaejeon(true)
-                                .gedPassDate("2020-02")
-                                .graduatedDate("2020-02")
+                                .gedPassDate(YearMonth.of(2020, 2))
+                                .graduatedDate(YearMonth.of(2020, 2))
                                 .build()))
         );
     }

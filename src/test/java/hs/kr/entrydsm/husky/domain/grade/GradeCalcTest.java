@@ -402,7 +402,7 @@ public class GradeCalcTest {
 
     private UnGraduatedApplication.UnGraduatedApplicationBuilder getDefaultUnGraduatedApplication(User user) {
         return UnGraduatedApplication.unGraduatedApplicationBuilder()
-                .user(user)
+                .receiptCode(user.getReceiptCode())
                 .volunteerTime(39)
                 .fullCutCount(0)
                 .periodCutCount(0)
@@ -419,7 +419,7 @@ public class GradeCalcTest {
 
     private GraduatedApplication.GraduatedApplicationBuilder getDefaultGraduatedApplication(User user) {
         return GraduatedApplication.graduatedApplicationBuilder()
-                .user(user)
+                .receiptCode(user.getReceiptCode())
                 .volunteerTime(39)
                 .fullCutCount(0)
                 .periodCutCount(0)

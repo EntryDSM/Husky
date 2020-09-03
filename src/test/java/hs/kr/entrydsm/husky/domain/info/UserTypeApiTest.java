@@ -4,22 +4,26 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import kr.hs.entrydsm.husky.infra.redis.EmbeddedRedisConfig;
 import kr.hs.entrydsm.husky.HuskyApplication;
-import kr.hs.entrydsm.husky.domain.user.dto.SelectTypeRequest;
 import kr.hs.entrydsm.husky.domain.application.domain.repositories.GEDApplicationRepository;
 import kr.hs.entrydsm.husky.domain.application.domain.repositories.GraduatedApplicationRepository;
 import kr.hs.entrydsm.husky.domain.application.domain.repositories.UnGraduatedApplicationRepository;
 import kr.hs.entrydsm.husky.domain.user.domain.User;
+import kr.hs.entrydsm.husky.domain.user.domain.enums.AdditionalType;
+import kr.hs.entrydsm.husky.domain.user.domain.enums.ApplyType;
+import kr.hs.entrydsm.husky.domain.user.domain.enums.GradeType;
 import kr.hs.entrydsm.husky.domain.user.domain.repositories.UserRepository;
-import org.junit.jupiter.api.*;
+import kr.hs.entrydsm.husky.domain.user.dto.SelectTypeRequest;
+import kr.hs.entrydsm.husky.infra.redis.EmbeddedRedisConfig;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,13 +31,10 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {HuskyApplication.class, EmbeddedRedisConfig.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -128,12 +129,12 @@ class UserTypeApiTest {
 
     private ResultActions selectTypeRequest(String url, String gradeType) throws Exception {
         SelectTypeRequest request = SelectTypeRequest.builder()
-                .gradeType(gradeType)
-                .applyType("COMMON")
-                .additionalType("NOT_APPLICABLE")
+                .gradeType(GradeType.valueOf(gradeType))
+                .applyType(ApplyType.COMMON)
+                .additionalType(AdditionalType.NOT_APPLICABLE)
                 .isDaejeon(true)
-                .gedPassDate("2020-02")
-                .graduatedDate("2020-02")
+                .gedPassDate(YearMonth.of(2020, 2))
+                .graduatedDate(YearMonth.of(2020, 2))
                 .build();
 
         return mvc.perform(patch(url + "/users/me/type")
