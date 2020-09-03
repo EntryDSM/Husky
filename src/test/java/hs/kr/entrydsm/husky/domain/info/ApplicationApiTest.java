@@ -190,7 +190,7 @@ class ApplicationApiTest {
         mvc.perform(patch(url + "applications/me/score")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(convertToJson(request)))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isAccepted());
 
         //then
         mvc.perform(get(url + "/applications/me/score"))
