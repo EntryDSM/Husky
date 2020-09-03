@@ -1,10 +1,10 @@
 package kr.hs.entrydsm.husky.domain.application.domain;
 
 import kr.hs.entrydsm.husky.domain.user.domain.User;
+import kr.hs.entrydsm.husky.domain.user.dto.SelectTypeRequest;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.persistence.*;
 import javax.validation.constraints.Digits;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -12,7 +12,15 @@ import java.time.LocalDate;
 @Getter
 @Entity(name = "ged_application")
 @NoArgsConstructor
-public class GEDApplication extends Application {
+public class GEDApplication extends BaseTimeEntity {
+
+    @Id
+    @Column(name = "user_receipt_code")
+    private Integer receiptCode;
+
+    @OneToOne
+    @PrimaryKeyJoinColumn
+    private User user;
 
     @Digits(integer = 3, fraction = 2)
     private BigDecimal gedAverageScore;
@@ -20,13 +28,23 @@ public class GEDApplication extends Application {
     @Column
     private LocalDate gedPassDate;
 
-    public void setGedAverageScore(BigDecimal gedAverageScore) {
+    public void updateGedAverageScore(BigDecimal gedAverageScore) {
         this.gedAverageScore = gedAverageScore;
+    }
+
+    public GEDApplication update(SelectTypeRequest dto) {
+        if (dto.getGedPassDate() != null)
+            this.gedPassDate = dto.getGedPassDate().atDay(1);
+        return this;
+    }
+
+    public GEDApplication(User user) {
+        this.receiptCode = user.getReceiptCode();
     }
 
     @Builder(builderMethodName = "gedApplicationBuilder")
     public GEDApplication(User user, BigDecimal gedAverageScore, LocalDate gedPassDate) {
-        super(user);
+        this.receiptCode = user.getReceiptCode();
         this.gedAverageScore = gedAverageScore;
         this.gedPassDate = gedPassDate;
     }

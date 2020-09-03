@@ -1,19 +1,20 @@
 package kr.hs.entrydsm.husky.domain.application.domain;
 
 import kr.hs.entrydsm.husky.domain.school.domain.School;
-import kr.hs.entrydsm.husky.domain.user.domain.User;
 import kr.hs.entrydsm.husky.domain.user.dto.SetUserInfoRequest;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.OneToOne;
 import java.util.function.Consumer;
 
 @Getter
 @Setter
-@Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class GeneralApplication extends Application {
+@MappedSuperclass
+public abstract class GeneralApplication extends BaseTimeEntity {
 
     @Column(length = 5)
     private String studentNumber;
@@ -111,15 +112,10 @@ public abstract class GeneralApplication extends Application {
 
     protected GeneralApplication() {}
 
-    GeneralApplication(User user) {
-        super(user);
-    }
-
-    public GeneralApplication(User user, String studentNumber, School school, String schoolTel, Integer volunteerTime,
+    public GeneralApplication(String studentNumber, School school, String schoolTel, Integer volunteerTime,
                               Integer fullCutCount, Integer periodCutCount, Integer lateCount, Integer earlyLeaveCount,
                               String korean, String social, String history, String math, String science,
                               String techAndHome, String english) {
-        super(user);
         this.studentNumber = studentNumber;
         this.school = school;
         this.schoolTel = schoolTel;
