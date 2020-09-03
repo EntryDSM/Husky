@@ -18,7 +18,7 @@ public class AwsSesConfig {
     @Value("${aws.credential.secret_key}")
     private String AWS_SECRET_KEY;
 
-    @Value("${aws.credential.region}")
+    @Value("${aws.credential.ses.region}")
     private String region;
 
     @Bean
