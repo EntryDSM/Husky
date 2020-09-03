@@ -68,7 +68,7 @@ public class GradeCalcServiceImpl implements GradeCalcService {
                     .add(BigDecimal.valueOf(3));
         }
 
-        GeneralApplication app = (GeneralApplication) user.getApplication();
+        GeneralApplication app = user.getGeneralApplication();
         if (app.getVolunteerTime() >= 45) {
             return BigDecimal.valueOf(15);
         }
@@ -123,7 +123,7 @@ public class GradeCalcServiceImpl implements GradeCalcService {
     }
 
     private GradeScore calcGeneralApplication(User user) {
-        GeneralApplication application = (GeneralApplication) user.getApplication();
+        GeneralApplication application = user.getGeneralApplication();
         GradeMatrix matrix = new GradeMatrix(application);
         GradeUtil matrixUtil = new GradeUtil(user, matrix);
 

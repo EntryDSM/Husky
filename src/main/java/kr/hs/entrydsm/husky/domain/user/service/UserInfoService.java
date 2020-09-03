@@ -1,7 +1,8 @@
 package kr.hs.entrydsm.husky.domain.user.service;
 
 import kr.hs.entrydsm.husky.domain.application.domain.GeneralApplication;
-import kr.hs.entrydsm.husky.domain.application.domain.repositories.GeneralApplicationRepository;
+import kr.hs.entrydsm.husky.domain.application.domain.adapter.GeneralApplicationAdapter;
+import kr.hs.entrydsm.husky.domain.application.domain.repositories.generalapplication.GeneralApplicationAsyncRepository;
 import kr.hs.entrydsm.husky.domain.school.domain.School;
 import kr.hs.entrydsm.husky.domain.school.domain.repositories.SchoolRepository;
 import kr.hs.entrydsm.husky.domain.user.domain.User;
@@ -12,6 +13,7 @@ import kr.hs.entrydsm.husky.domain.user.exception.SchoolNotFoundException;
 import kr.hs.entrydsm.husky.domain.user.exception.UserNotFoundException;
 import kr.hs.entrydsm.husky.global.config.security.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -21,7 +23,7 @@ import javax.transaction.Transactional;
 public class UserInfoService {
 
     private final UserRepository userRepository;
-    private final GeneralApplicationRepository generalApplicationRepository;
+    private final GeneralApplicationAsyncRepository generalApplicationAsyncRepository;
     private final SchoolRepository schoolRepository;
 
     private final AuthenticationFacade authenticationFacade;
@@ -40,7 +42,7 @@ public class UserInfoService {
                     .user(user).build();
         }
 
-        GeneralApplication application = user.getGeneralApplication();
+        GeneralApplicationAdapter application = new GeneralApplicationAdapter(user);
         if (!isSchoolCodeEmpty(request)) {
             School school = schoolRepository.findById(request.getSchoolCode())
                     .orElseThrow(SchoolNotFoundException::new);
@@ -48,12 +50,12 @@ public class UserInfoService {
         }
 
         application.update(request);
-        generalApplicationRepository.save(application);
+        generalApplicationAsyncRepository.save(application);
 
         return UserInfoResponse.builder()
                 .user(user)
                 .studentNumber(application.getStudentNumber())
-                .schoolCode(application.getSchool().getSchoolCode())
+                .schoolCode(application.getSchoolCode())
                 .schoolTel(application.getSchoolTel())
                 .build();
     }
@@ -76,7 +78,7 @@ public class UserInfoService {
         return UserInfoResponse.builder()
                 .user(user)
                 .studentNumber(application.getStudentNumber())
-                .schoolCode(application.getSchool().getSchoolCode())
+                .schoolCode((application.getSchool() != null) ? application.getSchool().getSchoolCode() : null)
                 .schoolTel(application.getSchoolTel())
                 .build();
     }

@@ -74,7 +74,7 @@ public class ApplicationService {
         GEDApplication application = gedApplicationRepository.findById(user.getReceiptCode())
                 .orElseThrow(ApplicationNotFoundException::new);
 
-        application.setGedAverageScore(request.getGedAverageScore());
+        application.updateGedAverageScore(request.getGedAverageScore());
         gedApplicationRepository.save(application);
     }
 
