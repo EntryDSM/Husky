@@ -19,9 +19,9 @@ aws:
     access_key: ${AWS_ACCESS_KEY:access_key}
     secret_key: ${AWS_SECRET_KEY:secret_key}
     ses:
-      region: ${AWS_REGION:us-east-1}
+      region: ${AWS_SES_REGION:us-east-1}
     s3:
-      region: ${AWS_REGION:ap-northeast-2}
+      region: ${AWS_S3_REGION:ap-northeast-2}
 
 auth:
   jwt:
