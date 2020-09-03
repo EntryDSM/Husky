@@ -1,22 +1,21 @@
 package kr.hs.entrydsm.husky.domain.application.service;
 
+import kr.hs.entrydsm.husky.domain.application.domain.GEDApplication;
+import kr.hs.entrydsm.husky.domain.application.domain.adapter.GeneralApplicationAdapter;
+import kr.hs.entrydsm.husky.domain.application.domain.repositories.GEDApplicationRepository;
+import kr.hs.entrydsm.husky.domain.application.domain.repositories.generalapplication.GeneralApplicationAsyncRepositoryImpl;
 import kr.hs.entrydsm.husky.domain.application.dto.*;
 import kr.hs.entrydsm.husky.domain.application.exception.ApplicationNotFoundException;
 import kr.hs.entrydsm.husky.domain.application.exception.ApplicationTypeUnmatchedException;
-import kr.hs.entrydsm.husky.domain.user.exception.UserNotFoundException;
-import kr.hs.entrydsm.husky.domain.application.domain.GEDApplication;
-import kr.hs.entrydsm.husky.domain.application.domain.GeneralApplication;
-import kr.hs.entrydsm.husky.domain.application.domain.GraduatedApplication;
-import kr.hs.entrydsm.husky.domain.application.domain.UnGraduatedApplication;
-import kr.hs.entrydsm.husky.domain.application.domain.repositories.GEDApplicationRepository;
-import kr.hs.entrydsm.husky.domain.application.domain.repositories.GraduatedApplicationRepository;
-import kr.hs.entrydsm.husky.domain.application.domain.repositories.UnGraduatedApplicationRepository;
 import kr.hs.entrydsm.husky.domain.user.domain.User;
-import kr.hs.entrydsm.husky.domain.user.domain.enums.GradeType;
 import kr.hs.entrydsm.husky.domain.user.domain.repositories.UserRepository;
+import kr.hs.entrydsm.husky.domain.user.exception.GradeTypeRequiredException;
+import kr.hs.entrydsm.husky.domain.user.exception.UserNotFoundException;
 import kr.hs.entrydsm.husky.global.config.security.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -24,8 +23,7 @@ public class ApplicationService {
 
     private final UserRepository userRepository;
     private final GEDApplicationRepository gedApplicationRepository;
-    private final GraduatedApplicationRepository graduatedApplicationRepository;
-    private final UnGraduatedApplicationRepository unGraduatedApplicationRepository;
+    private final GeneralApplicationAsyncRepositoryImpl generalApplicationAsyncRepository;
 
     private final AuthenticationFacade authenticationFacade;
 
@@ -78,39 +76,22 @@ public class ApplicationService {
         gedApplicationRepository.save(application);
     }
 
-    public void setScore(SetScoreRequest request) {
+    public void setScore(SetScoreRequest dto) {
         Integer receiptCode = authenticationFacade.getReceiptCode();
         User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
-        if (!user.isGraduated() && !user.isUngraduated())
+        if (user.isGradeTypeEmpty())
+            throw new GradeTypeRequiredException();
+
+        if (user.isGED())
             throw new ApplicationTypeUnmatchedException();
 
-        switch (user.getGradeType()) {
-            case GRADUATED: {
-                GraduatedApplication graduatedApplication = graduatedApplicationRepository.findById(user.getReceiptCode())
-                        .orElseThrow(ApplicationNotFoundException::new);
-
-                graduatedApplication.setScore(request.getVolunteerTime(), request.getFullCutCount(),
-                        request.getPeriodCutCount(), request.getLateCount(), request.getEarlyLeaveCount(),
-                        request.getKorean(), request.getSocial(), request.getHistory(), request.getMath(),
-                        request.getScience(), request.getTechAndHome(), request.getEnglish());
-                graduatedApplicationRepository.save(graduatedApplication);
-                break;
-            }
-
-            case UNGRADUATED: {
-                UnGraduatedApplication unGraduatedApplication = unGraduatedApplicationRepository.findById(user.getReceiptCode())
-                        .orElseThrow(ApplicationNotFoundException::new);
-
-                unGraduatedApplication.setScore(request.getVolunteerTime(), request.getFullCutCount(),
-                        request.getPeriodCutCount(), request.getLateCount(), request.getEarlyLeaveCount(),
-                        request.getKorean(), request.getSocial(), request.getHistory(), request.getMath(),
-                        request.getScience(), request.getTechAndHome(), request.getEnglish());
-                unGraduatedApplicationRepository.save(unGraduatedApplication);
-                break;
-            }
-        }
+        Optional.of(new GeneralApplicationAdapter(user))
+                .ifPresent(application -> {
+                    application.update(dto);
+                    generalApplicationAsyncRepository.save(application);
+                });
     }
 
     public ScoreResponse getScore() {
@@ -118,33 +99,23 @@ public class ApplicationService {
         User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
-        GeneralApplication generalApplication;
+        if (user.isGradeTypeEmpty())
+            throw new GradeTypeRequiredException();
 
-        GradeType gradeType = user.getGradeType();
-
-        switch (gradeType) {
-            case GED: {
-                GEDApplication gedApplication = gedApplicationRepository.findById(user.getReceiptCode())
-                        .orElseThrow(ApplicationNotFoundException::new);
-                return ScoreResponse.gedResponse(gedApplication, gradeType);
-            }
-
-            case UNGRADUATED: {
-                generalApplication = unGraduatedApplicationRepository.findById(user.getReceiptCode())
-                        .orElseThrow(ApplicationNotFoundException::new);
-                break;
-            }
-
-            case GRADUATED: {
-                generalApplication = graduatedApplicationRepository.findById(user.getReceiptCode())
-                        .orElseThrow(ApplicationNotFoundException::new);
-                break;
-            }
-
-            default:
-                throw new ApplicationNotFoundException();
+        if (user.isGED()) {
+            return gedApplicationRepository.findById(user.getReceiptCode())
+                    .or(() -> createGEDApplication(user.getReceiptCode()))
+                    .map(ScoreResponse::new)
+                    .orElseThrow(ApplicationNotFoundException::new);
         }
-        return ScoreResponse.response(generalApplication, gradeType);
+
+        GeneralApplicationAdapter adapter = new GeneralApplicationAdapter(user);
+        return new ScoreResponse(adapter);
+    }
+
+    private Optional<GEDApplication> createGEDApplication(int receiptCode) {
+        GEDApplication application = new GEDApplication(receiptCode);
+        return Optional.of(gedApplicationRepository.save(application));
     }
 
 }
