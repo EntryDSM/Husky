@@ -23,9 +23,9 @@ public class UserInfoController {
     private final S3Service s3Service;
 
     @PatchMapping("/type")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void selectUserType(@RequestBody @Valid SelectTypeRequest request) {
-        userTypeService.selectUserType(request);
+    @ResponseStatus(value = HttpStatus.ACCEPTED)
+    public void updateUserType(@RequestBody @Valid SelectTypeRequest request) {
+        userTypeService.updateUserType(request);
     }
 
     @GetMapping("/type")
