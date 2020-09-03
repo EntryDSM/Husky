@@ -38,13 +38,13 @@ public class GEDApplication extends BaseTimeEntity {
         return this;
     }
 
-    public GEDApplication(User user) {
-        this.receiptCode = user.getReceiptCode();
+    public GEDApplication(Integer receiptCode) {
+        this.receiptCode = receiptCode;
     }
 
     @Builder(builderMethodName = "gedApplicationBuilder")
-    public GEDApplication(User user, BigDecimal gedAverageScore, LocalDate gedPassDate) {
-        this.receiptCode = user.getReceiptCode();
+    public GEDApplication(Integer receiptCode, BigDecimal gedAverageScore, LocalDate gedPassDate) {
+        this.receiptCode = receiptCode;
         this.gedAverageScore = gedAverageScore;
         this.gedPassDate = gedPassDate;
     }

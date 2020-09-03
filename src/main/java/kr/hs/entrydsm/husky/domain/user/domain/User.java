@@ -187,4 +187,8 @@ public class User {
         return this.sex.equals(Sex.FEMALE);
     }
 
+    public boolean isGradeTypeEmpty() {
+        return this.gradeType == null;
+    }
+
 }

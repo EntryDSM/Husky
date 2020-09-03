@@ -1,19 +1,19 @@
 package kr.hs.entrydsm.husky.domain.application.domain;
 
+import kr.hs.entrydsm.husky.domain.application.dto.SetScoreRequest;
 import kr.hs.entrydsm.husky.domain.school.domain.School;
 import kr.hs.entrydsm.husky.domain.user.domain.User;
 import kr.hs.entrydsm.husky.domain.user.dto.SelectTypeRequest;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.function.Consumer;
 
 @Getter
-@Entity
+@Setter(AccessLevel.PRIVATE)
 @NoArgsConstructor
+@Entity
 public class GraduatedApplication extends GeneralApplication {
 
     @Id
@@ -30,6 +30,12 @@ public class GraduatedApplication extends GeneralApplication {
     public GraduatedApplication update(SelectTypeRequest dto) {
         if (dto.getGraduatedDate() != null)
             this.graduatedDate = dto.getGraduatedDate().atDay(1);
+        return this;
+    }
+
+    public GraduatedApplication update(SetScoreRequest dto) {
+        updateVolunteerAndAttendance(dto);
+        updateGrade(dto);
         return this;
     }
 

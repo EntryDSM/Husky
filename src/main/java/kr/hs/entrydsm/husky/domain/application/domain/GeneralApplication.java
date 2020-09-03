@@ -1,7 +1,9 @@
 package kr.hs.entrydsm.husky.domain.application.domain;
 
+import kr.hs.entrydsm.husky.domain.application.dto.SetScoreRequest;
 import kr.hs.entrydsm.husky.domain.school.domain.School;
 import kr.hs.entrydsm.husky.domain.user.dto.SetUserInfoRequest;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +14,7 @@ import javax.persistence.OneToOne;
 import java.util.function.Consumer;
 
 @Getter
-@Setter
+@Setter(AccessLevel.PROTECTED)
 @MappedSuperclass
 public abstract class GeneralApplication extends BaseTimeEntity {
 
@@ -62,42 +64,36 @@ public abstract class GeneralApplication extends BaseTimeEntity {
     @Column(length = 6)
     private String english;                 // 영어
 
-    public void setStudentInfo(String studentNumber, School school, String schoolTel) {
-        this.studentNumber = studentNumber;
-        this.school = school;
-        this.schoolTel = schoolTel;
-    }
-
     public void update(SetUserInfoRequest dto) {
         setIfNotNull(this::setStudentNumber, dto.getStudentNumber());
         setIfNotNull(this::setSchoolTel, dto.getSchoolTel());
     }
 
     public void update(School school) {
-        this.school = school;
+        setIfNotNull(this::setSchool, school);
+    }
+
+    protected void updateVolunteerAndAttendance(SetScoreRequest dto) {
+        setIfNotNull(this::setVolunteerTime, dto.getVolunteerTime());
+        setIfNotNull(this::setFullCutCount, dto.getFullCutCount());
+        setIfNotNull(this::setPeriodCutCount, dto.getPeriodCutCount());
+        setIfNotNull(this::setLateCount, dto.getLateCount());
+        setIfNotNull(this::setEarlyLeaveCount, dto.getEarlyLeaveCount());
+    }
+
+    protected void updateGrade(SetScoreRequest dto) {
+        setIfNotNull(this::setKorean, dto.getKorean());
+        setIfNotNull(this::setSocial, dto.getSocial());
+        setIfNotNull(this::setHistory, dto.getHistory());
+        setIfNotNull(this::setMath, dto.getMath());
+        setIfNotNull(this::setScience, dto.getScience());
+        setIfNotNull(this::setTechAndHome, dto.getTechAndHome());
+        setIfNotNull(this::setEnglish, dto.getEnglish());
     }
 
     private <T> void setIfNotNull(Consumer<T> setter, T value) {
-        if (value != null) {
+        if (value != null)
             setter.accept(value);
-        }
-    }
-
-    public void setScore(Integer volunteerTime, Integer fullCutCount, Integer periodCutCount, Integer lateCount,
-                         Integer earlyLeaveCount, String korean, String social, String history, String math,
-                         String science, String techAndHome, String english) {
-        this.volunteerTime = volunteerTime;
-        this.fullCutCount = fullCutCount;
-        this.periodCutCount = periodCutCount;
-        this.lateCount = lateCount;
-        this.earlyLeaveCount = earlyLeaveCount;
-        this.korean = korean;
-        this.social = social;
-        this.history = history;
-        this.math = math;
-        this.science = science;
-        this.techAndHome = techAndHome;
-        this.english = english;
     }
     
     public boolean isFilledScore() {

@@ -1,7 +1,9 @@
 package kr.hs.entrydsm.husky.domain.application.domain.adapter;
 
+import kr.hs.entrydsm.husky.domain.application.domain.GeneralApplication;
 import kr.hs.entrydsm.husky.domain.application.domain.GraduatedApplication;
 import kr.hs.entrydsm.husky.domain.application.domain.UnGraduatedApplication;
+import kr.hs.entrydsm.husky.domain.application.dto.SetScoreRequest;
 import kr.hs.entrydsm.husky.domain.school.domain.School;
 import kr.hs.entrydsm.husky.domain.user.domain.User;
 import kr.hs.entrydsm.husky.domain.user.domain.enums.GradeType;
@@ -32,13 +34,27 @@ public class GeneralApplicationAdapter {
             graduatedApplication.update(dto);
     }
 
+    public void update(SetScoreRequest dto) {
+        if (gradeType.equals(UNGRADUATED) && unGraduatedApplication != null)
+            unGraduatedApplication.update(dto);
+        else if (gradeType.equals(GRADUATED) && graduatedApplication != null)
+            graduatedApplication.update(dto);
+    }
+
     public GeneralApplicationAdapter(User user) {
         if (user.getGradeType() != null) {
             this.gradeType = user.getGradeType();
-            if (user.isUngraduated())
-                this.unGraduatedApplication = user.getUnGraduatedApplication();
-            else if (user.isGraduated())
-                this.graduatedApplication = user.getGraduatedApplication();
+            if (user.isUngraduated()) {
+                if (user.getUnGraduatedApplication() != null)
+                    this.unGraduatedApplication = user.getUnGraduatedApplication();
+                else
+                    this.unGraduatedApplication = new UnGraduatedApplication(user.getReceiptCode());
+            } else if (user.isGraduated()) {
+                if (user.getGraduatedApplication() != null)
+                    this.graduatedApplication = user.getGraduatedApplication();
+                else
+                    this.graduatedApplication = new GraduatedApplication(user.getReceiptCode());
+            }
         }
     }
 
@@ -72,6 +88,14 @@ public class GeneralApplicationAdapter {
             return graduatedApplication.getSchoolTel();
 
         return null;
+    }
+
+    public GeneralApplication getGeneralApplication() {
+        if (gradeType.equals(UNGRADUATED))
+            return unGraduatedApplication;
+
+        else
+            return graduatedApplication;
     }
 
 }
