@@ -3,16 +3,15 @@ package kr.hs.entrydsm.husky.domain.application.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import kr.hs.entrydsm.husky.domain.application.domain.GEDApplication;
 import kr.hs.entrydsm.husky.domain.application.domain.GeneralApplication;
+import kr.hs.entrydsm.husky.domain.application.domain.adapter.GeneralApplicationAdapter;
 import kr.hs.entrydsm.husky.domain.user.domain.enums.GradeType;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
 @Getter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
@@ -22,11 +21,11 @@ public class ScoreResponse {
 
     private BigDecimal gedAverageScore;
 
-    private int volunteerTime;
-    private int fullCutCount;
-    private int periodCutCount;
-    private int lateCount;
-    private int earlyLeaveCount;
+    private Integer volunteerTime;
+    private Integer fullCutCount;
+    private Integer periodCutCount;
+    private Integer lateCount;
+    private Integer earlyLeaveCount;
     private String korean;
     private String social;
     private String history;
@@ -35,29 +34,26 @@ public class ScoreResponse {
     private String techAndHome;
     private String english;
 
-    public static ScoreResponse gedResponse(GEDApplication gedApplication, GradeType gradeType) {
-        return ScoreResponse.builder()
-                .gradeType(gradeType)
-                .gedAverageScore(gedApplication.getGedAverageScore())
-                .build();
+    public ScoreResponse(GEDApplication gedApplication) {
+        this.gradeType = GradeType.GED;
+        this.gedAverageScore = gedApplication.getGedAverageScore();
     }
 
-    public static ScoreResponse response(GeneralApplication application, GradeType gradeType) {
-        return ScoreResponse.builder()
-                .gradeType(gradeType)
-                .volunteerTime(application.getVolunteerTime())
-                .fullCutCount(application.getFullCutCount())
-                .periodCutCount(application.getPeriodCutCount())
-                .lateCount(application.getLateCount())
-                .earlyLeaveCount(application.getEarlyLeaveCount())
-                .korean(application.getKorean())
-                .social(application.getSocial())
-                .history(application.getHistory())
-                .math(application.getMath())
-                .science(application.getScience())
-                .techAndHome(application.getTechAndHome())
-                .english(application.getEnglish())
-                .build();
+    public ScoreResponse(GeneralApplicationAdapter adapter) {
+        GeneralApplication application = adapter.getGeneralApplication();
+        this.gradeType = adapter.getGradeType();
+        this.volunteerTime = application.getVolunteerTime();
+        this.fullCutCount = application.getFullCutCount();
+        this.periodCutCount = application.getPeriodCutCount();
+        this.lateCount = application.getLateCount();
+        this.earlyLeaveCount = application.getEarlyLeaveCount();
+        this.korean = application.getKorean();
+        this.social = application.getSocial();
+        this.history = application.getHistory();
+        this.math = application.getMath();
+        this.science = application.getScience();
+        this.techAndHome = application.getTechAndHome();
+        this.english = application.getEnglish();
     }
 
 }

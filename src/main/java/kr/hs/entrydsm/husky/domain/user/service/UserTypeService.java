@@ -16,7 +16,6 @@ import kr.hs.entrydsm.husky.domain.user.dto.UserTypeResponse;
 import kr.hs.entrydsm.husky.domain.user.exception.UserNotFoundException;
 import kr.hs.entrydsm.husky.global.config.security.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -46,7 +45,7 @@ public class UserTypeService {
 
         if (user.isGED()) {
             gedRepository.findById(user.getReceiptCode())
-                    .or(() -> Optional.of(new GEDApplication(user)))
+                    .or(() -> Optional.of(new GEDApplication(user.getReceiptCode())))
                     .map(ged -> ged.update(dto))
                     .ifPresent(applicationAsyncRepository::save);
 

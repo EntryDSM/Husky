@@ -436,7 +436,7 @@ public class GradeCalcTest {
 
     private GEDApplication.GEDApplicationBuilder getDefaultGEDApplication(User user) {
         return GEDApplication.gedApplicationBuilder()
-                .user(user);
+                .receiptCode(user.getReceiptCode());
     }
 
 }
