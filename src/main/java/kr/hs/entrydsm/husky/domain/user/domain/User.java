@@ -5,6 +5,7 @@ import kr.hs.entrydsm.husky.domain.user.domain.enums.AdditionalType;
 import kr.hs.entrydsm.husky.domain.user.domain.enums.ApplyType;
 import kr.hs.entrydsm.husky.domain.user.domain.enums.GradeType;
 import kr.hs.entrydsm.husky.domain.user.domain.enums.Sex;
+import kr.hs.entrydsm.husky.domain.user.dto.SelectTypeRequest;
 import kr.hs.entrydsm.husky.domain.user.dto.SetUserInfoRequest;
 import lombok.*;
 
@@ -99,19 +100,6 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private UnGraduatedApplication unGraduatedApplication;
 
-    public Application getApplication() {
-        switch (gradeType) {
-            case GED:
-                return this.gedApplication;
-            case GRADUATED:
-                return this.graduatedApplication;
-            case UNGRADUATED:
-                return this.unGraduatedApplication;
-            default:
-                return null;
-        }
-    }
-
     public GeneralApplication getGeneralApplication() {
         switch (gradeType) {
             case GRADUATED:
@@ -127,12 +115,11 @@ public class User {
         this.password = password;
     }
 
-    public void setClassification(GradeType gradeType, ApplyType applyType, AdditionalType additionalType,
-                                  boolean isDaejeon) {
-        this.gradeType = gradeType;
-        this.applyType = applyType;
-        this.additionalType = additionalType;
-        this.isDaejeon = isDaejeon;
+    public void updateClassification(SelectTypeRequest dto) {
+        setIfNotNull(this::setGradeType, dto.getGradeType());
+        setIfNotNull(this::setApplyType, dto.getApplyType());
+        setIfNotNull(this::setAdditionalType, dto.getAdditionalType());
+        setIfNotNull(this::setDaejeon, dto.getIsDaejeon());
     }
 
     public void update(SetUserInfoRequest dto) {
@@ -179,7 +166,17 @@ public class User {
     }
 
     public boolean isFilledType() {
-        return gradeType != null && applyType != null && additionalType != null && getApplication() != null;
+        return gradeType != null && applyType != null && additionalType != null && hasApplication();
+    }
+
+    private boolean hasApplication() {
+        if (gradeType == null)
+            return false;
+
+        if (gradeType.equals(GED))
+            return gedApplication != null;
+
+        return getGeneralApplication() != null;
     }
 
     public boolean isMale() {
