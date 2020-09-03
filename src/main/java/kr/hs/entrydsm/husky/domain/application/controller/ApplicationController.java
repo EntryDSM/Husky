@@ -43,7 +43,7 @@ public class ApplicationController {
     }
 
     @PatchMapping("/score")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @ResponseStatus(value = HttpStatus.ACCEPTED)
     public void setScore(@RequestBody @Valid SetScoreRequest request) {
         applicationService.setScore(request);
     }
