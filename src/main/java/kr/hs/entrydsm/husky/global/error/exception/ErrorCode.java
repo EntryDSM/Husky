@@ -27,6 +27,7 @@ public enum ErrorCode {
     //Info
     NOT_ADMIN_FORBIDDEN(403, "I403-0", "The server understood the request but refuses to authorize it."),
     APPLICATION_TYPE_UNMATCHED(403, "I403-1", "Application Type is unmatched"),
+    GRADE_TYPE_REQUIRED(406, "I406-0", "Grade type is not set."),
     APPLICATION_NOT_FOUND(404, "I404-0", "Application Not Found"),
 
     //School
