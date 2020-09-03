@@ -5,9 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.PositiveOrZero;
 
 @Getter
 @Builder
@@ -15,29 +14,40 @@ import javax.validation.constraints.Pattern;
 @AllArgsConstructor
 public class SetScoreRequest {
 
-    @NotNull @Min(0)
+    @PositiveOrZero
     private int volunteerTime;
-    @NotNull @Min(0)
+    
+    @PositiveOrZero
     private int fullCutCount;
-    @NotNull @Min(0)
+    
+    @PositiveOrZero
     private int periodCutCount;
-    @NotNull @Min(0)
+    
+    @PositiveOrZero
     private int lateCount;
-    @NotNull @Min(0)
+    
+    @PositiveOrZero
     private int earlyLeaveCount;
-    @Pattern(regexp = "[AX][AX][AX][AX][AX]")
+    
+    @Pattern(regexp = "[A-E,X]{6}")
     private String korean;
-    @Pattern(regexp = "[AX][AX][AX][AX][AX]")
+    
+    @Pattern(regexp = "[A-E,X]{6}")
     private String social;
-    @Pattern(regexp = "[AX][AX][AX][AX][AX]")
+    
+    @Pattern(regexp = "[A-E,X]{6}")
     private String history;
-    @Pattern(regexp = "[AX][AX][AX][AX][AX]")
+    
+    @Pattern(regexp = "[A-E,X]{6}")
     private String math;
-    @Pattern(regexp = "[AX][AX][AX][AX][AX]")
+    
+    @Pattern(regexp = "[A-E,X]{6}")
     private String science;
-    @Pattern(regexp = "[AX][AX][AX][AX][AX]")
+    
+    @Pattern(regexp = "[A-E,X]{6}")
     private String techAndHome;
-    @Pattern(regexp = "[AX][AX][AX][AX][AX]")
+    
+    @Pattern(regexp = "[A-E,X]{6}")
     private String english;
 
 }
