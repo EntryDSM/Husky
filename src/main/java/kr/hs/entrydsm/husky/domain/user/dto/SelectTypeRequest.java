@@ -1,13 +1,15 @@
 package kr.hs.entrydsm.husky.domain.user.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import kr.hs.entrydsm.husky.domain.user.domain.enums.AdditionalType;
+import kr.hs.entrydsm.husky.domain.user.domain.enums.ApplyType;
+import kr.hs.entrydsm.husky.domain.user.domain.enums.GradeType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
+import java.time.YearMonth;
 
 @Getter
 @Builder
@@ -15,16 +17,18 @@ import javax.validation.constraints.Pattern;
 @AllArgsConstructor
 public class SelectTypeRequest {
 
-    @NotEmpty @NotBlank
-    private String gradeType;
-    @NotEmpty @NotBlank
-    private String applyType;
-    @NotEmpty @NotBlank
-    private String additionalType;
+    private GradeType gradeType;
+
+    private ApplyType applyType;
+
+    private AdditionalType additionalType;
+
     private Boolean isDaejeon;
-    @Pattern(regexp = "2[0-9][0-9][0-9]-[0-1][0-9]")
-    private String graduatedDate;
-    @Pattern(regexp = "2[0-9][0-9][0-9]-[0-1][0-9]")
-    private String gedPassDate;
+
+    @JsonFormat(pattern = "yyyy-MM")
+    private YearMonth graduatedDate;
+
+    @JsonFormat(pattern = "yyyy-MM")
+    private YearMonth gedPassDate;
 
 }
