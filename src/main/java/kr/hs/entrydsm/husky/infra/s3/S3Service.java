@@ -22,13 +22,13 @@ public class S3Service {
 
     private AmazonS3 s3Client;
 
-    @Value("${aws.credential.access_key}")
+    @Value("${aws.s3.access_key}")
     private String accessKey;
 
-    @Value("${aws.credential.secret_key}")
+    @Value("${aws.s3.secret_key}")
     private String secretKey;
 
-    @Value("${aws.credential.s3.region}")
+    @Value("${aws.s3.region}")
     private String region;
 
     @Value("${aws.s3.bucket}")

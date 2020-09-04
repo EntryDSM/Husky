@@ -15,13 +15,14 @@ spring:
 aws:
   s3:
     bucket: ${S3_BUCKET:default}
-  credential:
-    access_key: ${AWS_ACCESS_KEY:access_key}
-    secret_key: ${AWS_SECRET_KEY:secret_key}
-    ses:
-      region: ${AWS_SES_REGION:us-east-1}
-    s3:
-      region: ${AWS_S3_REGION:ap-northeast-2}
+    region: ${AWS_S3_REGION:ap-northeast-2}
+    access_key: ${AWS_S3_ACCESS_KEY:access_key}
+    secret_key: ${AWS_S3_SECRET_KEY:secret_key}
+  ses:
+    region: ${AWS_SES_REGION:us-east-1}
+    access_key: ${AWS_SES_ACCESS_KEY:access_key}
+    secret_key: ${AWS_SES_SECRET_KEY:secret_key}
+
 
 auth:
   jwt:
