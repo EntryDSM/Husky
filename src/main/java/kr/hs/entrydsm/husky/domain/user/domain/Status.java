@@ -43,6 +43,7 @@ public class Status {
 
     public void finalSubmit() {
         this.isFinalSubmit = true;
+        this.submittedAt = LocalDateTime.now();
     }
 
 }
