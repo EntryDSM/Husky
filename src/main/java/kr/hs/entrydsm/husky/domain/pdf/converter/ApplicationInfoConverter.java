@@ -29,8 +29,8 @@ public class ApplicationInfoConverter {
         values.put("isUnGraduated", toBallotBox(user.isUngraduated()));
         values.put("isGraduated", toBallotBox(user.isGraduated()));
         values.put("isGed", toBallotBox(user.isGED()));
-        values.put("isDj", toBallotBox(user.isDaejeon()));
-        values.put("isNotDaejeon", toBallotBox(!user.isDaejeon()));
+        values.put("isDj", toBallotBox(user.getIsDaejeon()));
+        values.put("isNotDaejeon", toBallotBox(!user.getIsDaejeon()));
         values.put("isNationalMerit", toBallotBox(user.getAdditionalType().equals(AdditionalType.NATIONAL_MERIT)));
         values.put("isPrivilegedAdmission", toBallotBox(user.getAdditionalType().equals(AdditionalType.PRIVILEGED_ADMISSION)));
         values.put("isCommon", toBallotBox(isCommon(user)));
@@ -50,10 +50,10 @@ public class ApplicationInfoConverter {
         values.put("selfIntroduction", (user.getSelfIntroduction() == null) ? "" : user.getSelfIntroduction());
         values.put("studyPlan", (user.getStudyPlan() == null) ? "" : user.getStudyPlan());
         values.put("parentName", user.getParentName());
-        values.put("isDaejeonAndMeister", toBallotBox(user.isDaejeon() && user.getApplyType().equals(ApplyType.MEISTER)));
-        values.put("isDaejeonAndSocialMerit", toBallotBox(user.isDaejeon() && isSocialMerit(user)));
-        values.put("isNotDaejeonAndMeister", toBallotBox(!user.isDaejeon() && isMeister(user)));
-        values.put("isNotDaejeonAndSocialMerit", toBallotBox(!user.isDaejeon() && isSocialMerit(user)));
+        values.put("isDaejeonAndMeister", toBallotBox(user.getIsDaejeon() && user.getApplyType().equals(ApplyType.MEISTER)));
+        values.put("isDaejeonAndSocialMerit", toBallotBox(user.getIsDaejeon() && isSocialMerit(user)));
+        values.put("isNotDaejeonAndMeister", toBallotBox(!user.getIsDaejeon() && isMeister(user)));
+        values.put("isNotDaejeonAndSocialMerit", toBallotBox(!user.getIsDaejeon() && isSocialMerit(user)));
 
         return values;
     }

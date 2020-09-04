@@ -19,7 +19,7 @@ public class UserTypeResponse {
     private GradeType gradeType;
     private ApplyType applyType;
     private AdditionalType additionalType;
-    private boolean isDaejeon;
+    private Boolean isDaejeon;
     private String graduatedDate;
     private String gedPassDate;
 
@@ -33,7 +33,7 @@ public class UserTypeResponse {
                 .applyType(user.getApplyType())
                 .additionalType(user.getAdditionalType())
                 .gradeType(user.getGradeType())
-                .isDaejeon(user.isDaejeon())
+                .isDaejeon(user.getIsDaejeon())
                 .graduatedDate(graduated)
                 .gedPassDate(gedPass)
                 .build();
