@@ -52,11 +52,15 @@ public class UserInfoService {
         application.update(request);
         generalApplicationAsyncRepository.save(application);
 
+        School school = schoolRepository.findById(application.getSchoolCode())
+                .orElseThrow(SchoolNotFoundException::new);
+
         return UserInfoResponse.builder()
                 .user(user)
                 .studentNumber(application.getStudentNumber())
                 .schoolCode(application.getSchoolCode())
                 .schoolTel(application.getSchoolTel())
+                .schoolName(school.getSchoolName())
                 .build();
     }
 
@@ -75,11 +79,15 @@ public class UserInfoService {
         }
 
         GeneralApplication application = user.getGeneralApplication();
+        School school = schoolRepository.findById(application.getSchool().getSchoolCode())
+                .orElseThrow(SchoolNotFoundException::new);
+
         return UserInfoResponse.builder()
                 .user(user)
                 .studentNumber(application.getStudentNumber())
                 .schoolCode((application.getSchool() != null) ? application.getSchool().getSchoolCode() : null)
                 .schoolTel(application.getSchoolTel())
+                .schoolName(school.getSchoolName())
                 .build();
     }
 

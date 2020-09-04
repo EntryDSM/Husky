@@ -20,6 +20,7 @@ public class UserInfoResponse {
     private String studentNumber;
     private String schoolCode;
     private String schoolTel;
+    private String schoolName;
     private String parentName;
     private String parentTel;
     private String applicantTel;
@@ -29,7 +30,7 @@ public class UserInfoResponse {
     private String photo;
 
     @Builder
-    public UserInfoResponse(User user, String studentNumber, String schoolCode, String schoolTel) {
+    public UserInfoResponse(User user, String studentNumber, String schoolCode, String schoolTel, String schoolName) {
         this.gradeType = user.getGradeType();
         this.name = user.getName();
         this.sex = user.getSex();
@@ -37,6 +38,7 @@ public class UserInfoResponse {
         this.studentNumber = studentNumber;
         this.schoolCode = schoolCode;
         this.schoolTel = schoolTel;
+        this.schoolName = schoolName;
         this.parentName = user.getParentName();
         this.parentTel = user.getParentTel();
         this.applicantTel = user.getApplicantTel();
