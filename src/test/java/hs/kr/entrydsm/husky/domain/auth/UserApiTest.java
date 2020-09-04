@@ -12,6 +12,7 @@ import kr.hs.entrydsm.husky.domain.auth.domain.verification.EmailVerificationRep
 import kr.hs.entrydsm.husky.domain.auth.domain.verification.EmailVerificationStatus;
 import kr.hs.entrydsm.husky.domain.user.domain.User;
 import kr.hs.entrydsm.husky.domain.user.domain.repositories.UserRepository;
+import org.junit.BeforeClass;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,19 +25,21 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles({"test", "local"})
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {HuskyApplication.class, EmbeddedRedisConfig.class},
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class UserApiTest {
+public class UserApiTest {
 
     @LocalServerPort
     private int port;
