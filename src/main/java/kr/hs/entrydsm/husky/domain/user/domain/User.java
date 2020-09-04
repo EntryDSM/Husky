@@ -44,7 +44,7 @@ public class User {
     private GradeType gradeType;
 
     @Column
-    private boolean isDaejeon;
+    private Boolean isDaejeon;
 
     @Column(length = 15)
     private String name;
@@ -119,7 +119,7 @@ public class User {
         setIfNotNull(this::setGradeType, dto.getGradeType());
         setIfNotNull(this::setApplyType, dto.getApplyType());
         setIfNotNull(this::setAdditionalType, dto.getAdditionalType());
-        setIfNotNull(this::setDaejeon, dto.getIsDaejeon());
+        setIfNotNull(this::setIsDaejeon, dto.getIsDaejeon());
     }
 
     public void update(SetUserInfoRequest dto) {
