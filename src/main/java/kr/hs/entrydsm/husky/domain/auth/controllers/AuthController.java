@@ -11,7 +11,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Email;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 @RequiredArgsConstructor
 public class AuthController {
 
