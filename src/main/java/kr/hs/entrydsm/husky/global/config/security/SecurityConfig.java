@@ -37,6 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/users/email/verify").permitAll()
                     .antMatchers("/users/email/password/verify").permitAll()
                     .antMatchers("/actuator/health").permitAll()
+                    .antMatchers("/schedules").permitAll()
                     .anyRequest().authenticated().and()
                 .apply(new JwtConfigurer(jwtTokenProvider)).and()
                 .apply(new ExceptionConfigurer());
