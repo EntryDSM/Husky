@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.net.MalformedURLException;
 
 @RequiredArgsConstructor
 @RequestMapping("/users/me")
@@ -46,8 +47,8 @@ public class UserInfoController {
     }
 
     @GetMapping
-    public UserInfoResponse getUserInfo() {
-        return userInfoService.getUserInfo();
+    public UserInfoResponse getUserInfo() throws MalformedURLException {
+        return userInfoService.getUserInfo(s3Service);
     }
 
     @GetMapping("/status")
