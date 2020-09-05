@@ -30,6 +30,10 @@ public class GradeUtil {
         return isEmptyGrade(SEMESTER_2_1, SEMESTER_2_2);
     }
 
+    public boolean isAllGradeEmpty() {
+        return isEmptyGrade(SEMESTER_1_1, SEMESTER_3_2);
+    }
+
     private boolean isEmptyGrade(int beginColumn, int endColumn) {
         int sum = 0;
         for (int column = beginColumn; column <= endColumn; column++) {

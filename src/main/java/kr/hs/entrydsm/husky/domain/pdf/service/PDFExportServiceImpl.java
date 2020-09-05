@@ -73,6 +73,7 @@ public class PDFExportServiceImpl implements PDFExportService {
             return result.toByteArray();
 
         } catch (Exception e) {
+            e.printStackTrace();
             throw new UnprocessableEntityException();
         }
     }

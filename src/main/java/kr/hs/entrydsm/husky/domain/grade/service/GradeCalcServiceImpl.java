@@ -54,10 +54,13 @@ public class GradeCalcServiceImpl implements GradeCalcService {
         }
 
         GeneralApplication app = user.getGeneralApplication();
-        int conversionAbsence = app.getFullCutCount() +
-                (app.getLateCount() + app.getEarlyLeaveCount() + app.getPeriodCutCount()) / 3;
 
+        int odmission = app.getLateCount() + app.getEarlyLeaveCount() + app.getPeriodCutCount();
+        if (odmission != 0) odmission /= 3;
+
+        int conversionAbsence = app.getFullCutCount() + odmission;
         return DEFAULT_ATTENDANCE_SCORE - conversionAbsence;
+
     }
 
     private BigDecimal calcVolunteerScore(User user) {
@@ -93,6 +96,7 @@ public class GradeCalcServiceImpl implements GradeCalcService {
 
         } else {
             gradeScore = this.calcGeneralApplication(user);
+            if (gradeScore.isEmpty()) return gradeScore;
         }
 
         if (user.getApplyType() != ApplyType.COMMON) {
@@ -130,6 +134,9 @@ public class GradeCalcServiceImpl implements GradeCalcService {
         BigDecimal firstGradeScore = null;
         BigDecimal secondGradeScore = null;
         BigDecimal thirdGradeScore;
+
+        if (matrixUtil.isAllGradeEmpty())
+            return GradeScore.EMPTY();
 
         boolean isFirstGradeEmpty = matrixUtil.isFirstGradeEmpty();
         boolean isSecondGradeEmpty = matrixUtil.isSecondGradeEmpty();

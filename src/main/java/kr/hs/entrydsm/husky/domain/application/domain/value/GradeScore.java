@@ -54,4 +54,20 @@ public class GradeScore {
         this.conversionScore = conversionScore;
     }
 
+    public static GradeScore EMPTY() {
+        return GradeScore.builder()
+                .firstGradeScore(BigDecimal.ZERO)
+                .secondGradeScore(BigDecimal.ZERO)
+                .thirdGradeScore(BigDecimal.ZERO)
+                .conversionScore(BigDecimal.ZERO)
+                .build();
+    }
+
+    public boolean isEmpty() {
+        return firstGradeScore.equals(BigDecimal.ZERO)
+                && secondGradeScore.equals(BigDecimal.ZERO)
+                && thirdGradeScore.equals(BigDecimal.ZERO)
+                && conversionScore.equals(BigDecimal.ZERO);
+    }
+
 }
