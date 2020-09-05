@@ -79,15 +79,12 @@ public class UserInfoService {
         }
 
         GeneralApplication application = user.getGeneralApplication();
-        School school = schoolRepository.findById(application.getSchool().getSchoolCode())
-                .orElseThrow(SchoolNotFoundException::new);
-
         return UserInfoResponse.builder()
                 .user(user)
                 .studentNumber(application.getStudentNumber())
-                .schoolCode((application.getSchool() != null) ? application.getSchool().getSchoolCode() : null)
+                .schoolCode(application.getSchoolCode())
                 .schoolTel(application.getSchoolTel())
-                .schoolName(school.getSchoolName())
+                .schoolName(application.getSchoolName())
                 .build();
     }
 
