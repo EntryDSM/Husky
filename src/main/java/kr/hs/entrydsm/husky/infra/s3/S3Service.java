@@ -78,7 +78,7 @@ public class S3Service extends AWS4Signer {
     }
 
     public String generateS3ObjectUrl(String objectName) throws MalformedURLException {
-        URL endpointUrl = new URL("https://" + baseImageUrl + ".s3." + region + ".amazonaws.com/" + objectName);
+        URL endpointUrl = new URL("https://" + baseImageUrl + ".s3." + region + ".amazonaws.com" + objectName);
 
         // X-Amz-Algorithm
         String x_amz_algorithm = SCHEME + "-" + ALGORITHM;
