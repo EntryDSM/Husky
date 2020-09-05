@@ -12,11 +12,13 @@ import kr.hs.entrydsm.husky.domain.user.dto.UserInfoResponse;
 import kr.hs.entrydsm.husky.domain.user.exception.SchoolNotFoundException;
 import kr.hs.entrydsm.husky.domain.user.exception.UserNotFoundException;
 import kr.hs.entrydsm.husky.global.config.security.AuthenticationFacade;
+import kr.hs.entrydsm.husky.infra.s3.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.net.MalformedURLException;
 
 @RequiredArgsConstructor
 @Service
@@ -64,11 +66,7 @@ public class UserInfoService {
                 .build();
     }
 
-    public boolean isSchoolCodeEmpty(SetUserInfoRequest request) {
-        return request.getSchoolCode() == null;
-    }
-
-    public UserInfoResponse getUserInfo() {
+    public UserInfoResponse getUserInfo(S3Service s3Service) throws MalformedURLException {
         Integer receiptCode = authenticationFacade.getReceiptCode();
         User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
@@ -85,7 +83,12 @@ public class UserInfoService {
                 .schoolCode(application.getSchoolCode())
                 .schoolTel(application.getSchoolTel())
                 .schoolName(application.getSchoolName())
+                .photo(s3Service.generateS3ObjectUrl(user.getUserPhoto()))
                 .build();
+    }
+
+    private boolean isSchoolCodeEmpty(SetUserInfoRequest request) {
+        return request.getSchoolCode() == null;
     }
 
     private boolean isGradeTypeEmpty(User user) {
