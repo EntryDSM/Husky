@@ -83,21 +83,21 @@ public class UserApiTest {
     @Test
     public void emailVerifyTest() throws Exception {
         VerifyCodeRequest request = new VerifyCodeRequest("leaguelugas@test.com", "ABCDE");
-        requestMvc(put("/user/email/verify"), request);
+        requestMvc(put("/users/email/verify"), request);
     }
 
     @Test
     public void signUpTest() throws Exception {
         emailVerifyTest();
         AccountRequest request = new AccountRequest("leaguelugas@test.com", "P@ssw0rd");
-        requestMvc(post("/user"), request);
+        requestMvc(post("/users"), request);
     }
 
     @Test
     public void passwordChangeTest() throws Exception {
         signUpTest();
         ChangePasswordRequest request = new ChangePasswordRequest("leaguelugas@test.com", "P@ssw0rd123");
-        requestMvc(put("/user/password"), request);
+        requestMvc(put("/users/password"), request);
 
         User user = userRepository.findByEmail("leaguelugas@test.com")
                 .orElseThrow();
