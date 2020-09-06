@@ -1,4 +1,4 @@
-package kr.hs.entrydsm.husky.infra.s3;
+package kr.hs.entrydsm.husky.domain.image.service;
 
 import com.amazonaws.auth.AWS4Signer;
 import com.amazonaws.auth.AWSCredentials;
@@ -8,9 +8,11 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.util.IOUtils;
 import kr.hs.entrydsm.husky.infra.s3.auth.AWS4SignerBase;
 import kr.hs.entrydsm.husky.infra.s3.util.BinaryUtils;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,7 +28,8 @@ import static kr.hs.entrydsm.husky.infra.s3.auth.AWS4SignerBase.*;
 
 @NoArgsConstructor
 @Service
-public class S3Service extends AWS4Signer {
+@RequiredArgsConstructor
+public class S3ImageServiceImpl extends AWS4Signer implements ImageService {
 
     private static final String SCHEME = "AWS4";
 
@@ -38,7 +41,7 @@ public class S3Service extends AWS4Signer {
 
     private SimpleDateFormat dateStampFormat = new SimpleDateFormat("yyyyMMdd");
 
-    private AmazonS3 s3Client;
+    private final AmazonS3 s3;
 
     @Value("${aws.s3.access_key}")
     private String accessKey;
@@ -55,23 +58,14 @@ public class S3Service extends AWS4Signer {
     @Value("${aws.s3.base_image_url}")
     private String baseImageUrl;
 
-    @PostConstruct
-    public void setS3Client() {
-        AWSCredentials credentials = new BasicAWSCredentials(this.accessKey, this.secretKey);
-
-        s3Client = AmazonS3ClientBuilder.standard()
-                .withCredentials(new AWSStaticCredentialsProvider(credentials))
-                .withRegion(this.region)
-                .build();
-    }
-
+    @Override
     public String upload(MultipartFile file) throws IOException {
         String originalFilename = file.getOriginalFilename();
         String ext = originalFilename.substring( originalFilename.lastIndexOf(".") + 1);
         String randomName = UUID.randomUUID().toString();
         String filename = randomName + "." + ext;
 
-        s3Client.putObject(new PutObjectRequest(bucket, filename, file.getInputStream(), null)
+        s3.putObject(new PutObjectRequest(bucket, filename, file.getInputStream(), null)
                 .withCannedAcl(CannedAccessControlList.AuthenticatedRead));
 
         return filename;
@@ -134,6 +128,11 @@ public class S3Service extends AWS4Signer {
         authString.append("&X-Amz-Signature=" + BinaryUtils.toHex(signature));
 
         return authString.toString();
+    }
+
+    public byte[] getObject(String fileName) throws IOException {
+        S3Object object = s3.getObject(bucket, fileName);
+        return IOUtils.toByteArray(object.getObjectContent());
     }
 
 }
