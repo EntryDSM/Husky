@@ -6,7 +6,7 @@ import org.springframework.data.redis.core.RedisHash;
 
 import javax.persistence.Id;
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -15,7 +15,7 @@ public class Schedule implements Serializable {
 
     @Id
     private String id;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
 
 }
