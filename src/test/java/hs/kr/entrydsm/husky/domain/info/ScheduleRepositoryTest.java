@@ -13,6 +13,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,8 +35,8 @@ class ScheduleRepositoryTest {
     public void save_and_find() {
         //given
         String id = "엔트리 개발";
-        LocalDate startDate = LocalDate.now();
-        LocalDate endDate = LocalDate.of(2020, 8, 30);
+        LocalDateTime startDate = LocalDateTime.of(2020, 8,29,8, 30);
+        LocalDateTime endDate = LocalDateTime.of(2020, 8, 30, 9, 40);
         Schedule schedule = Schedule.builder()
                 .id(id)
                 .startDate(startDate)

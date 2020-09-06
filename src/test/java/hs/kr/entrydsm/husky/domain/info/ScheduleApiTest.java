@@ -24,7 +24,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -67,8 +68,8 @@ class ScheduleApiTest {
     public void save_schedule() throws Exception {
         //given
         String id = "엔트리_멘토링";
-        String startDate = "2020-07-23";
-        String endDate = "2020-07-25";
+        String startDate = "2020-07-23 12:30";
+        String endDate = "2020-07-25 09:40";
 
         //when
         ResultActions resultActions = this.postRequest(id, startDate, endDate, this.secret);
@@ -83,8 +84,8 @@ class ScheduleApiTest {
     public void save_forbidden() throws Exception {
         //given
         String id = "엔트리_멘토링";
-        String startDate = "2020-07-23";
-        String endDate = "2020-07-25";
+        String startDate = "2020-07-23 12:30";
+        String endDate = "2020-07-25 09:40";
 
         //when
         ResultActions resultActions = this.postRequest(id, startDate, endDate, "entry");
@@ -97,8 +98,8 @@ class ScheduleApiTest {
     @Test
     public void get_schedules() throws Exception {
         //given
-        this.postRequest("test", "2020-07-26", "2020-07-31", this.secret);
-        this.postRequest("develop", "2020-07-23", "2020-07-25", this.secret);
+        this.postRequest("test", "2020-07-26 12:30", "2020-07-31 06:30", this.secret);
+        this.postRequest("develop", "2020-07-23 13:40", "2020-07-25 09:40", this.secret);
         String url = "/schedules";
 
         //when
@@ -117,8 +118,8 @@ class ScheduleApiTest {
                 .header("secret", secretKey)
                 .content(convertObjectToJson(Schedule.builder()
                         .id(id)
-                        .startDate(LocalDate.parse(startDate))
-                        .endDate(LocalDate.parse(endDate))
+                        .startDate(LocalDateTime.parse(startDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))
+                        .endDate(LocalDateTime.parse(endDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))
                         .build())
                 )
         );
