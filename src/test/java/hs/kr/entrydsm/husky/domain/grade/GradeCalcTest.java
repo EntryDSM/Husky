@@ -396,8 +396,7 @@ public class GradeCalcTest {
                 .additionalType(AdditionalType.NOT_APPLICABLE)
                 .isDaejeon(true)
                 .name("name")
-                .sex(Sex.MALE)
-                .createdAt(LocalDateTime.now());
+                .sex(Sex.MALE);
     }
 
     private UnGraduatedApplication.UnGraduatedApplicationBuilder getDefaultUnGraduatedApplication(User user) {

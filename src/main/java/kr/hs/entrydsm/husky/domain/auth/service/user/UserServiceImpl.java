@@ -48,7 +48,6 @@ public class UserServiceImpl implements UserService {
             User.builder()
                 .email(email)
                 .password(password)
-                .createdAt(LocalDateTime.now())
                 .build()
         );
     }
