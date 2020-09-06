@@ -74,11 +74,11 @@ public class S3Service extends AWS4Signer {
         s3Client.putObject(new PutObjectRequest(bucket, filename, file.getInputStream(), null)
                 .withCannedAcl(CannedAccessControlList.AuthenticatedRead));
 
-        return s3Client.getUrl(bucket, filename).toString();
+        return filename;
     }
 
     public String generateS3ObjectUrl(String objectName) throws MalformedURLException {
-        URL endpointUrl = new URL("https://" + baseImageUrl + ".s3." + region + ".amazonaws.com" + objectName);
+        URL endpointUrl = new URL("https://" + baseImageUrl + ".s3." + region + ".amazonaws.com/" + objectName);
 
         // X-Amz-Algorithm
         String x_amz_algorithm = SCHEME + "-" + ALGORITHM;
