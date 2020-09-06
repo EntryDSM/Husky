@@ -63,7 +63,6 @@ public class AuthApiTest {
                         .email("leaguelugas@test.com")
                         .password(passwordEncoder.encode("P@ssw0rd"))
                         .name("임용성")
-                        .createdAt(LocalDateTime.now())
                         .build()
         );
     }

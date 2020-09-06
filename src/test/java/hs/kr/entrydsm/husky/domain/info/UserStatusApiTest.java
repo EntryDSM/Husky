@@ -51,7 +51,6 @@ class UserStatusApiTest {
         userRepository.save(User.builder()
                 .sex(Sex.MALE)
                 .email("test")
-                .createdAt(LocalDateTime.now())
                 .password("1234")
                 .build());
 

@@ -70,13 +70,11 @@ class UserTypeApiTest {
 
         userRepository.save(User.builder()
                 .email("test")
-                .createdAt(LocalDateTime.now())
                 .password("1234")
                 .build());
 
         userRepository.save(User.builder()
                 .email("test2")
-                .createdAt(LocalDateTime.now())
                 .password("1234")
                 .build());
     }

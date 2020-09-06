@@ -22,7 +22,7 @@ import static kr.hs.entrydsm.husky.domain.user.domain.enums.GradeType.*;
 @Entity(name = "user")
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class User extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -84,9 +84,6 @@ public class User {
 
     @Column(length = 1600)
     private String studyPlan;
-
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Status status;
@@ -189,6 +186,10 @@ public class User {
 
     public boolean isGradeTypeEmpty() {
         return this.gradeType == null;
+    }
+
+    public boolean isPhotoEmpty() {
+        return this.userPhoto.isEmpty();
     }
 
 }

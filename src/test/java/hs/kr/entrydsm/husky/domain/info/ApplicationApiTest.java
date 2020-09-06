@@ -77,7 +77,6 @@ class ApplicationApiTest {
 
         userRepository.save(User.builder()
                 .email("test")
-                .createdAt(LocalDateTime.now())
                 .password("1234")
                 .build());
     }
