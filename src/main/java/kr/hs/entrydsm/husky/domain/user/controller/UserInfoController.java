@@ -36,13 +36,13 @@ public class UserInfoController {
 
     @PatchMapping
     @ResponseStatus(value = HttpStatus.ACCEPTED)
-    public UserInfoResponse serUserInfo(@RequestBody @Valid SetUserInfoRequest request) {
+    public UserInfoResponse serUserInfo(@RequestBody @Valid SetUserInfoRequest request) throws MalformedURLException {
         return userInfoService.setUserInfo(request);
     }
 
     @PatchMapping("/ged")
     @ResponseStatus(value = HttpStatus.ACCEPTED)
-    public UserInfoResponse serGEDUserInfo(@RequestBody @Valid SetUserInfoRequest request) {
+    public UserInfoResponse serGEDUserInfo(@RequestBody @Valid SetUserInfoRequest request) throws MalformedURLException {
         return userInfoService.setUserInfo(request);
     }
 
