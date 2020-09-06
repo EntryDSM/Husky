@@ -31,7 +31,7 @@ public class UserInfoService {
     private final AuthenticationFacade authenticationFacade;
 
     @Transactional
-    public UserInfoResponse setUserInfo(SetUserInfoRequest request) {
+    public UserInfoResponse setUserInfo(SetUserInfoRequest request) throws MalformedURLException {
         Integer receiptCode = authenticationFacade.getReceiptCode();
         User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
@@ -63,6 +63,7 @@ public class UserInfoService {
                 .schoolCode(application.getSchoolCode())
                 .schoolTel(application.getSchoolTel())
                 .schoolName(school.getSchoolName())
+                .photo(imageService.generateObjectUrl(user.getUserPhoto()))
                 .build();
     }
 
