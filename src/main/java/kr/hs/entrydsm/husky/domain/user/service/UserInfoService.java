@@ -3,6 +3,7 @@ package kr.hs.entrydsm.husky.domain.user.service;
 import kr.hs.entrydsm.husky.domain.application.domain.GeneralApplication;
 import kr.hs.entrydsm.husky.domain.application.domain.adapter.GeneralApplicationAdapter;
 import kr.hs.entrydsm.husky.domain.application.domain.repositories.generalapplication.GeneralApplicationAsyncRepository;
+import kr.hs.entrydsm.husky.domain.image.service.ImageService;
 import kr.hs.entrydsm.husky.domain.school.domain.School;
 import kr.hs.entrydsm.husky.domain.school.domain.repositories.SchoolRepository;
 import kr.hs.entrydsm.husky.domain.user.domain.User;
@@ -12,9 +13,7 @@ import kr.hs.entrydsm.husky.domain.user.dto.UserInfoResponse;
 import kr.hs.entrydsm.husky.domain.user.exception.SchoolNotFoundException;
 import kr.hs.entrydsm.husky.domain.user.exception.UserNotFoundException;
 import kr.hs.entrydsm.husky.global.config.security.AuthenticationFacade;
-import kr.hs.entrydsm.husky.infra.s3.S3Service;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -28,6 +27,7 @@ public class UserInfoService {
     private final GeneralApplicationAsyncRepository generalApplicationAsyncRepository;
     private final SchoolRepository schoolRepository;
 
+    private final ImageService imageService;
     private final AuthenticationFacade authenticationFacade;
 
     @Transactional
@@ -66,7 +66,7 @@ public class UserInfoService {
                 .build();
     }
 
-    public UserInfoResponse getUserInfo(S3Service s3Service) throws MalformedURLException {
+    public UserInfoResponse getUserInfo() throws MalformedURLException {
         Integer receiptCode = authenticationFacade.getReceiptCode();
         User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
@@ -83,7 +83,7 @@ public class UserInfoService {
                 .schoolCode(application.getSchoolCode())
                 .schoolTel(application.getSchoolTel())
                 .schoolName(application.getSchoolName())
-                .photo(s3Service.generateS3ObjectUrl(user.getUserPhoto()))
+                .photo(imageService.generateObjectUrl(user.getUserPhoto()))
                 .build();
     }
 

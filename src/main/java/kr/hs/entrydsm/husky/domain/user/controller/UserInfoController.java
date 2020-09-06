@@ -1,10 +1,10 @@
 package kr.hs.entrydsm.husky.domain.user.controller;
 
+import kr.hs.entrydsm.husky.domain.image.service.ImageService;
 import kr.hs.entrydsm.husky.domain.user.dto.*;
 import kr.hs.entrydsm.husky.domain.user.service.UserInfoService;
 import kr.hs.entrydsm.husky.domain.user.service.UserStatusService;
 import kr.hs.entrydsm.husky.domain.user.service.UserTypeService;
-import kr.hs.entrydsm.husky.infra.s3.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +21,7 @@ public class UserInfoController {
     private final UserTypeService userTypeService;
     private final UserInfoService userInfoService;
     private final UserStatusService userStatusService;
-    private final S3Service s3Service;
+    private final ImageService imageService;
 
     @PatchMapping("/type")
     @ResponseStatus(value = HttpStatus.ACCEPTED)
@@ -48,7 +48,7 @@ public class UserInfoController {
 
     @GetMapping
     public UserInfoResponse getUserInfo() throws MalformedURLException {
-        return userInfoService.getUserInfo(s3Service);
+        return userInfoService.getUserInfo();
     }
 
     @GetMapping("/status")
@@ -61,6 +61,6 @@ public class UserInfoController {
 
     @PostMapping("/photo")
     public String uploadPhoto(@RequestPart MultipartFile file) throws Exception {
-        return s3Service.upload(file);
+        return imageService.upload(file);
     }
 }
