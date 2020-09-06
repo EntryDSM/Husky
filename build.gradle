@@ -24,7 +24,7 @@ repositories {
 
 dependencies {
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
-    implementation 'com.amazonaws:aws-java-sdk-ses:1.11.807'
+    implementation 'com.amazonaws:aws-java-sdk-ses:1.11.852'
     implementation 'org.docx4j:docx4j:6.1.2'
     implementation 'org.docx4j:docx4j-export-fo:6.1.0'
     implementation 'javax.xml.bind:jaxb-api:2.3.1'
