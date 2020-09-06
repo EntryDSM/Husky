@@ -26,7 +26,6 @@ import java.util.*;
 
 import static kr.hs.entrydsm.husky.infra.s3.auth.AWS4SignerBase.*;
 
-@NoArgsConstructor
 @Service
 @RequiredArgsConstructor
 public class S3ImageServiceImpl extends AWS4Signer implements ImageService {
@@ -71,7 +70,8 @@ public class S3ImageServiceImpl extends AWS4Signer implements ImageService {
         return filename;
     }
 
-    public String generateS3ObjectUrl(String objectName) throws MalformedURLException {
+    @Override
+    public String generateObjectUrl(String objectName) throws MalformedURLException {
         URL endpointUrl = new URL("https://" + baseImageUrl + ".s3." + region + ".amazonaws.com/" + objectName);
 
         // X-Amz-Algorithm
