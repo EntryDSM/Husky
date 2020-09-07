@@ -41,7 +41,7 @@ public class UserInfoService {
 
         if (isGradeTypeEmpty(user) || user.isGED()) {
             return UserInfoResponse.builder()
-                    .user(user).build();
+                    .user(user).photo(imageService.generateObjectUrl(user.getUserPhoto())).build();
         }
 
         GeneralApplicationAdapter application = new GeneralApplicationAdapter(user);
@@ -74,7 +74,7 @@ public class UserInfoService {
 
         if (isGradeTypeEmpty(user) || user.isGED() || isGeneralApplicationEmpty(user)) {
             return UserInfoResponse.builder()
-                    .user(user).build();
+                    .user(user).photo(imageService.generateObjectUrl(user.getUserPhoto())).build();
         }
 
         GeneralApplication application = user.getGeneralApplication();

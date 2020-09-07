@@ -110,14 +110,14 @@ class UserInfoApiTest {
                 .birthDate(LocalDate.parse("2020-01-23"))
                 .studentNumber("30120")
                 .schoolCode("1")
-                .schoolTel("01012345678")
+                .schoolTel("010-1234-5678")
                 .parentName("test2")
-                .parentTel("01012345678")
-                .applicantTel("01012345678")
+                .parentTel("010-1234-5678")
+                .applicantTel("010-1234-5678")
                 .address("대전 유성구")
                 .detailAddress("대덕 소프트웨어 마이스터 고등학교")
                 .postCode("11111")
-                .photo("test.png")
+                .photo("54c2c17d-ea4c-4d92-a6ea-c54d8beacb4f.png")
                 .build();
 
         select_user_type(url, "UNGRADUATED");
@@ -155,12 +155,12 @@ class UserInfoApiTest {
                 .sex(Sex.FEMALE)
                 .birthDate(LocalDate.parse("2020-01-23"))
                 .parentName("test2")
-                .parentTel("01011111111")
-                .applicantTel("01012345678")
+                .parentTel("010-1111-1111")
+                .applicantTel("010-1234-5678")
                 .address("대전 유성구")
                 .detailAddress("대덕소프트웨어마이스터고등학교")
                 .postCode("11111")
-                .photo("test.png")
+                .photo("54c2c17d-ea4c-4d92-a6ea-c54d8beacb4f.png")
                 .build();
 
         select_user_type(url, "GED");
