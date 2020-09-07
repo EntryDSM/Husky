@@ -36,7 +36,7 @@ public class UserInfoService {
         User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
-        user.update(request);
+        user.updateInfo(request);
         user = userRepository.save(user);
 
         if (isGradeTypeEmpty(user) || user.isGED()) {

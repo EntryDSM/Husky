@@ -39,6 +39,10 @@ public class SetUserInfoRequest {
     @Pattern(regexp = PHONE_REGEX)
     private String schoolTel;
 
+    @Size(max = 20)
+    @Pattern(regexp = PHONE_REGEX)
+    private String homeTel;
+
     @Size(max = 15)
     private String parentName;
 
