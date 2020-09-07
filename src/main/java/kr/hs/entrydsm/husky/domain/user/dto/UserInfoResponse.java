@@ -24,6 +24,7 @@ public class UserInfoResponse {
     private String parentName;
     private String parentTel;
     private String applicantTel;
+    private String homeTel;
     private String address;
     private String detailAddress;
     private String postCode;
@@ -43,6 +44,7 @@ public class UserInfoResponse {
         this.parentName = user.getParentName();
         this.parentTel = user.getParentTel();
         this.applicantTel = user.getApplicantTel();
+        this.homeTel = user.getHomeTel();
         this.address = user.getAddress();
         this.detailAddress = user.getDetailAddress();
         this.postCode = user.getPostCode();
