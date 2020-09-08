@@ -223,5 +223,9 @@ class UserInfoApiTest {
         mvc.perform(patch(url + "/users/me/status"))
                 .andDo(print())
                 .andExpect(status().isOk());
+
+        mvc.perform(get(url + "/users/me/status"))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 }

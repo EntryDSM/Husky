@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Builder
 @NoArgsConstructor
@@ -21,6 +23,7 @@ public class UserStatusResponse {
     private boolean isPrintedApplicationArrived;
     private boolean isPassedFirstApply;
     private boolean isPassedInterview;
+    private LocalDateTime submittedAt;
 
     public static UserStatusResponse response(User user, Status status) {
         return UserStatusResponse.builder()
@@ -31,6 +34,7 @@ public class UserStatusResponse {
                 .isPrintedApplicationArrived(status.isPrintedApplicationArrived())
                 .isPassedFirstApply(status.isPassedFirstApply())
                 .isPassedInterview(status.isPassedInterview())
+                .submittedAt(status.getSubmittedAt())
                 .build();
     }
 
