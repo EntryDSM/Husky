@@ -130,7 +130,7 @@ public class User extends BaseTimeEntity {
         setIfNotNull(this::setAddress, dto.getAddress());
         setIfNotNull(this::setDetailAddress, dto.getDetailAddress());
         setIfNotNull(this::setPostCode, dto.getPostCode());
-        setIfNotNull(this::setUserPhoto, dto.getPhoto());
+        this.userPhoto = dto.getPhoto();
     }
 
     private <T> void setIfNotNull(final Consumer<T> setter, final T value) {
