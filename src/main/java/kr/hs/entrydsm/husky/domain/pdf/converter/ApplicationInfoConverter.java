@@ -88,6 +88,7 @@ public class ApplicationInfoConverter {
         values.put("isMale", toBallotBox(user.isMale()));
         values.put("isFemale", toBallotBox(user.isFemale()));
         values.put("address", setBlankIfNull(user.getAddress()));
+        values.put("detailAddress", setBlankIfNull(user.getDetailAddress()));
 
         String birthDate = "";
         if (user.getBirthDate() != null) {
