@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(UserNotFoundException::new);
 
         String code = randomCode();
-        emailService.sendEmail(email, code);
+        emailService.sendPasswordChangeEmail(email, code);
         emailVerificationRepository.save(
                 EmailVerification.builder()
                         .email(email)

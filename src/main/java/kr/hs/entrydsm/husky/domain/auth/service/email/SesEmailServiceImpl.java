@@ -14,13 +14,23 @@ public class SesEmailServiceImpl implements EmailService {
     private static final String UTF_8_ENCODED_SOURCE_NAME = "=?utf-8?B?7J6F7ZWZ7KCE7ZiV7Iuc7Iqk7YWc?=";
 
     @Override
-    public void sendEmail(String receiveEmail, String code) {
-
+    public void sendEmail(String email, String code) {
         SendTemplatedEmailRequest request = new SendTemplatedEmailRequest()
-                .withDestination(new Destination().withToAddresses(receiveEmail))
+                .withDestination(new Destination().withToAddresses(email))
                 .withTemplate("EntryEmailConfirmTemplate")
                 .withSource(UTF_8_ENCODED_SOURCE_NAME + " <noreply@entrydsm.hs.kr>")
-                .withTemplateData("{\"code\": \"" + code + "\", \"email\": \"" + receiveEmail + "\"}");
+                .withTemplateData("{\"code\": \"" + code + "\", \"email\": \"" + email + "\"}");
+
+        amazonSimpleEmailServiceAsync.sendTemplatedEmailAsync(request);
+    }
+
+    @Override
+    public void sendPasswordChangeEmail(String email, String code) {
+        SendTemplatedEmailRequest request = new SendTemplatedEmailRequest()
+                .withDestination(new Destination().withToAddresses(email))
+                .withTemplate("EntryPasswordChangeEmailConfirmTemplate")
+                .withSource(UTF_8_ENCODED_SOURCE_NAME + " <noreply@entrydsm.hs.kr>")
+                .withTemplateData("{\"code\": \"" + code + "\", \"email\": \"" + email + "\"}");
 
         amazonSimpleEmailServiceAsync.sendTemplatedEmailAsync(request);
     }
