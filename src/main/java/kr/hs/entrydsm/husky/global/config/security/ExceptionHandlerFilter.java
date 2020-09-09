@@ -1,9 +1,8 @@
 package kr.hs.entrydsm.husky.global.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kr.hs.entrydsm.husky.domain.auth.exceptions.ExpiredTokenException;
+import kr.hs.entrydsm.husky.global.error.exception.BusinessException;
 import kr.hs.entrydsm.husky.global.error.exception.ErrorCode;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -19,14 +18,18 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
         try {
             filterChain.doFilter(request, response);
-        } catch (ExpiredTokenException e) {
-            ObjectMapper objectMapper = new ObjectMapper();
-            String jsonValue = objectMapper.writer()
-                    .writeValueAsString(ErrorCode.EXPIRED_TOKEN);
-            response.getWriter().write(jsonValue);
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        } catch (BusinessException e) {
+            this.setErrorResponse(response, e.getErrorCode());
         }
+    }
+
+    private void setErrorResponse(HttpServletResponse response, ErrorCode errorCode) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonValue = objectMapper.writer()
+                .writeValueAsString(errorCode);
+        response.getWriter().write(jsonValue);
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setStatus(errorCode.getStatus());
     }
 
 }

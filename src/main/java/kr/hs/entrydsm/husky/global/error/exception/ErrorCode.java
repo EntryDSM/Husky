@@ -20,6 +20,7 @@ public enum ErrorCode {
     INVALID_TOKEN(401, "A401-0", "Invalid Token"),
     EXPIRED_TOKEN(401, "A401-1", "Expired Token"),
     UNAUTHORIZED(401, "A401-2", "Authentication is required and has failed or has not yet been provided."),
+    TOKEN_REQUIRED(404, "A404-0", "Bearer Token Required."),
     USER_DUPLICATION(409, "A409-0", "User is Already Exists"),
     PASSWORD_DUPLICATION(409, "A409-1", "Password is Already Exists"),
     FAIL_GENERATE_VERIFY_EMAIL(422, "A422-0", "Email Generate Error"),
