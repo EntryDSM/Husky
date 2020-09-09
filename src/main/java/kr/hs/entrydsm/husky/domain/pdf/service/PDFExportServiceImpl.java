@@ -8,6 +8,7 @@ import kr.hs.entrydsm.husky.domain.pdf.exception.FinalSubmitRequiredException;
 import kr.hs.entrydsm.husky.domain.pdf.exception.UnprocessableEntityException;
 import kr.hs.entrydsm.husky.domain.pdf.util.FontLoader;
 import kr.hs.entrydsm.husky.domain.user.domain.User;
+import kr.hs.entrydsm.husky.domain.user.domain.enums.ApplyType;
 import kr.hs.entrydsm.husky.domain.user.domain.repositories.UserRepository;
 import kr.hs.entrydsm.husky.global.config.security.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +49,7 @@ public class PDFExportServiceImpl implements PDFExportService {
     @Override
     public byte[] getPDFApplicationPreview() {
         return userRepository.findById(authFacade.getReceiptCode())
-                .map(user -> generatePDFApplication(user, gradeCalcService.calcStudentGrade(user.getReceiptCode())))
+                .map(user -> generatePDFApplication(user, gradeCalcService.calcStudentGrade(user.getReceiptCode()), true))
                 .orElseThrow(UserNotFoundException::new);
     }
 
@@ -56,17 +57,22 @@ public class PDFExportServiceImpl implements PDFExportService {
     public byte[] getFinalPDFApplication() {
         return userRepository.findById(authFacade.getReceiptCode())
                 .map(user -> {
-                    if (user.getStatus() == null || !user.getStatus().isFinalSubmit())
+                    if (isFinalSubmitRequired(user))
                         throw new FinalSubmitRequiredException();
-
-                    return generatePDFApplication(user, gradeCalcService.calcStudentGrade(user.getReceiptCode()));
+                    return generatePDFApplication(user, gradeCalcService.calcStudentGrade(user.getReceiptCode()), false);
                 })
                 .orElseThrow(UserNotFoundException::new);
     }
 
-    private byte[] generatePDFApplication(User user, CalculatedScore calculatedScore) {
+    private boolean isFinalSubmitRequired(User user) {
+        return user.getStatus() == null || !user.getStatus().isFinalSubmit();
+    }
+
+    private byte[] generatePDFApplication(User user, CalculatedScore calculatedScore, boolean isPreview) {
+        String templateFileName = setTemplateFileName(user, isPreview);
+
         try {
-            InputStream template = new ClassPathResource("templates/application.docx").getInputStream();
+            InputStream template = new ClassPathResource(templateFileName).getInputStream();
             WordprocessingMLPackage mlPackage = WordprocessingMLPackage.load(template);
             MainDocumentPart documentPart = mlPackage.getMainDocumentPart();
             VariablePrepare.prepare(mlPackage);
@@ -88,6 +94,31 @@ public class PDFExportServiceImpl implements PDFExportService {
             e.printStackTrace();
             throw new UnprocessableEntityException();
         }
+    }
+
+    private String setTemplateFileName(User user, boolean isPreview) {
+        String application = "templates/";
+        if (isPreview) application += "preview/";
+
+        if (isGED(user)) {
+            application += "ged_application.docx";
+
+        } else if (isCommonApply(user)) {
+            application += "common_application.docx";
+
+        } else {
+            application += "application.docx";
+        }
+
+        return application;
+    }
+
+    private boolean isGED(User user) {
+        return !user.isGradeTypeEmpty() && user.isGED();
+    }
+
+    private boolean isCommonApply(User user) {
+        return user.getApplyType() != null && user.getApplyType().equals(ApplyType.COMMON);
     }
 
     private void insertUserProfileImage(User user, WordprocessingMLPackage mlPackage) throws Exception {
