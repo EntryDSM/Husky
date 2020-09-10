@@ -74,11 +74,13 @@ public class AuthApiTest {
     }
 
     @Test
+    @Order(1)
     public void signInTest() throws Exception {
         signIn();
     }
 
     @Test
+    @Order(2)
     public void refreshTest() throws Exception {
         String url = "http://localhost:" + port;
 
