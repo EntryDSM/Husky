@@ -18,6 +18,7 @@ import kr.hs.entrydsm.husky.domain.user.domain.enums.GradeType;
 import kr.hs.entrydsm.husky.domain.user.domain.enums.Sex;
 import kr.hs.entrydsm.husky.domain.user.domain.repositories.UserRepository;
 import org.junit.After;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +64,7 @@ class GradeCalcTest {
         userRepository.deleteAll();
     }
 
+    @Tag("Second")
     @Test
     public void commonUnGraduatedApplication() {
         User user = this.getDefaultUser()

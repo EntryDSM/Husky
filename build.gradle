@@ -50,6 +50,9 @@ dependencies {
 }
 
 test {
-    useJUnitPlatform()
+    useJUnitPlatform() {
+        includeTags 'First'
+        includeTags 'Second'
+    }
 }
 

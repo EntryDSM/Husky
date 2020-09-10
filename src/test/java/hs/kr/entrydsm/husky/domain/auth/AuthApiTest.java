@@ -69,11 +69,13 @@ class AuthApiTest {
         userRepository.deleteAll();
     }
 
+    @Tag("First")
     @Test
     public void signInTest() throws Exception {
         signIn();
     }
 
+    @Tag("First")
     @Test
     public void refreshTest() throws Exception {
         String url = "http://localhost:" + port;
