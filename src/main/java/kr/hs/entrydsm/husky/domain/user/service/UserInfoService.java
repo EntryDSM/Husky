@@ -57,13 +57,15 @@ public class UserInfoService {
         School school = schoolRepository.findById(application.getSchoolCode())
                 .orElseThrow(SchoolNotFoundException::new);
 
+        String photo = request.getPhoto() == null ? null : imageService.generateObjectUrl(request.getPhoto());
+
         return UserInfoResponse.builder()
                 .user(user)
                 .studentNumber(application.getStudentNumber())
                 .schoolCode(application.getSchoolCode())
                 .schoolTel(application.getSchoolTel())
                 .schoolName(school.getSchoolName())
-                .photo(imageService.generateObjectUrl(user.getUserPhoto()))
+                .photo(photo)
                 .build();
     }
 
@@ -72,9 +74,11 @@ public class UserInfoService {
         User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
+        String photo = user.getUserPhoto() == null ? null : imageService.generateObjectUrl(user.getUserPhoto());
+
         if (isGradeTypeEmpty(user) || user.isGED() || isGeneralApplicationEmpty(user)) {
             return UserInfoResponse.builder()
-                    .user(user).photo(imageService.generateObjectUrl(user.getUserPhoto())).build();
+                    .user(user).photo(photo).build();
         }
 
         GeneralApplication application = user.getGeneralApplication();
@@ -84,7 +88,7 @@ public class UserInfoService {
                 .schoolCode(application.getSchoolCode())
                 .schoolTel(application.getSchoolTel())
                 .schoolName(application.getSchoolName())
-                .photo(imageService.generateObjectUrl(user.getUserPhoto()))
+                .photo(photo)
                 .build();
     }
 
