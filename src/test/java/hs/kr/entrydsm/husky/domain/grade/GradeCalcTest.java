@@ -63,8 +63,7 @@ class GradeCalcTest {
         calcScoreRepository.deleteAll();
         userRepository.deleteAll();
     }
-
-    @Tag("Second")
+    
     @Test
     public void commonUnGraduatedApplication() {
         User user = this.getDefaultUser()
