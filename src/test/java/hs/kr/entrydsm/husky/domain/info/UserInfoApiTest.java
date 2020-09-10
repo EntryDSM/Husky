@@ -118,7 +118,7 @@ class UserInfoApiTest {
                 .address("대전 유성구")
                 .detailAddress("대덕 소프트웨어 마이스터 고등학교")
                 .postCode("11111")
-                .photo("54c2c17d-ea4c-4d92-a6ea-c54d8beacb4f.png")
+                .photo(null)
                 .build();
 
         select_user_type(url, "UNGRADUATED");
@@ -222,7 +222,7 @@ class UserInfoApiTest {
 
         mvc.perform(patch(url + "/users/me/status"))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isNotAcceptable());
 
         mvc.perform(get(url + "/users/me/status"))
                 .andDo(print())
