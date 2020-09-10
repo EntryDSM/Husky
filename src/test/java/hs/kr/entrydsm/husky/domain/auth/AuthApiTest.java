@@ -8,6 +8,7 @@ import kr.hs.entrydsm.husky.domain.auth.dto.request.AccountRequest;
 import kr.hs.entrydsm.husky.domain.auth.dto.response.TokenResponse;
 import kr.hs.entrydsm.husky.domain.user.domain.User;
 import kr.hs.entrydsm.husky.domain.user.domain.repositories.UserRepository;
+import org.junit.BeforeClass;
 import org.junit.jupiter.api.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,6 +89,7 @@ class AuthApiTest {
                 .andExpect(status().isOk());
     }
 
+    @BeforeClass
     private MvcResult signIn() throws Exception {
         String url = "http://localhost:" + port;
 
