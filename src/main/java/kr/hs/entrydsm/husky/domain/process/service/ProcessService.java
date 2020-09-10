@@ -80,4 +80,8 @@ public class ProcessService {
         return user.getSelfIntroduction() != null && user.getStudyPlan() != null;
     }
 
+    public boolean AllCheck(User user) {
+        return checkType(user) && checkDocs(user) && checkInfo(user) && checkScore(user);
+    }
+
 }
