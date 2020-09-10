@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {HuskyApplication.class, EmbeddedRedisConfig.class})
-public class GradeCalcTest {
+class GradeCalcTest {
 
     @Autowired
     private GradeCalcService gradeCalcService;
