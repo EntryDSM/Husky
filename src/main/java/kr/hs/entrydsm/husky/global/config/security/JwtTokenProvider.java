@@ -58,7 +58,7 @@ public class JwtTokenProvider {
         if (bearerToken != null && bearerToken.startsWith(prefix)) {
             return bearerToken.substring(7);
         }
-        throw new TokenRequiredException();
+        return null;
     }
 
     public boolean validateToken(String token) {
