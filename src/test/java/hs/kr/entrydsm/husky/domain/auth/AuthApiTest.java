@@ -92,8 +92,7 @@ class AuthApiTest {
                 .header("X-Refresh-Token", refreshToken))
                 .andExpect(status().isOk());
     }
-
-    @BeforeClass
+    
     private MvcResult signIn() throws Exception {
         String url = "http://localhost:" + port;
 
