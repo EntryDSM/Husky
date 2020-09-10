@@ -15,6 +15,7 @@ import kr.hs.entrydsm.husky.domain.user.domain.repositories.UserRepository;
 import org.junit.BeforeClass;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,12 +81,14 @@ public class UserApiTest {
         userRepository.deleteAll();
     }
 
+    @Tag("Second")
     @Test
     public void emailVerifyTest() throws Exception {
         VerifyCodeRequest request = new VerifyCodeRequest("leaguelugas@test.com", "ABCDE");
         requestMvc(put("/users/email/verify"), request);
     }
 
+    @Tag("Second")
     @Test
     public void signUpTest() throws Exception {
         emailVerifyTest();
@@ -93,6 +96,7 @@ public class UserApiTest {
         requestMvc(post("/users"), request);
     }
 
+    @Tag("Second")
     @Test
     public void passwordChangeTest() throws Exception {
         signUpTest();
