@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ActiveProfiles({"test", "local"})
-class AuthApiTest {
+public class AuthApiTest {
 
     @LocalServerPort
     private int port;
@@ -92,7 +92,7 @@ class AuthApiTest {
                 .header("X-Refresh-Token", refreshToken))
                 .andExpect(status().isOk());
     }
-    
+
     private MvcResult signIn() throws Exception {
         String url = "http://localhost:" + port;
 
