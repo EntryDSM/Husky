@@ -2,6 +2,7 @@ package kr.hs.entrydsm.husky.global.config.security;
 
 import io.jsonwebtoken.*;
 import kr.hs.entrydsm.husky.domain.auth.exceptions.ExpiredTokenException;
+import kr.hs.entrydsm.husky.domain.auth.exceptions.InvalidTokenException;
 import kr.hs.entrydsm.husky.domain.auth.exceptions.TokenRequiredException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -58,7 +59,7 @@ public class JwtTokenProvider {
         if (bearerToken != null && bearerToken.startsWith(prefix)) {
             return bearerToken.substring(7);
         }
-        return null;
+        throw new InvalidTokenException();
     }
 
     public boolean validateToken(String token) {
@@ -66,8 +67,8 @@ public class JwtTokenProvider {
             Jwts.parser().setSigningKey(secretKey)
                     .parseClaimsJws(token).getBody().getSubject();
             return true;
-        } catch (ExpiredJwtException e) {
-            throw new ExpiredTokenException();
+        } catch (Exception e) {
+            throw new InvalidTokenException();
         }
     }
 
