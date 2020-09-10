@@ -53,6 +53,7 @@ test {
     useJUnitPlatform() {
         includeTags 'First'
         includeTags 'Second'
+        includeTags 'Last'
     }
 }
 

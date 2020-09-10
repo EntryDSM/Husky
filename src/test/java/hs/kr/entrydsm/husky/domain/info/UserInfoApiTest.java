@@ -96,6 +96,7 @@ class UserInfoApiTest {
         userRepository.deleteAll();
     }
 
+    @Tag("Last")
     @Test
     @Order(1)
     @WithMockUser(username = "1", password = "1234")
@@ -143,6 +144,7 @@ class UserInfoApiTest {
                 .andExpect(status().isOk());
     }
 
+    @Tag("Last")
     @Test
     @Order(2)
     @WithMockUser(username = "2", password = "1234")
@@ -209,6 +211,7 @@ class UserInfoApiTest {
         );
     }
 
+    @Tag("Last")
     @Test
     @WithMockUser(username = "3", password = "1234")
     public void getUserStatus() throws Exception {
