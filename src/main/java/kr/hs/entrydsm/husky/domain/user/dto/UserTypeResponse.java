@@ -13,7 +13,8 @@ import java.time.LocalDate;
 
 @Getter
 @Builder
-@NoArgsConstructor@AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserTypeResponse {
 
     private GradeType gradeType;
