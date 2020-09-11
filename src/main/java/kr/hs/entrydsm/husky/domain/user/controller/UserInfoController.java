@@ -24,7 +24,7 @@ public class UserInfoController {
     private final ImageService imageService;
 
     @PatchMapping("/type")
-    @ResponseStatus(value = HttpStatus.ACCEPTED)
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void updateUserType(@RequestBody @Valid SelectTypeRequest request) {
         userTypeService.updateUserType(request);
     }
@@ -35,13 +35,13 @@ public class UserInfoController {
     }
 
     @PatchMapping
-    @ResponseStatus(value = HttpStatus.ACCEPTED)
+    @ResponseStatus(value = HttpStatus.OK)
     public UserInfoResponse setUserInfo(@RequestBody @Valid SetUserInfoRequest request) throws MalformedURLException {
         return userInfoService.setUserInfo(request);
     }
 
     @PatchMapping("/ged")
-    @ResponseStatus(value = HttpStatus.ACCEPTED)
+    @ResponseStatus(value = HttpStatus.OK)
     public UserInfoResponse setGEDUserInfo(@RequestBody @Valid SetUserInfoRequest request) throws MalformedURLException {
         return userInfoService.setUserInfo(request);
     }
@@ -55,11 +55,13 @@ public class UserInfoController {
     public UserStatusResponse getUserStatus() { return userStatusService.getStatus(); }
 
     @PatchMapping("/status")
+    @ResponseStatus(value = HttpStatus.OK)
     public UserStatusResponse finalSubmit() {
         return userStatusService.finalSubmit();
     }
 
     @PostMapping("/photo")
+    @ResponseStatus(value = HttpStatus.CREATED)
     public String uploadPhoto(@RequestPart MultipartFile file) throws Exception {
         return imageService.upload(file);
     }
