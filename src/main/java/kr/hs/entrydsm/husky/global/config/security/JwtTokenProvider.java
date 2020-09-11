@@ -1,9 +1,7 @@
 package kr.hs.entrydsm.husky.global.config.security;
 
 import io.jsonwebtoken.*;
-import kr.hs.entrydsm.husky.domain.auth.exceptions.ExpiredTokenException;
 import kr.hs.entrydsm.husky.domain.auth.exceptions.InvalidTokenException;
-import kr.hs.entrydsm.husky.domain.auth.exceptions.TokenRequiredException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
