@@ -190,7 +190,7 @@ public class User extends BaseTimeEntity {
     }
 
     public boolean isPhotoEmpty() {
-        return this.userPhoto.isEmpty();
+        return this.userPhoto == null;
     }
 
 }

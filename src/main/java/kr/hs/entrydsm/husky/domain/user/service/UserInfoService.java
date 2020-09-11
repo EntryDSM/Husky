@@ -8,6 +8,7 @@ import kr.hs.entrydsm.husky.domain.school.domain.School;
 import kr.hs.entrydsm.husky.domain.school.domain.repositories.SchoolRepository;
 import kr.hs.entrydsm.husky.domain.user.domain.User;
 import kr.hs.entrydsm.husky.domain.user.domain.repositories.UserRepository;
+import kr.hs.entrydsm.husky.domain.user.domain.repositories.async.UserAsyncRepository;
 import kr.hs.entrydsm.husky.domain.user.dto.SetUserInfoRequest;
 import kr.hs.entrydsm.husky.domain.user.dto.UserInfoResponse;
 import kr.hs.entrydsm.husky.domain.user.exception.SchoolNotFoundException;
@@ -24,6 +25,7 @@ import java.net.MalformedURLException;
 public class UserInfoService {
 
     private final UserRepository userRepository;
+    private final UserAsyncRepository userAsyncRepository;
     private final GeneralApplicationAsyncRepository generalApplicationAsyncRepository;
     private final SchoolRepository schoolRepository;
 
@@ -37,11 +39,11 @@ public class UserInfoService {
                 .orElseThrow(UserNotFoundException::new);
 
         user.updateInfo(request);
-        user = userRepository.save(user);
+        userAsyncRepository.save(user);
 
-        if (isGradeTypeEmpty(user) || user.isGED()) {
+        if (user.isGradeTypeEmpty() || user.isGED()) {
             return UserInfoResponse.builder()
-                    .user(user).photo(imageService.generateObjectUrl(user.getUserPhoto())).build();
+                    .user(user).photo(getImageUrl(user)).build();
         }
 
         GeneralApplicationAdapter application = new GeneralApplicationAdapter(user);
@@ -54,19 +56,18 @@ public class UserInfoService {
         application.update(request);
         generalApplicationAsyncRepository.save(application);
 
-        School school = schoolRepository.findById(application.getSchoolCode())
-                .orElseThrow(SchoolNotFoundException::new);
-
-        String photo = request.getPhoto() == null ? null : imageService.generateObjectUrl(request.getPhoto());
-
         return UserInfoResponse.builder()
                 .user(user)
                 .studentNumber(application.getStudentNumber())
                 .schoolCode(application.getSchoolCode())
                 .schoolTel(application.getSchoolTel())
-                .schoolName(application.getGeneralApplication().getSchoolName())
-                .photo(photo)
+                .schoolName(application.getSchoolName())
+                .photo(getImageUrl(user))
                 .build();
+    }
+
+    private String getImageUrl(User user) throws MalformedURLException {
+        return (!user.isPhotoEmpty()) ? imageService.generateObjectUrl(user.getUserPhoto()) : null;
     }
 
     public UserInfoResponse getUserInfo() throws MalformedURLException {
@@ -74,11 +75,9 @@ public class UserInfoService {
         User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
-        String photo = user.getUserPhoto() == null ? null : imageService.generateObjectUrl(user.getUserPhoto());
-
-        if (isGradeTypeEmpty(user) || user.isGED() || isGeneralApplicationEmpty(user)) {
+        if (user.isGradeTypeEmpty() || user.isGED() || isGeneralApplicationEmpty(user)) {
             return UserInfoResponse.builder()
-                    .user(user).photo(photo).build();
+                    .user(user).photo(getImageUrl(user)).build();
         }
 
         GeneralApplication application = user.getGeneralApplication();
@@ -88,16 +87,12 @@ public class UserInfoService {
                 .schoolCode(application.getSchoolCode())
                 .schoolTel(application.getSchoolTel())
                 .schoolName(application.getSchoolName())
-                .photo(photo)
+                .photo(getImageUrl(user))
                 .build();
     }
 
     private boolean isSchoolCodeEmpty(SetUserInfoRequest request) {
         return request.getSchoolCode() == null;
-    }
-
-    private boolean isGradeTypeEmpty(User user) {
-        return user.getGradeType() == null;
     }
 
     private boolean isGeneralApplicationEmpty(User user) {

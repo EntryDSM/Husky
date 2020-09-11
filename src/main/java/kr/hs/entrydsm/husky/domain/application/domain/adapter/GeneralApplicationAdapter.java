@@ -21,23 +21,23 @@ public class GeneralApplicationAdapter {
     private GraduatedApplication graduatedApplication;
 
     public void update(School school) {
-        if (gradeType.equals(UNGRADUATED) && unGraduatedApplication != null)
+        if (isUngraduatedApplication())
             unGraduatedApplication.update(school);
-        else if (gradeType.equals(GRADUATED) && graduatedApplication != null)
+        else if (isGraduatedApplication())
             graduatedApplication.update(school);
     }
 
     public void update(SetUserInfoRequest dto) {
-        if (gradeType.equals(UNGRADUATED) && unGraduatedApplication != null)
+        if (isUngraduatedApplication())
             unGraduatedApplication.update(dto);
-        else if (gradeType.equals(GRADUATED) && graduatedApplication != null)
+        else if (isGraduatedApplication())
             graduatedApplication.update(dto);
     }
 
     public void update(SetScoreRequest dto) {
-        if (gradeType.equals(UNGRADUATED) && unGraduatedApplication != null)
+        if (isUngraduatedApplication())
             unGraduatedApplication.update(dto);
-        else if (gradeType.equals(GRADUATED) && graduatedApplication != null)
+        else if (isGraduatedApplication())
             graduatedApplication.update(dto);
     }
 
@@ -45,49 +45,60 @@ public class GeneralApplicationAdapter {
         if (user.getGradeType() != null) {
             this.gradeType = user.getGradeType();
             if (user.isUngraduated()) {
-                if (user.getUnGraduatedApplication() != null)
-                    this.unGraduatedApplication = user.getUnGraduatedApplication();
-                else
-                    this.unGraduatedApplication = new UnGraduatedApplication(user.getReceiptCode());
+                setUngraduatedApplication(user);
             } else if (user.isGraduated()) {
-                if (user.getGraduatedApplication() != null)
-                    this.graduatedApplication = user.getGraduatedApplication();
-                else
-                    this.graduatedApplication = new GraduatedApplication(user.getReceiptCode());
+                setGraduatedApplication(user);
             }
         }
     }
 
+    private void setUngraduatedApplication(User user) {
+        if (user.getUnGraduatedApplication() != null)
+            this.unGraduatedApplication = user.getUnGraduatedApplication();
+        else
+            this.unGraduatedApplication = new UnGraduatedApplication(user.getReceiptCode());
+    }
+
+    private void setGraduatedApplication(User user) {
+        if (user.getGraduatedApplication() != null)
+            this.graduatedApplication = user.getGraduatedApplication();
+        else
+            this.graduatedApplication = new GraduatedApplication(user.getReceiptCode());
+    }
+
     public String getStudentNumber() {
-        if (gradeType.equals(UNGRADUATED) && unGraduatedApplication != null)
-            return unGraduatedApplication.getStudentNumber();
-
-        if (gradeType.equals(GRADUATED) && graduatedApplication != null)
-            return graduatedApplication.getStudentNumber();
-
-        return null;
+        return getGeneralApplication().getStudentNumber();
     }
 
     public String getSchoolCode() {
-        if (gradeType.equals(UNGRADUATED) && unGraduatedApplication != null
-                && unGraduatedApplication.getSchool() != null)
-            return unGraduatedApplication.getSchool().getSchoolCode();
-
-        if (gradeType.equals(GRADUATED) && graduatedApplication != null
-                && graduatedApplication.getSchool() != null)
-            return graduatedApplication.getSchool().getSchoolCode();
-
-        return null;
+        School school = getSchool();
+        return (school != null) ? school.getSchoolCode() : null;
     }
 
     public String getSchoolTel() {
-        if (gradeType.equals(UNGRADUATED) && unGraduatedApplication != null)
-            return unGraduatedApplication.getSchoolTel();
+        return getGeneralApplication().getSchoolTel();
+    }
 
-        if (gradeType.equals(GRADUATED) && graduatedApplication != null)
-            return graduatedApplication.getSchoolTel();
+    public String getSchoolName() {
+        School school = getSchool();
+        return (school != null) ? school.getSchoolName() : null;
+    }
 
-        return null;
+    public School getSchool() {
+        GeneralApplication application = getGeneralApplication();
+        return (isSchoolEmpty(application)) ? null : application.getSchool();
+    }
+
+    private boolean isSchoolEmpty(GeneralApplication application) {
+        return application.getSchool() == null;
+    }
+
+    private boolean isUngraduatedApplication() {
+        return gradeType.equals(UNGRADUATED) && unGraduatedApplication != null;
+    }
+
+    private boolean isGraduatedApplication() {
+        return gradeType.equals(GRADUATED) && graduatedApplication != null;
     }
 
     public GeneralApplication getGeneralApplication() {
