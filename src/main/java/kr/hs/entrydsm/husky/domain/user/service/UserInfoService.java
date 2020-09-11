@@ -64,7 +64,7 @@ public class UserInfoService {
                 .studentNumber(application.getStudentNumber())
                 .schoolCode(application.getSchoolCode())
                 .schoolTel(application.getSchoolTel())
-                .schoolName(school.getSchoolName())
+                .schoolName(application.getGeneralApplication().getSchoolName())
                 .photo(photo)
                 .build();
     }

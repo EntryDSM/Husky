@@ -66,6 +66,9 @@ public class ApplicationService {
         User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
+        if (user.isGradeTypeEmpty())
+            throw new GradeTypeRequiredException();
+
         if (!user.isGED())
             throw new ApplicationTypeUnmatchedException();
 
