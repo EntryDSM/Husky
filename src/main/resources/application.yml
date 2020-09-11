@@ -1,0 +1,44 @@
+spring:
+  jpa:
+    generate-ddl: true
+  datasource:
+    url: ${MYSQL_URL}
+
+  redis:
+    port: ${REDIS_PORT:6379}
+    host: ${REDIS_HOST:localhost}
+    password: ${REDIS_PASSWORD:}
+
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
+aws:
+  s3:
+    bucket: ${AWS_S3_BUCKET:default}
+    region: ${AWS_S3_REGION:ap-northeast-2}
+    access_key: ${AWS_S3_ACCESS_KEY:access_key}
+    secret_key: ${AWS_S3_SECRET_KEY:secret_key}
+    base_image_url: ${AWS_S3_IMAGE_BASE_URL:image.entrydsm.hs.kr}
+  ses:
+    region: ${AWS_SES_REGION:us-east-1}
+    access_key: ${AWS_SES_ACCESS_KEY:access_key}
+    secret_key: ${AWS_SES_SECRET_KEY:secret_key}
+
+
+auth:
+  jwt:
+    secret: ${JWT_SECRET_KEY:dGVzdA==}
+    exp:
+      access: ${JWT_ACCESS_EXP:3600}
+      refresh: ${JWT_REFRESH_EXP:3600}
+    header: ${JWT_HEADER:header}
+    prefix: ${JWT_PREFIX:prefix}
+  maintenance:
+    key: ${MAINTENANCE_KEY:dGVzdA==}
+
+logging:
+  level:
+    org:
+      docx4j: OFF
+      apache:
+        fop: OFF

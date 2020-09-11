@@ -1,0 +1,40 @@
+spring:
+  # H2 Setting
+  h2:
+    console:
+      enabled: true
+      path: /h2
+  # Redis Setting
+  redis:
+    port: 6379
+    host: 127.0.0.1
+
+  # Json Naming Setting
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:test
+    username: test
+    password: 1234
+
+# AWS Setting
+aws:
+  credential:
+    access_key: ${AWS_ACCESS_KEY:access_key}
+    secret_key: ${AWS_SECRET_KEY:secret_key}
+    region: ${AWS_REGION:us-east-1}
+
+# JWT Setting
+auth:
+  jwt:
+    secret: ${JWT_SECRET_KEY:dGVzdA==}
+    exp:
+      access: ${JWT_ACCESS_EXP:3600}
+      refresh: ${JWT_REFRESH_EXP:3600}
+    header: ${JWT_HEADER:header}
+    prefix: ${JWT_PREFIX:prefix}
+  maintenance:
+    key: dGVzdA==
+

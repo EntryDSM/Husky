@@ -1,178 +1,58 @@
-buildscript {
-    ext {
-        set('snippetsDir', file("build/generated-snippets"))
-        dependencyManagementVersion = '1.0.8.RELEASE'
-        springBootVersion = '2.2.1.RELEASE'
-    }
+plugins {
+    id 'org.springframework.boot' version '2.3.1.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id 'java'
+}
 
-    repositories {
-        maven { url "https://plugins.gradle.org/m2/" }
-        mavenCentral()
-    }
+group = 'kr.hs.entrydsm'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
 
-    dependencies {
-        classpath("io.spring.gradle:dependency-management-plugin:${dependencyManagementVersion}")
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    all {
+        exclude group: 'org.slf4j', module: 'slf4j-simple'
+        exclude group: 'org.slf4j', module: 'slf4j-log4j12'
     }
 }
 
-subprojects {
-
-    apply plugin: 'org.springframework.boot'
-    apply plugin: 'io.spring.dependency-management'
-    apply plugin: 'java'
-
-    group = 'kr.hs.entrydsm'
-    version = '0.0.1-SNAPSHOT'
-    sourceCompatibility = '11'
-    targetCompatibility = '11'
-
-    configurations {
-        compileOnly {
-            extendsFrom annotationProcessor
-        }
-    }
-
-    repositories {
-        maven { url "https://repo.spring.io/libs-release" }
-        maven { url "https://repo.spring.io/milestone" }
-        mavenCentral()
-    }
-
-    dependencies {
-        compileOnly 'org.projectlombok:lombok'
-        annotationProcessor 'org.projectlombok:lombok'
-        implementation 'org.springframework.boot:spring-boot-starter-actuator'
-        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-        testImplementation 'com.h2database:h2'
-        compile 'junit:junit:4.12'
-    }
-
-    configurations {
-        all*.exclude module : 'spring-boot-starter-logging'
-    }
-
-    task initSourceFolders {
-        sourceSets*.java.srcDirs*.each {
-            if (!it.exists()) {
-                it.mkdirs()
-            }
-        }
-        sourceSets*.resources.srcDirs*.each {
-            if (!it.exists()) {
-                it.mkdirs()
-            }
-        }
-    }
-
-    test {
-        outputs.dir snippetsDir
-        useJUnitPlatform()
-    }
-
+repositories {
+    mavenCentral()
 }
 
-
-project(':core') {
-    dependencies {
-        implementation 'org.springframework.boot:spring-boot-starter-web'
-        implementation 'org.springframework.boot:spring-boot-starter-security'
-        runtimeOnly 'mysql:mysql-connector-java'
+dependencies {
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    implementation 'com.amazonaws:aws-java-sdk-ses:1.11.852'
+    implementation 'org.docx4j:docx4j:6.1.2'
+    implementation 'org.docx4j:docx4j-export-fo:6.1.0'
+    implementation 'javax.xml.bind:jaxb-api:2.3.1'
+    implementation 'javax.activation:activation:1.1.1'
+    implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.2'
+    implementation 'com.amazonaws:aws-java-sdk-s3control:1.11.852'
+    implementation 'it.ozimov:embedded-redis:0.7.3'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'mysql:mysql-connector-java'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
-
-    bootJar {
-        enabled = false
-    }
-
-    jar {
-        enabled = true
-    }
-
+    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'com.h2database:h2'
+    compile 'junit:junit:4.12'
 }
 
-project(':auth') {
-    dependencies {
-        compile project(':core')
-
-        implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-        implementation 'org.springframework.boot:spring-boot-starter-web'
-        implementation 'org.springframework.boot:spring-boot-starter-security'
-        implementation 'io.jsonwebtoken:jjwt:0.9.1'
-        implementation 'com.amazonaws:aws-java-sdk-ses:1.11.807'
-        implementation 'it.ozimov:embedded-redis:0.7.3'
-        testImplementation('org.springframework.boot:spring-boot-starter-test') {
-            exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-        }
-        testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-    }
-    jar {
-        enabled = false
+test {
+    useJUnitPlatform() {
+        includeTags 'First'
+        includeTags 'Second'
     }
 }
 
-project(':info') {
-    dependencies {
-        compile project(':core')
-
-        implementation 'org.springframework.boot:spring-boot-starter-web'
-        implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-        implementation 'it.ozimov:embedded-redis:0.7.3'
-        testImplementation('org.springframework.boot:spring-boot-starter-test') {
-            exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-        }
-        testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-        testImplementation 'org.springframework.security:spring-security-test'
-        implementation 'org.springframework.boot:spring-boot-starter-security'
-    }
-    jar {
-        enabled = false
-    }
-}
-
-project(':grade') {
-    dependencies {
-        compile project(':core')
-
-        implementation 'org.springframework.boot:spring-boot-starter-web'
-        testImplementation('org.springframework.boot:spring-boot-starter-test') {
-            exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-        }
-        testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-    }
-    jar {
-        enabled = false
-    }
-}
-
-project(':school') {
-    dependencies {
-        compile project(':core')
-
-        implementation 'org.springframework.boot:spring-boot-starter-web'
-        testImplementation('org.springframework.boot:spring-boot-starter-test') {
-            exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-        }
-        testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-    }
-    jar {
-        enabled = false
-    }
-}
-
-project(':husky') {
-    dependencies {
-        compile project(':auth')
-        compile project(':info')
-        compile project(':grade')
-        compile project(':school')
-        compile project(':core')
-
-        implementation 'org.springframework.boot:spring-boot-starter-web'
-        implementation 'org.springframework.boot:spring-boot-starter-security'
-        testImplementation('org.springframework.boot:spring-boot-starter-test') {
-            exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-        }
-        testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-        testImplementation 'org.springframework.security:spring-security-test'
-    }
-}
