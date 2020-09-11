@@ -93,7 +93,6 @@ public class GeneralApplicationAdapter {
     public GeneralApplication getGeneralApplication() {
         if (gradeType.equals(UNGRADUATED))
             return unGraduatedApplication;
-
         else
             return graduatedApplication;
     }
