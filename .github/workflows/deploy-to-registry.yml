@@ -1,4 +1,4 @@
-name: Deploy to Entry Container Registry
+name: Deploy to ECR(Entry Container Registry)
 
 on:
   push:
