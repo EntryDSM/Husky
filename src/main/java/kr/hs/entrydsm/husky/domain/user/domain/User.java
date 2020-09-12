@@ -193,6 +193,14 @@ public class User extends BaseTimeEntity {
         return this.userPhoto == null;
     }
 
+    public boolean isHomeTelEmpty() {
+        return this.homeTel == null || this.homeTel.isBlank();
+    }
+
+    public boolean isAdditionalTypeEquals(AdditionalType type) {
+        return (additionalType != null) && additionalType.equals(type);
+    }
+
     public boolean isApplyTypeEmpty() {
         return this.applyType == null;
     }
