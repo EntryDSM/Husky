@@ -11,9 +11,10 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.function.Consumer;
 
+import static kr.hs.entrydsm.husky.domain.user.domain.enums.ApplyType.COMMON;
+import static kr.hs.entrydsm.husky.domain.user.domain.enums.ApplyType.MEISTER;
 import static kr.hs.entrydsm.husky.domain.user.domain.enums.GradeType.*;
 
 @Getter
@@ -190,6 +191,26 @@ public class User extends BaseTimeEntity {
 
     public boolean isPhotoEmpty() {
         return this.userPhoto == null;
+    }
+
+    public boolean isApplyTypeEmpty() {
+        return this.applyType == null;
+    }
+
+    public boolean isGeneralApplicationEmpty() {
+        return this.getGeneralApplication() != null;
+    }
+
+    public boolean isCommonApplyType() {
+        return !isApplyTypeEmpty() && applyType.equals(COMMON);
+    }
+
+    public boolean isMeisterApplyType() {
+        return !isApplyTypeEmpty() && applyType.equals(MEISTER);
+    }
+
+    public boolean isSocialMeritApplytype() {
+        return !isCommonApplyType() && !isMeisterApplyType();
     }
 
 }
