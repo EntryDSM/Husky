@@ -97,20 +97,17 @@ public class PDFExportServiceImpl implements PDFExportService {
     }
 
     private String setTemplateFileName(User user, boolean isPreview) {
-        String application = "templates/";
-        if (isPreview) application += "preview/";
+        StringBuilder fileName = new StringBuilder("templates/");
 
-        if (isGED(user)) {
-            application += "ged_application.docx";
+        if (isPreview)
+            fileName.append("preview/");
 
-        } else if (isCommonApply(user)) {
-            application += "common_application.docx";
+        if (isGED(user))
+            fileName.append("ged_");
+        else if (isCommonApply(user))
+            fileName.append("common_");
 
-        } else {
-            application += "application.docx";
-        }
-
-        return application;
+        return fileName.append("application.docx").toString();
     }
 
     private boolean isGED(User user) {
