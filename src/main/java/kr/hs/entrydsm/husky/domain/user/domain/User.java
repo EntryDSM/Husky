@@ -206,7 +206,7 @@ public class User extends BaseTimeEntity {
     }
 
     public boolean isGeneralApplicationEmpty() {
-        return this.getGeneralApplication() != null;
+        return this.getGeneralApplication() == null;
     }
 
     public boolean isCommonApplyType() {

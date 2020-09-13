@@ -3,6 +3,7 @@ package kr.hs.entrydsm.husky.domain.pdf.converter;
 import kr.hs.entrydsm.husky.domain.application.domain.CalculatedScore;
 import kr.hs.entrydsm.husky.domain.user.domain.User;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -19,6 +20,7 @@ public class ApplicationInfoConverter {
         setPersonalInfo(values, user);
         setSchoolInfo(values, user);
         setPhoneNumber(values, user);
+        setGraduationClassification(values, user);
         setUserType(values, user);
         setGradeScore(values, user, calculatedScore);
         setLocalDate(values);
@@ -67,6 +69,37 @@ public class ApplicationInfoConverter {
         values.put("parentTel", toFormattedPhoneNumber(user.getParentTel()));
         String homeTel = (user.isHomeTelEmpty()) ? "없음" : toFormattedPhoneNumber(user.getHomeTel());
         values.put("homeTel", homeTel);
+    }
+
+    private static void setGraduationClassification(HashMap<String, String> values, User user) {
+        String graduatedYYYY = "";
+        String graduatedMM = "";
+        String gedPassedYYYY = "";
+        String gedPassedMM = "";
+
+        if (isGraduatedApplicationExists(user)) {
+            LocalDate graduatedDate = user.getGraduatedApplication().getGraduatedDate();
+            graduatedYYYY = (graduatedDate != null) ? String.valueOf(graduatedDate.getYear()) : "";
+            graduatedMM = (graduatedDate != null) ? String.valueOf(graduatedDate.getMonth()) : "";
+
+        } else if (isGEDApplicationExists(user)) {
+            LocalDate gedPassedDate = user.getGedApplication().getGedPassDate();
+            gedPassedYYYY = (gedPassedDate != null) ? String.valueOf(gedPassedDate.getYear()) : "";
+            gedPassedMM = (gedPassedDate != null) ? String.valueOf(gedPassedDate.getMonth()) : "";
+        }
+
+        values.put("graduatedYYYY", graduatedYYYY);
+        values.put("graduatedMM", graduatedMM);
+        values.put("gedPassedYYYY", gedPassedYYYY);
+        values.put("gedPassedMM", gedPassedMM);
+    }
+
+    private static boolean isGraduatedApplicationExists(User user) {
+        return !user.isGradeTypeEmpty() && user.isGraduated() && user.getGraduatedApplication() != null;
+    }
+
+    private static boolean isGEDApplicationExists(User user) {
+        return !user.isGradeTypeEmpty() && user.isGED() && user.getGedApplication() != null;
     }
 
     private static void setUserType(Map<String, String> values, User user) {
