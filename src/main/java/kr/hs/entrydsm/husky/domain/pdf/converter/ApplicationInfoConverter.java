@@ -69,26 +69,26 @@ public class ApplicationInfoConverter {
     }
 
     private static void setGraduationClassification(HashMap<String, String> values, User user) {
-        String graduatedYYYY = "";
-        String graduatedMM = "";
-        String gedPassedYYYY = "";
-        String gedPassedMM = "";
+        String graduatedYear = "";
+        String graduatedMonth = "";
+        String gedPassedYear = "";
+        String gedPassedMonth = "";
 
         if (isGraduatedApplicationExists(user)) {
             LocalDate graduatedDate = user.getGraduatedApplication().getGraduatedDate();
-            graduatedYYYY = (graduatedDate != null) ? String.valueOf(graduatedDate.getYear()) : "";
-            graduatedMM = (graduatedDate != null) ? String.valueOf(graduatedDate.getMonth()) : "";
+            graduatedYear = (graduatedDate != null) ? String.valueOf(graduatedDate.getYear()) : "";
+            graduatedMonth = (graduatedDate != null) ? String.valueOf(graduatedDate.getMonth()) : "";
 
         } else if (isGEDApplicationExists(user)) {
             LocalDate gedPassedDate = user.getGedApplication().getGedPassDate();
-            gedPassedYYYY = (gedPassedDate != null) ? String.valueOf(gedPassedDate.getYear()) : "";
-            gedPassedMM = (gedPassedDate != null) ? String.valueOf(gedPassedDate.getMonth()) : "";
+            gedPassedYear = (gedPassedDate != null) ? String.valueOf(gedPassedDate.getYear()) : "";
+            gedPassedMonth = (gedPassedDate != null) ? String.valueOf(gedPassedDate.getMonth()) : "";
         }
 
-        values.put("graduatedYYYY", graduatedYYYY);
-        values.put("graduatedMM", graduatedMM);
-        values.put("gedPassedYYYY", gedPassedYYYY);
-        values.put("gedPassedMM", gedPassedMM);
+        values.put("graduatedYear", graduatedYear);
+        values.put("graduatedMonth", graduatedMonth);
+        values.put("gedPassedYear", gedPassedYear);
+        values.put("gedPassedMonth", gedPassedMonth);
     }
 
     private static boolean isGraduatedApplicationExists(User user) {
