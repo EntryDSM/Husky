@@ -102,20 +102,12 @@ public class PDFExportServiceImpl implements PDFExportService {
         if (isPreview)
             fileName.append("preview/");
 
-        if (isGED(user))
+        if (user.isGED())
             fileName.append("ged_");
-        else if (isCommonApply(user))
+        else if (user.isCommonApplyType())
             fileName.append("common_");
 
         return fileName.append("application.docx").toString();
-    }
-
-    private boolean isGED(User user) {
-        return !user.isGradeTypeEmpty() && user.isGED();
-    }
-
-    private boolean isCommonApply(User user) {
-        return user.getApplyType() != null && user.getApplyType().equals(ApplyType.COMMON);
     }
 
     private void insertUserProfileImage(User user, WordprocessingMLPackage mlPackage) throws Exception {
