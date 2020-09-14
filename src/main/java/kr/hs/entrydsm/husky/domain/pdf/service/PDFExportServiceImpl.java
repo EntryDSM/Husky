@@ -57,15 +57,11 @@ public class PDFExportServiceImpl implements PDFExportService {
     public byte[] getFinalPDFApplication() {
         return userRepository.findById(authFacade.getReceiptCode())
                 .map(user -> {
-                    if (isFinalSubmitRequired(user))
+                    if (user.isFinalSubmitRequired())
                         throw new FinalSubmitRequiredException();
                     return generatePDFApplication(user, gradeCalcService.calcStudentGrade(user.getReceiptCode()), false);
                 })
                 .orElseThrow(UserNotFoundException::new);
-    }
-
-    private boolean isFinalSubmitRequired(User user) {
-        return user.getStatus() == null || !user.getStatus().isFinalSubmit();
     }
 
     private byte[] generatePDFApplication(User user, CalculatedScore calculatedScore, boolean isPreview) {

@@ -222,4 +222,8 @@ public class User extends BaseTimeEntity {
         return !isCommonApplyType() && !isMeisterApplyType();
     }
 
+    public boolean isFinalSubmitRequired() {
+        return status == null || !status.isFinalSubmit();
+    }
+
 }
