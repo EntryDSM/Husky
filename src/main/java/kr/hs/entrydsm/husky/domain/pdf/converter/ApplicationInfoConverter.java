@@ -37,31 +37,28 @@ public class ApplicationInfoConverter {
         values.put("receiptCode", user.getReceiptCode().toString());
     }
 
-    private static void setLocalDate(HashMap<String, String> values) {
-        LocalDateTime now = LocalDateTime.now();
-        values.put("month", String.valueOf(now.getMonthValue()));
-        values.put("day", String.valueOf(now.getDayOfMonth()));
+    private static void setPersonalInfo(Map<String, String> values, User user) {
+        values.put("userName", setBlankIfNull(user.getName()));
+        values.put("isMale", toBallotBox(user.isMale()));
+        values.put("isFemale", toBallotBox(user.isFemale()));
+        values.put("address", setBlankIfNull(user.getAddress()));
+        values.put("detailAddress", setBlankIfNull(user.getDetailAddress()));
+
+        String birthDate = "";
+        if (user.getBirthDate() != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일");
+            birthDate = user.getBirthDate().format(formatter);
+        }
+        values.put("birthDate", birthDate);
     }
 
-    private static void setRecommendations(HashMap<String, String> values, User user) {
-        values.put("isDaejeonAndMeister", markOIfTrue(user.getIsDaejeon() && user.isMeisterApplyType()));
-        values.put("isDaejeonAndSocialMerit", markOIfTrue(user.getIsDaejeon() && user.isSocialMeritApplytype()));
-        values.put("isNotDaejeonAndMeister", markOIfTrue(!user.getIsDaejeon() && user.isMeisterApplyType()));
-        values.put("isNotDaejeonAndSocialMerit", markOIfTrue(!user.getIsDaejeon() && user.isMeisterApplyType()));
-        setSpaceJoinedSchoolName(values, user);
-    }
-
-    private static String markOIfTrue(boolean isTrue) {
-        return (isTrue) ? "◯" : "";
-    }
-
-    private static void setParentInfo(HashMap<String, String> values, User user) {
-        values.put("parentName", user.getParentName());
-    }
-
-    private static void setIntroducement(HashMap<String, String> values, User user) {
-        values.put("selfIntroduction", (user.getSelfIntroduction() == null) ? "" : user.getSelfIntroduction());
-        values.put("studyPlan", (user.getStudyPlan() == null) ? "" : user.getStudyPlan());
+    private static void setSchoolInfo(Map<String, String> values, User user) {
+        if (!user.isGradeTypeEmpty() && !user.isGED() && user.getGeneralApplication() != null) {
+            values.put("schoolCode", setBlankIfNull(user.getGeneralApplication().getSchoolCode()));
+            values.put("schoolClass", setBlankIfNull(user.getGeneralApplication().getSchoolClass()));
+            values.put("schoolTel", setBlankIfNull(user.getGeneralApplication().getSchoolTel()));
+            values.put("schoolName", setBlankIfNull(user.getGeneralApplication().getSchoolName()));
+        }
     }
 
     private static void setPhoneNumber(Map<String, String> values, User user) {
@@ -125,28 +122,31 @@ public class ApplicationInfoConverter {
         values.put("finalScore", calculatedScore.getFinalScore().toString());
     }
 
-    private static void setPersonalInfo(Map<String, String> values, User user) {
-        values.put("userName", setBlankIfNull(user.getName()));
-        values.put("isMale", toBallotBox(user.isMale()));
-        values.put("isFemale", toBallotBox(user.isFemale()));
-        values.put("address", setBlankIfNull(user.getAddress()));
-        values.put("detailAddress", setBlankIfNull(user.getDetailAddress()));
-
-        String birthDate = "";
-        if (user.getBirthDate() != null) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일");
-            birthDate = user.getBirthDate().format(formatter);
-        }
-        values.put("birthDate", birthDate);
+    private static void setLocalDate(HashMap<String, String> values) {
+        LocalDateTime now = LocalDateTime.now();
+        values.put("month", String.valueOf(now.getMonthValue()));
+        values.put("day", String.valueOf(now.getDayOfMonth()));
     }
 
-    private static void setSchoolInfo(Map<String, String> values, User user) {
-        if (!user.isGradeTypeEmpty() && !user.isGED() && user.getGeneralApplication() != null) {
-            values.put("schoolCode", setBlankIfNull(user.getGeneralApplication().getSchoolCode()));
-            values.put("schoolClass", setBlankIfNull(user.getGeneralApplication().getSchoolClass()));
-            values.put("schoolTel", setBlankIfNull(user.getGeneralApplication().getSchoolTel()));
-            values.put("schoolName", setBlankIfNull(user.getGeneralApplication().getSchoolName()));
-        }
+    private static void setIntroducement(HashMap<String, String> values, User user) {
+        values.put("selfIntroduction", (user.getSelfIntroduction() == null) ? "" : user.getSelfIntroduction());
+        values.put("studyPlan", (user.getStudyPlan() == null) ? "" : user.getStudyPlan());
+    }
+
+    private static void setParentInfo(HashMap<String, String> values, User user) {
+        values.put("parentName", user.getParentName());
+    }
+
+    private static void setRecommendations(HashMap<String, String> values, User user) {
+        values.put("isDaejeonAndMeister", markOIfTrue(user.getIsDaejeon() && user.isMeisterApplyType()));
+        values.put("isDaejeonAndSocialMerit", markOIfTrue(user.getIsDaejeon() && user.isSocialMeritApplytype()));
+        values.put("isNotDaejeonAndMeister", markOIfTrue(!user.getIsDaejeon() && user.isMeisterApplyType()));
+        values.put("isNotDaejeonAndSocialMerit", markOIfTrue(!user.getIsDaejeon() && user.isMeisterApplyType()));
+        setSpaceJoinedSchoolName(values, user);
+    }
+
+    private static String markOIfTrue(boolean isTrue) {
+        return (isTrue) ? "◯" : "";
     }
 
     public static void setSpaceJoinedSchoolName(Map<String, String> values, User user) {
