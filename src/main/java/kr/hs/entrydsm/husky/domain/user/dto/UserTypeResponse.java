@@ -13,7 +13,8 @@ import java.time.LocalDate;
 
 @Getter
 @Builder
-@NoArgsConstructor@AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserTypeResponse {
 
     private GradeType gradeType;
@@ -25,9 +26,10 @@ public class UserTypeResponse {
 
     public static UserTypeResponse response(User user, LocalDate graduatedDate, LocalDate gedPassDate) {
         String graduated =
-                graduatedDate != null ? graduatedDate.getYear() + "-" + graduatedDate.getMonthValue() : null;
+                (graduatedDate != null) ? yearMonthFormatter(graduatedDate.getYear(),
+                        graduatedDate.getMonthValue()) : null;
         String gedPass =
-                gedPassDate != null ? gedPassDate.getYear() + "-" + gedPassDate.getMonthValue() : null;
+                (gedPassDate != null) ? yearMonthFormatter(gedPassDate.getYear(), gedPassDate.getMonthValue()) : null;
 
         return UserTypeResponse.builder()
                 .applyType(user.getApplyType())
@@ -37,5 +39,9 @@ public class UserTypeResponse {
                 .graduatedDate(graduated)
                 .gedPassDate(gedPass)
                 .build();
+    }
+
+    private static String yearMonthFormatter(int year, int month) {
+        return year + "-" + month;
     }
 }

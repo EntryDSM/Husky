@@ -18,6 +18,7 @@ import kr.hs.entrydsm.husky.domain.user.domain.enums.GradeType;
 import kr.hs.entrydsm.husky.domain.user.domain.enums.Sex;
 import kr.hs.entrydsm.husky.domain.user.domain.repositories.UserRepository;
 import org.junit.After;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {HuskyApplication.class, EmbeddedRedisConfig.class})
-public class GradeCalcTest {
+class GradeCalcTest {
 
     @Autowired
     private GradeCalcService gradeCalcService;
@@ -62,7 +63,7 @@ public class GradeCalcTest {
         calcScoreRepository.deleteAll();
         userRepository.deleteAll();
     }
-
+    
     @Test
     public void commonUnGraduatedApplication() {
         User user = this.getDefaultUser()

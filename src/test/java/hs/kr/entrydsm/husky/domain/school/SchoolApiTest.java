@@ -44,7 +44,7 @@ class SchoolApiTest {
     private SchoolRepository schoolRepository;
 
     @BeforeEach
-    public void setup() {
+    private void setup() {
 
         mvc = MockMvcBuilders
                 .webAppContextSetup(context)
@@ -58,7 +58,7 @@ class SchoolApiTest {
     }
 
     @Test
-    public void return_schools_page() throws Exception {
+    private void return_schools_page() throws Exception {
 
         String url = "http://localhost:" + port;
 
@@ -73,7 +73,7 @@ class SchoolApiTest {
     }
 
     @Test
-    public void invalid_parameter_error() throws Exception{
+    private void invalid_parameter_error() throws Exception{
 
         String url = "http://localhost:" + port;
 

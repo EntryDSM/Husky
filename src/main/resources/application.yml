@@ -34,7 +34,7 @@ auth:
     header: ${JWT_HEADER:header}
     prefix: ${JWT_PREFIX:prefix}
   maintenance:
-    key: dGVzdA==
+    key: ${MAINTENANCE_KEY:dGVzdA==}
 
 logging:
   level:

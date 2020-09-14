@@ -21,14 +21,13 @@ public enum ErrorCode {
     EXPIRED_TOKEN(401, "A401-1", "Expired Token"),
     UNAUTHORIZED(401, "A401-2", "Authentication is required and has failed or has not yet been provided."),
     USER_DUPLICATION(409, "A409-0", "User is Already Exists"),
-    PASSWORD_DUPLICATION(409, "A409-1", "Password is Already Exists"),
-    FAIL_GENERATE_VERIFY_EMAIL(422, "A422-0", "Email Generate Error"),
 
     //Info
     NOT_ADMIN_FORBIDDEN(403, "I403-0", "The server understood the request but refuses to authorize it."),
     APPLICATION_TYPE_UNMATCHED(403, "I403-1", "Application Type is unmatched"),
-    GRADE_TYPE_REQUIRED(406, "I406-0", "Grade type is not set."),
     APPLICATION_NOT_FOUND(404, "I404-0", "Application Not Found"),
+    GRADE_TYPE_REQUIRED(406, "I406-0", "Grade type is not set."),
+    NOT_COMPLETED_PROCESS(406, "I406-1", "Apply process did not complete yet."),
 
     //School
     SCHOOL_NOT_FOUND(404, "S404-0", "School Not Found."),

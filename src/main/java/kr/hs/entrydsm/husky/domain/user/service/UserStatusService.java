@@ -1,6 +1,8 @@
 package kr.hs.entrydsm.husky.domain.user.service;
 
+import kr.hs.entrydsm.husky.domain.process.service.ProcessService;
 import kr.hs.entrydsm.husky.domain.user.dto.UserStatusResponse;
+import kr.hs.entrydsm.husky.domain.user.exception.NotCompletedProcessException;
 import kr.hs.entrydsm.husky.domain.user.exception.UserNotFoundException;
 import kr.hs.entrydsm.husky.domain.user.domain.Status;
 import kr.hs.entrydsm.husky.domain.user.domain.User;
@@ -18,6 +20,8 @@ public class UserStatusService {
     private final StatusRepository statusRepository;
 
     private final AuthenticationFacade authenticationFacade;
+
+    private final ProcessService processService;
 
     public UserStatusResponse getStatus() {
         Integer receiptCode = authenticationFacade.getReceiptCode();
@@ -38,6 +42,7 @@ public class UserStatusService {
         Status status = user.getStatus();
         if (status == null) status = createStatus(user);
 
+        if (!processService.AllCheck(user)) throw new NotCompletedProcessException();
         status.finalSubmit();
         statusRepository.save(status);
 

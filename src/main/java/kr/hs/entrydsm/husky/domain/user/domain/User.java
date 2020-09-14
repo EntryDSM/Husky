@@ -120,13 +120,14 @@ public class User extends BaseTimeEntity {
         setIfNotNull(this::setIsDaejeon, dto.getIsDaejeon());
     }
 
-    public void update(SetUserInfoRequest dto) {
+    public void updateInfo(SetUserInfoRequest dto) {
         setIfNotNull(this::setName, dto.getName());
         setIfNotNull(this::setSex, dto.getSex());
         setIfNotNull(this::setBirthDate, dto.getBirthDate());
         setIfNotNull(this::setParentName, dto.getParentName());
         setIfNotNull(this::setParentTel, dto.getParentTel());
         setIfNotNull(this::setApplicantTel, dto.getApplicantTel());
+        setIfNotNull(this::setHomeTel, dto.getHomeTel());
         setIfNotNull(this::setAddress, dto.getAddress());
         setIfNotNull(this::setDetailAddress, dto.getDetailAddress());
         setIfNotNull(this::setPostCode, dto.getPostCode());

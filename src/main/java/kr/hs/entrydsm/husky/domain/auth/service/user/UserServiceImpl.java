@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -90,7 +90,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(UserNotFoundException::new);
 
         String code = randomCode();
-        emailService.sendEmail(email, code);
+        emailService.sendPasswordChangeEmail(email, code);
         emailVerificationRepository.save(
                 EmailVerification.builder()
                         .email(email)
@@ -120,7 +120,7 @@ public class UserServiceImpl implements UserService {
         StringBuilder result = new StringBuilder();
         String[] codes = "QWERTYUIOPASDFGHJKLZXCVBNM0123456789".split("");
         for (int i = 0; i < 6; i++) {
-            result.append(codes[(int) (Math.random() % codes.length)]);
+            result.append(codes[new Random().nextInt(codes.length)]);
         }
         return result.toString();
     }
