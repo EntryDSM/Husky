@@ -1,8 +1,10 @@
 package kr.hs.entrydsm.husky.domain.user.service;
 
 import kr.hs.entrydsm.husky.domain.application.domain.GEDApplication;
+import kr.hs.entrydsm.husky.domain.application.domain.GeneralApplication;
 import kr.hs.entrydsm.husky.domain.application.domain.GraduatedApplication;
 import kr.hs.entrydsm.husky.domain.application.domain.UnGraduatedApplication;
+import kr.hs.entrydsm.husky.domain.application.domain.adapter.GeneralApplicationAdapter;
 import kr.hs.entrydsm.husky.domain.application.domain.repositories.GEDApplicationRepository;
 import kr.hs.entrydsm.husky.domain.application.domain.repositories.GraduatedApplicationRepository;
 import kr.hs.entrydsm.husky.domain.application.domain.repositories.UnGraduatedApplicationRepository;
@@ -58,6 +60,7 @@ public class UserTypeService {
         } else if (user.isUngraduated()) {
             unGraduatedRepository.findById(user.getReceiptCode())
                     .or(() -> Optional.of(new UnGraduatedApplication(user.getReceiptCode())))
+                    .map(unGraduated -> unGraduated.update(dto))
                     .ifPresent(applicationAsyncRepository::save);
         }
     }
@@ -80,9 +83,9 @@ public class UserTypeService {
                 break;
 
             case GRADUATED:
-                GraduatedApplication graduatedApplication = graduatedRepository.findById(user.getReceiptCode())
-                        .orElseThrow(ApplicationNotFoundException::new);
-                graduatedDate = graduatedApplication.getGraduatedDate();
+            case UNGRADUATED:
+                GeneralApplication generalApplication = new GeneralApplicationAdapter(user).getGeneralApplication();
+                graduatedDate = generalApplication.getGraduatedDate();
                 break;
         }
 
