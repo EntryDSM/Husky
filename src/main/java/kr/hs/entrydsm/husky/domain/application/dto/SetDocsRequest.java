@@ -12,6 +12,6 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SetDocsRequest {
-    @NotEmpty @NotBlank @Size(max = 1600)
+    @Size(max = 1600)
     private String content;
 }
