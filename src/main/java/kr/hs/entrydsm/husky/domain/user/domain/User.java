@@ -127,7 +127,7 @@ public class User extends BaseTimeEntity {
         setIfNotNull(this::setParentName, dto.getParentName());
         setIfNotNull(this::setParentTel, dto.getParentTel());
         setIfNotNull(this::setApplicantTel, dto.getApplicantTel());
-        setIfNotNull(this::setHomeTel, dto.getHomeTel());
+        this.homeTel = dto.getHomeTel();
         setIfNotNull(this::setAddress, dto.getAddress());
         setIfNotNull(this::setDetailAddress, dto.getDetailAddress());
         setIfNotNull(this::setPostCode, dto.getPostCode());
