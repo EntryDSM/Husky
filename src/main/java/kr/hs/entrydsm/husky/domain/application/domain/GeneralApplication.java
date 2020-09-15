@@ -118,6 +118,10 @@ public abstract class GeneralApplication extends BaseTimeEntity {
         return (isSchoolEmpty()) ? null : school.getSchoolCode();
     }
 
+    public String getSchoolClass() {
+        return (studentNumber != null) ? studentNumber.substring(1, 3).replace("0", "") : null;
+    }
+
     protected GeneralApplication() {}
 
     public GeneralApplication(String studentNumber, School school, String schoolTel, Integer volunteerTime,
