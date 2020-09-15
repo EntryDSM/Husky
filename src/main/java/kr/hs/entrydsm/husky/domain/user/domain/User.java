@@ -160,8 +160,9 @@ public class User extends BaseTimeEntity {
     }
 
     public boolean isFilledInfo() {
-        return name != null && sex != null && birthDate != null && applicantTel != null && parentTel != null &&
-                parentName != null && address != null && detailAddress != null && postCode != null && userPhoto != null;
+        return !name.isBlank() && sex != null && birthDate != null && applicantTel != null && parentTel != null &&
+                !parentName.isBlank() && !address.isBlank() && !detailAddress.isBlank() && !postCode.isBlank() &&
+                userPhoto != null;
     }
 
     public boolean isFilledType() {
