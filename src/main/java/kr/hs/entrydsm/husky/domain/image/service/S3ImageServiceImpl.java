@@ -72,8 +72,7 @@ public class S3ImageServiceImpl extends AWS4Signer implements ImageService {
 
     @Override
     public String generateObjectUrl(String objectName) throws MalformedURLException {
-        URL endpointUrl = new URL("https://" + baseImageUrl + ".s3." + region + ".amazonaws.com/images/"
-                + objectName);
+        URL endpointUrl = new URL("https://" + baseImageUrl + ".s3." + region + ".amazonaws.com/" + objectName);
 
         // X-Amz-Algorithm
         String x_amz_algorithm = SCHEME + "-" + ALGORITHM;
