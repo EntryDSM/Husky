@@ -7,6 +7,7 @@ import kr.hs.entrydsm.husky.domain.user.domain.enums.GradeType;
 import kr.hs.entrydsm.husky.domain.user.domain.enums.Sex;
 import kr.hs.entrydsm.husky.domain.user.dto.SelectTypeRequest;
 import kr.hs.entrydsm.husky.domain.user.dto.SetUserInfoRequest;
+import kr.hs.entrydsm.husky.global.util.Validator;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,6 +17,7 @@ import java.util.function.Consumer;
 import static kr.hs.entrydsm.husky.domain.user.domain.enums.ApplyType.COMMON;
 import static kr.hs.entrydsm.husky.domain.user.domain.enums.ApplyType.MEISTER;
 import static kr.hs.entrydsm.husky.domain.user.domain.enums.GradeType.*;
+import static kr.hs.entrydsm.husky.global.util.Validator.isBlank;
 
 @Getter
 @Setter
@@ -160,8 +162,8 @@ public class User extends BaseTimeEntity {
     }
 
     public boolean isFilledInfo() {
-        return !name.isBlank() && sex != null && birthDate != null && applicantTel != null && parentTel != null &&
-                !parentName.isBlank() && !address.isBlank() && !detailAddress.isBlank() && !postCode.isBlank() &&
+        return isBlank(name) && sex != null && birthDate != null && applicantTel != null && parentTel != null &&
+                isBlank(parentName) && isBlank(address) && isBlank(detailAddress) && isBlank(postCode) &&
                 userPhoto != null;
     }
 
