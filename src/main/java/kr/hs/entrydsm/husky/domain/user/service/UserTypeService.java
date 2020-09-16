@@ -85,7 +85,7 @@ public class UserTypeService {
             case GRADUATED:
             case UNGRADUATED:
                 GeneralApplication generalApplication = user.getGeneralApplication();
-                if(generalApplication == null)
+                if (generalApplication == null)
                     return UserTypeResponse.response(user, null, null);
                 graduatedDate = generalApplication.getGraduatedDate();
                 break;
