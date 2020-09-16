@@ -62,9 +62,9 @@ public class S3ImageServiceImpl extends AWS4Signer implements ImageService {
         String originalFilename = file.getOriginalFilename();
         String ext = originalFilename.substring( originalFilename.lastIndexOf(".") + 1);
         String randomName = UUID.randomUUID().toString();
-        String filename = "images/" + randomName + "." + ext;
+        String filename = randomName + "." + ext;
 
-        s3.putObject(new PutObjectRequest(bucket, filename, file.getInputStream(), null)
+        s3.putObject(new PutObjectRequest(bucket, "images/" + filename, file.getInputStream(), null)
                 .withCannedAcl(CannedAccessControlList.AuthenticatedRead));
 
         return filename;
