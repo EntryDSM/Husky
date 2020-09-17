@@ -1,8 +1,13 @@
 package kr.hs.entrydsm.husky.domain.user.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.time.LocalDateTime;
 
 @Getter
@@ -36,10 +41,6 @@ public class Status {
 
     @Column(length = 6)
     private String examCode;
-
-    @OneToOne
-    @PrimaryKeyJoinColumn
-    private User user;
 
     public void finalSubmit() {
         this.isFinalSubmit = true;
