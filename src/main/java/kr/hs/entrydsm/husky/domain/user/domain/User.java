@@ -11,7 +11,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.function.Consumer;
 
 import static kr.hs.entrydsm.husky.domain.user.domain.enums.GradeType.*;
@@ -86,15 +85,12 @@ public class User extends BaseTimeEntity {
     private String studyPlan;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Status status;
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private GEDApplication gedApplication;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private GraduatedApplication graduatedApplication;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private UnGraduatedApplication unGraduatedApplication;
 
     public GeneralApplication getGeneralApplication() {
