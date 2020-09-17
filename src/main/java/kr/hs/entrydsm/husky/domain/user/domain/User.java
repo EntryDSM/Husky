@@ -189,4 +189,15 @@ public class User extends BaseTimeEntity {
         return this.userPhoto == null;
     }
 
+    public Status createStatus() {
+        return Status.builder()
+                .receiptCode(receiptCode)
+                .isFinalSubmit(false)
+                .isPaid(false)
+                .isPrintedApplicationArrived(false)
+                .isPassedFirstApply(false)
+                .isPassedInterview(false)
+                .build();
+    }
+
 }
