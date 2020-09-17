@@ -6,7 +6,9 @@ import kr.hs.entrydsm.husky.domain.grade.service.GradeCalcService;
 import kr.hs.entrydsm.husky.domain.pdf.exception.FinalSubmitRequiredException;
 import kr.hs.entrydsm.husky.domain.pdf.exception.UnprocessableEntityException;
 import kr.hs.entrydsm.husky.domain.pdf.util.FontLoader;
+import kr.hs.entrydsm.husky.domain.user.domain.Status;
 import kr.hs.entrydsm.husky.domain.user.domain.User;
+import kr.hs.entrydsm.husky.domain.user.domain.repositories.StatusRepository;
 import kr.hs.entrydsm.husky.domain.user.domain.repositories.UserRepository;
 import kr.hs.entrydsm.husky.global.config.security.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +35,8 @@ public class PDFExportServiceImpl implements PDFExportService {
 
     private final AuthenticationFacade authFacade;
     private final UserRepository userRepository;
+    private final StatusRepository statusRepository;
+
     private final GradeCalcService gradeCalcService;
 
     @Override
@@ -44,14 +48,16 @@ public class PDFExportServiceImpl implements PDFExportService {
 
     @Override
     public byte[] getFinalPDFApplication() {
-        return userRepository.findById(authFacade.getReceiptCode())
-                .map(user -> {
-                    if (user.getStatus() == null || !user.getStatus().isFinalSubmit())
-                        throw new FinalSubmitRequiredException();
-
-                    return generatePDFApplication(user, gradeCalcService.calcStudentGrade(user.getReceiptCode()));
-                })
+        User user = userRepository.findById(authFacade.getReceiptCode())
                 .orElseThrow(UserNotFoundException::new);
+
+        Status status = statusRepository.findById(user.getReceiptCode())
+                .orElseGet(() -> statusRepository.save(user.createStatus()));
+
+        if (!status.isFinalSubmit())
+            throw new FinalSubmitRequiredException();
+
+        return generatePDFApplication(user, gradeCalcService.calcStudentGrade(user.getReceiptCode()));
     }
 
     private byte[] generatePDFApplication(User user, CalculatedScore calculatedScore) {
