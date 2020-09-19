@@ -47,4 +47,8 @@ public class Status {
         this.submittedAt = LocalDateTime.now();
     }
 
+    public boolean isFinalSubmitRequired() {
+        return !isFinalSubmit;
+    }
+
 }
