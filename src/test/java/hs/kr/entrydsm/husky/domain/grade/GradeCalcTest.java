@@ -75,7 +75,7 @@ class GradeCalcTest {
         UnGraduatedApplication unGraduatedApplication = this.getDefaultUnGraduatedApplication(user).build();
         unGraduatedApplicationRepository.save(unGraduatedApplication);
 
-        gradeCalcService.calcStudentGrade(user.getReceiptCode());
+        gradeCalcService.calcStudentGrade(user);
         CalculatedScore calculatedScore = calcScoreRepository.findById(user.getReceiptCode())
                 .orElseThrow();
 
@@ -104,7 +104,7 @@ class GradeCalcTest {
                 .build();
         graduatedApplicationRepository.save(graduatedApplication);
 
-        gradeCalcService.calcStudentGrade(user.getReceiptCode());
+        gradeCalcService.calcStudentGrade(user);
         CalculatedScore calculatedScore = calcScoreRepository.findById(user.getReceiptCode())
                 .orElseThrow();
 
@@ -130,7 +130,7 @@ class GradeCalcTest {
                 .build();
         gedApplicationRepository.save(gedApplication);
 
-        gradeCalcService.calcStudentGrade(user.getReceiptCode());
+        gradeCalcService.calcStudentGrade(user);
         CalculatedScore calculatedScore = calcScoreRepository.findById(user.getReceiptCode())
                 .orElseThrow();
 
@@ -151,7 +151,7 @@ class GradeCalcTest {
         UnGraduatedApplication unGraduatedApplication = this.getDefaultUnGraduatedApplication(user).build();
         unGraduatedApplicationRepository.save(unGraduatedApplication);
 
-        gradeCalcService.calcStudentGrade(user.getReceiptCode());
+        gradeCalcService.calcStudentGrade(user);
         CalculatedScore calculatedScore = calcScoreRepository.findById(user.getReceiptCode()).orElseThrow();
 
         assertEquals(15, calculatedScore.getAttendanceScore());
@@ -171,7 +171,7 @@ class GradeCalcTest {
         GraduatedApplication graduatedApplication = this.getDefaultGraduatedApplication(user).build();
         graduatedApplicationRepository.save(graduatedApplication);
 
-        gradeCalcService.calcStudentGrade(user.getReceiptCode());
+        gradeCalcService.calcStudentGrade(user);
         CalculatedScore calculatedScore = calcScoreRepository.findById(user.getReceiptCode()).orElseThrow();
 
         assertEquals(15, calculatedScore.getAttendanceScore());
@@ -193,7 +193,7 @@ class GradeCalcTest {
                 .build();
         gedApplicationRepository.save(gedApplication);
 
-        gradeCalcService.calcStudentGrade(user.getReceiptCode());
+        gradeCalcService.calcStudentGrade(user);
         CalculatedScore calculatedScore = calcScoreRepository.findById(user.getReceiptCode())
                 .orElseThrow();
 
@@ -220,7 +220,7 @@ class GradeCalcTest {
         UnGraduatedApplication unGraduatedApplication = this.getDefaultUnGraduatedApplication(user).build();
         unGraduatedApplicationRepository.save(unGraduatedApplication);
 
-        gradeCalcService.calcStudentGrade(user.getReceiptCode());
+        gradeCalcService.calcStudentGrade(user);
         CalculatedScore calculatedScore = calcScoreRepository.findById(user.getReceiptCode())
                 .orElseThrow();
 
@@ -247,7 +247,7 @@ class GradeCalcTest {
         GraduatedApplication graduatedApplication = this.getDefaultGraduatedApplication(user).build();
         graduatedApplicationRepository.save(graduatedApplication);
 
-        gradeCalcService.calcStudentGrade(user.getReceiptCode());
+        gradeCalcService.calcStudentGrade(user);
         CalculatedScore calculatedScore = calcScoreRepository.findById(user.getReceiptCode()).orElseThrow();
 
         assertEquals(15, calculatedScore.getAttendanceScore());
@@ -275,7 +275,7 @@ class GradeCalcTest {
                 .build();
         gedApplicationRepository.save(gedApplication);
 
-        gradeCalcService.calcStudentGrade(user.getReceiptCode());
+        gradeCalcService.calcStudentGrade(user);
         CalculatedScore calculatedScore = calcScoreRepository.findById(user.getReceiptCode())
                 .orElseThrow();
 
@@ -307,7 +307,7 @@ class GradeCalcTest {
                 .build();
         graduatedApplicationRepository.save(graduatedApplication);
 
-        gradeCalcService.calcStudentGrade(user.getReceiptCode());
+        gradeCalcService.calcStudentGrade(user);
         CalculatedScore calculatedScore = calcScoreRepository.findById(user.getReceiptCode())
                 .orElseThrow();
 
@@ -340,7 +340,7 @@ class GradeCalcTest {
                 .build();
         unGraduatedApplicationRepository.save(ungraduatedApplication);
 
-        gradeCalcService.calcStudentGrade(user.getReceiptCode());
+        gradeCalcService.calcStudentGrade(user);
         CalculatedScore calculatedScore = calcScoreRepository.findById(user.getReceiptCode())
                 .orElseThrow();
 
@@ -376,7 +376,7 @@ class GradeCalcTest {
                 .build();
         unGraduatedApplicationRepository.save(ungraduatedApplication);
 
-        gradeCalcService.calcStudentGrade(user.getReceiptCode());
+        gradeCalcService.calcStudentGrade(user);
         CalculatedScore calculatedScore = calcScoreRepository.findById(user.getReceiptCode())
                 .orElseThrow();
 
