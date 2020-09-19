@@ -3,12 +3,15 @@ package kr.hs.entrydsm.husky.domain.application.domain.adapter;
 import kr.hs.entrydsm.husky.domain.application.domain.GeneralApplication;
 import kr.hs.entrydsm.husky.domain.application.domain.GraduatedApplication;
 import kr.hs.entrydsm.husky.domain.application.domain.UnGraduatedApplication;
+import kr.hs.entrydsm.husky.domain.application.domain.repositories.GeneralApplicationRepository;
 import kr.hs.entrydsm.husky.domain.application.dto.SetScoreRequest;
 import kr.hs.entrydsm.husky.domain.school.domain.School;
 import kr.hs.entrydsm.husky.domain.user.domain.User;
 import kr.hs.entrydsm.husky.domain.user.domain.enums.GradeType;
 import kr.hs.entrydsm.husky.domain.user.dto.SetUserInfoRequest;
 import lombok.Getter;
+
+import java.util.Optional;
 
 import static kr.hs.entrydsm.husky.domain.user.domain.enums.GradeType.GRADUATED;
 import static kr.hs.entrydsm.husky.domain.user.domain.enums.GradeType.UNGRADUATED;
@@ -17,8 +20,8 @@ import static kr.hs.entrydsm.husky.domain.user.domain.enums.GradeType.UNGRADUATE
 public class GeneralApplicationAdapter {
 
     private GradeType gradeType;
-    private UnGraduatedApplication unGraduatedApplication;
     private GraduatedApplication graduatedApplication;
+    private UnGraduatedApplication unGraduatedApplication;
 
     public void update(School school) {
         if (isUngraduatedApplication())
@@ -41,29 +44,25 @@ public class GeneralApplicationAdapter {
             graduatedApplication.update(dto);
     }
 
-    public GeneralApplicationAdapter(User user) {
+    public GeneralApplicationAdapter(User user,
+                                     Optional<GraduatedApplication> graduated,
+                                     Optional<UnGraduatedApplication> ungraduated) {
         if (user.getGradeType() != null) {
             this.gradeType = user.getGradeType();
-            if (user.isUngraduated()) {
-                setUngraduatedApplication(user);
-            } else if (user.isGraduated()) {
-                setGraduatedApplication(user);
-            }
+            if (user.isGraduated())
+                setGraduatedApplication(user, graduated);
+
+            else if (user.isUngraduated())
+                setUnGraduatedApplication(user, ungraduated);
         }
     }
 
-    private void setUngraduatedApplication(User user) {
-        if (user.getUnGraduatedApplication() != null)
-            this.unGraduatedApplication = user.getUnGraduatedApplication();
-        else
-            this.unGraduatedApplication = new UnGraduatedApplication(user.getReceiptCode());
+    private void setUnGraduatedApplication(User user, Optional<UnGraduatedApplication> ungraduated) {
+        this.unGraduatedApplication = ungraduated.orElseGet(() -> new UnGraduatedApplication(user.getReceiptCode()));
     }
 
-    private void setGraduatedApplication(User user) {
-        if (user.getGraduatedApplication() != null)
-            this.graduatedApplication = user.getGraduatedApplication();
-        else
-            this.graduatedApplication = new GraduatedApplication(user.getReceiptCode());
+    private void setGraduatedApplication(User user, Optional<GraduatedApplication> graduated) {
+        this.graduatedApplication = graduated.orElseGet(() -> new GraduatedApplication(user.getReceiptCode()));
     }
 
     public String getStudentNumber() {
