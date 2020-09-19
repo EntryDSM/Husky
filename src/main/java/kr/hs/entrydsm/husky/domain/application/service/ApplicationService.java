@@ -1,9 +1,13 @@
 package kr.hs.entrydsm.husky.domain.application.service;
 
 import kr.hs.entrydsm.husky.domain.application.domain.GEDApplication;
+import kr.hs.entrydsm.husky.domain.application.domain.GraduatedApplication;
+import kr.hs.entrydsm.husky.domain.application.domain.UnGraduatedApplication;
 import kr.hs.entrydsm.husky.domain.application.domain.adapter.GeneralApplicationAdapter;
 import kr.hs.entrydsm.husky.domain.application.domain.repositories.GEDApplicationRepository;
-import kr.hs.entrydsm.husky.domain.application.domain.repositories.generalapplication.GeneralApplicationAsyncRepositoryImpl;
+import kr.hs.entrydsm.husky.domain.application.domain.repositories.GraduatedApplicationRepository;
+import kr.hs.entrydsm.husky.domain.application.domain.repositories.UnGraduatedApplicationRepository;
+import kr.hs.entrydsm.husky.domain.application.domain.repositories.async.GeneralApplicationAsyncRepositoryImpl;
 import kr.hs.entrydsm.husky.domain.application.dto.*;
 import kr.hs.entrydsm.husky.domain.application.exception.ApplicationNotFoundException;
 import kr.hs.entrydsm.husky.domain.application.exception.ApplicationTypeUnmatchedException;
@@ -23,6 +27,8 @@ public class ApplicationService {
 
     private final UserRepository userRepository;
     private final GEDApplicationRepository gedApplicationRepository;
+    private final GraduatedApplicationRepository graduatedApplicationRepository;
+    private final UnGraduatedApplicationRepository unGraduatedApplicationRepository;
     private final GeneralApplicationAsyncRepositoryImpl generalApplicationAsyncRepository;
 
     private final AuthenticationFacade authenticationFacade;
@@ -90,7 +96,7 @@ public class ApplicationService {
         if (user.isGED())
             throw new ApplicationTypeUnmatchedException();
 
-        Optional.of(new GeneralApplicationAdapter(user))
+        Optional.of(createGeneralApplicationAdapter(user))
                 .ifPresent(application -> {
                     application.update(dto);
                     generalApplicationAsyncRepository.save(application);
@@ -112,13 +118,19 @@ public class ApplicationService {
                     .orElseThrow(ApplicationNotFoundException::new);
         }
 
-        GeneralApplicationAdapter adapter = new GeneralApplicationAdapter(user);
+        GeneralApplicationAdapter adapter = createGeneralApplicationAdapter(user);
         return new ScoreResponse(adapter);
     }
 
     private Optional<GEDApplication> createGEDApplication(int receiptCode) {
         GEDApplication application = new GEDApplication(receiptCode);
         return Optional.of(gedApplicationRepository.save(application));
+    }
+
+    private GeneralApplicationAdapter createGeneralApplicationAdapter(User user) {
+        Optional<GraduatedApplication> graduated = graduatedApplicationRepository.findById(user.getReceiptCode());
+        Optional<UnGraduatedApplication> unGraduated = unGraduatedApplicationRepository.findById(user.getReceiptCode());
+        return new GeneralApplicationAdapter(user, graduated, unGraduated);
     }
 
 }

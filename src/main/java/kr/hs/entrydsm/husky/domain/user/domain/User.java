@@ -172,10 +172,6 @@ public class User extends BaseTimeEntity {
         return this.applyType == null;
     }
 
-    public boolean isGeneralApplicationEmpty() {
-        return this.getGeneralApplication() == null;
-    }
-
     public boolean isCommonApplyType() {
         return !isApplyTypeEmpty() && applyType.equals(COMMON);
     }

@@ -4,8 +4,8 @@ import kr.hs.entrydsm.husky.domain.application.domain.GEDApplication;
 import kr.hs.entrydsm.husky.domain.application.domain.GeneralApplication;
 import kr.hs.entrydsm.husky.domain.application.domain.GraduatedApplication;
 import kr.hs.entrydsm.husky.domain.application.domain.UnGraduatedApplication;
-import kr.hs.entrydsm.husky.domain.application.domain.adapter.GeneralApplicationAdapter;
 import kr.hs.entrydsm.husky.domain.application.domain.repositories.GEDApplicationRepository;
+import kr.hs.entrydsm.husky.domain.application.domain.repositories.GeneralApplicationRepository;
 import kr.hs.entrydsm.husky.domain.application.domain.repositories.GraduatedApplicationRepository;
 import kr.hs.entrydsm.husky.domain.application.domain.repositories.UnGraduatedApplicationRepository;
 import kr.hs.entrydsm.husky.domain.application.domain.repositories.async.ApplicationAsyncRepository;
@@ -34,6 +34,7 @@ public class UserTypeService {
     private final GraduatedApplicationRepository graduatedRepository;
     private final ApplicationAsyncRepository applicationAsyncRepository;
     private final UnGraduatedApplicationRepository unGraduatedRepository;
+    private final GeneralApplicationRepository generalApplicationRepository;
 
     private final AuthenticationFacade authenticationFacade;
 
@@ -84,11 +85,10 @@ public class UserTypeService {
 
             case GRADUATED:
             case UNGRADUATED:
-                GeneralApplication generalApplication = user.getGeneralApplication();
+                GeneralApplication generalApplication = generalApplicationRepository.findByUser(user);
                 if (generalApplication == null)
                     return UserTypeResponse.response(user, null, null);
                 graduatedDate = generalApplication.getGraduatedDate();
-                break;
         }
 
         return UserTypeResponse.response(user, graduatedDate, gedPassDate);

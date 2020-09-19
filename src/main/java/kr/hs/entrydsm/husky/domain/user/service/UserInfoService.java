@@ -1,8 +1,13 @@
 package kr.hs.entrydsm.husky.domain.user.service;
 
 import kr.hs.entrydsm.husky.domain.application.domain.GeneralApplication;
+import kr.hs.entrydsm.husky.domain.application.domain.GraduatedApplication;
+import kr.hs.entrydsm.husky.domain.application.domain.UnGraduatedApplication;
 import kr.hs.entrydsm.husky.domain.application.domain.adapter.GeneralApplicationAdapter;
-import kr.hs.entrydsm.husky.domain.application.domain.repositories.generalapplication.GeneralApplicationAsyncRepository;
+import kr.hs.entrydsm.husky.domain.application.domain.repositories.GeneralApplicationRepository;
+import kr.hs.entrydsm.husky.domain.application.domain.repositories.GraduatedApplicationRepository;
+import kr.hs.entrydsm.husky.domain.application.domain.repositories.UnGraduatedApplicationRepository;
+import kr.hs.entrydsm.husky.domain.application.domain.repositories.async.GeneralApplicationAsyncRepository;
 import kr.hs.entrydsm.husky.domain.image.service.ImageService;
 import kr.hs.entrydsm.husky.domain.school.domain.School;
 import kr.hs.entrydsm.husky.domain.school.domain.repositories.SchoolRepository;
@@ -19,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.net.MalformedURLException;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -26,6 +32,9 @@ public class UserInfoService {
 
     private final UserRepository userRepository;
     private final UserAsyncRepository userAsyncRepository;
+    private final GeneralApplicationRepository generalApplicationRepository;
+    private final GraduatedApplicationRepository graduatedApplicationRepository;
+    private final UnGraduatedApplicationRepository unGraduatedApplicationRepository;
     private final GeneralApplicationAsyncRepository generalApplicationAsyncRepository;
     private final SchoolRepository schoolRepository;
 
@@ -46,7 +55,7 @@ public class UserInfoService {
                     .user(user).photo(getImageUrl(user)).build();
         }
 
-        GeneralApplicationAdapter application = new GeneralApplicationAdapter(user);
+        GeneralApplicationAdapter application = createGeneralApplicationAdapter(user);
         if (!isSchoolCodeEmpty(request)) {
             School school = schoolRepository.findById(request.getSchoolCode())
                     .orElseThrow(SchoolNotFoundException::new);
@@ -75,12 +84,12 @@ public class UserInfoService {
         User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
-        if (user.isGradeTypeEmpty() || user.isGED() || isGeneralApplicationEmpty(user)) {
+        if (user.isGradeTypeEmpty() || user.isGED() || !generalApplicationRepository.existsByUser(user)) {
             return UserInfoResponse.builder()
                     .user(user).photo(getImageUrl(user)).build();
         }
 
-        GeneralApplication application = user.getGeneralApplication();
+        GeneralApplication application = generalApplicationRepository.findByUser(user);
         return UserInfoResponse.builder()
                 .user(user)
                 .studentNumber(application.getStudentNumber())
@@ -95,8 +104,10 @@ public class UserInfoService {
         return request.getSchoolCode() == null;
     }
 
-    private boolean isGeneralApplicationEmpty(User user) {
-        return user.getGeneralApplication() == null;
+    private GeneralApplicationAdapter createGeneralApplicationAdapter(User user) {
+        Optional<GraduatedApplication> graduated = graduatedApplicationRepository.findById(user.getReceiptCode());
+        Optional<UnGraduatedApplication> unGraduated = unGraduatedApplicationRepository.findById(user.getReceiptCode());
+        return new GeneralApplicationAdapter(user, graduated, unGraduated);
     }
 
 }
