@@ -24,12 +24,9 @@ public class GraduatedApplication extends GeneralApplication {
     @PrimaryKeyJoinColumn
     private User user;
 
-    @Column
-    private LocalDate graduatedDate;
-
     public GraduatedApplication update(SelectTypeRequest dto) {
         if (dto.getGraduatedDate() != null)
-            this.graduatedDate = dto.getGraduatedDate().atDay(1);
+            super.updateGraduatedDate(dto.getGraduatedDate().atDay(1));
         return this;
     }
 
@@ -45,9 +42,8 @@ public class GraduatedApplication extends GeneralApplication {
 
     @Builder(builderMethodName = "graduatedApplicationBuilder")
     public GraduatedApplication(Integer receiptCode, String studentNumber, School school, String schoolTel, Integer volunteerTime, Integer fullCutCount, Integer periodCutCount, Integer lateCount, Integer earlyLeaveCount, String korean, String social, String history, String math, String science, String techAndHome, String english, LocalDate graduatedDate) {
-        super(studentNumber, school, schoolTel, volunteerTime, fullCutCount, periodCutCount, lateCount, earlyLeaveCount, korean, social, history, math, science, techAndHome, english);
+        super(studentNumber, school, schoolTel, graduatedDate, volunteerTime, fullCutCount, periodCutCount, lateCount, earlyLeaveCount, korean, social, history, math, science, techAndHome, english);
         this.receiptCode = receiptCode;
-        this.graduatedDate = graduatedDate;
     }
 
 }

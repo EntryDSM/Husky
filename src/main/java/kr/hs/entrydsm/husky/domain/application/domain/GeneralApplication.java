@@ -11,6 +11,7 @@ import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
+import java.time.LocalDate;
 import java.util.function.Consumer;
 
 @Getter
@@ -27,6 +28,9 @@ public abstract class GeneralApplication extends BaseTimeEntity {
 
     @Column(length = 20)
     private String schoolTel;
+
+    @Column
+    private LocalDate graduatedDate;
 
     @Column
     private Integer volunteerTime;
@@ -71,6 +75,10 @@ public abstract class GeneralApplication extends BaseTimeEntity {
 
     public void update(School school) {
         setIfNotNull(this::setSchool, school);
+    }
+
+    protected void updateGraduatedDate(LocalDate graduatedDate) {
+        this.graduatedDate = graduatedDate;
     }
 
     protected void updateVolunteerAndAttendance(SetScoreRequest dto) {
@@ -118,15 +126,20 @@ public abstract class GeneralApplication extends BaseTimeEntity {
         return (isSchoolEmpty()) ? null : school.getSchoolCode();
     }
 
+    public String getSchoolClass() {
+        return (studentNumber != null) ? studentNumber.substring(1, 3).replace("0", "") : null;
+    }
+
     protected GeneralApplication() {}
 
-    public GeneralApplication(String studentNumber, School school, String schoolTel, Integer volunteerTime,
-                              Integer fullCutCount, Integer periodCutCount, Integer lateCount, Integer earlyLeaveCount,
-                              String korean, String social, String history, String math, String science,
-                              String techAndHome, String english) {
+    public GeneralApplication(String studentNumber, School school, String schoolTel, LocalDate graduatedDate,
+                              Integer volunteerTime, Integer fullCutCount, Integer periodCutCount,
+                              Integer lateCount, Integer earlyLeaveCount, String korean, String social,
+                              String history, String math, String science, String techAndHome, String english) {
         this.studentNumber = studentNumber;
         this.school = school;
         this.schoolTel = schoolTel;
+        this.graduatedDate = graduatedDate;
         this.volunteerTime = volunteerTime;
         this.fullCutCount = fullCutCount;
         this.periodCutCount = periodCutCount;
