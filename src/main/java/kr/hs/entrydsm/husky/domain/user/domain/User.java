@@ -84,26 +84,6 @@ public class User extends BaseTimeEntity {
     @Column(length = 1600)
     private String studyPlan;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private GEDApplication gedApplication;
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private GraduatedApplication graduatedApplication;
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private UnGraduatedApplication unGraduatedApplication;
-
-    public GeneralApplication getGeneralApplication() {
-        switch (gradeType) {
-            case GRADUATED:
-                return this.graduatedApplication;
-            case UNGRADUATED:
-                return this.unGraduatedApplication;
-            default:
-                return null;
-        }
-    }
-
     public void setPassword(String password) {
         this.password = password;
     }
@@ -157,20 +137,6 @@ public class User extends BaseTimeEntity {
     public boolean isFilledInfo() {
         return name != null && sex != null && birthDate != null && applicantTel != null && parentTel != null &&
                 parentName != null && address != null && detailAddress != null && postCode != null && userPhoto != null;
-    }
-
-    public boolean isFilledType() {
-        return gradeType != null && applyType != null && additionalType != null && hasApplication();
-    }
-
-    private boolean hasApplication() {
-        if (gradeType == null)
-            return false;
-
-        if (gradeType.equals(GED))
-            return gedApplication != null;
-
-        return getGeneralApplication() != null;
     }
 
     public boolean isMale() {
