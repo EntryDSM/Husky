@@ -42,4 +42,9 @@ public class GeneralApplicationRepositoryImpl implements GeneralApplicationRepos
         }
     }
 
+    @Override
+    public boolean existsByUser(User user) {
+        return findByUser(user) != null;
+    }
+
 }
