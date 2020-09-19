@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface GraduatedApplicationRepository extends JpaRepository<GraduatedApplication, Integer> {
+    boolean existsByReceiptCode(int receiptCode);
 }
