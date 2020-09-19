@@ -1,6 +1,7 @@
 package kr.hs.entrydsm.husky.domain.process.service;
 
 import kr.hs.entrydsm.husky.domain.application.domain.GeneralApplication;
+import kr.hs.entrydsm.husky.domain.application.domain.repositories.GeneralApplicationRepository;
 import kr.hs.entrydsm.husky.domain.process.dto.ProcessResponse;
 import kr.hs.entrydsm.husky.domain.user.exception.UserNotFoundException;
 import kr.hs.entrydsm.husky.domain.application.domain.repositories.GEDApplicationRepository;
@@ -17,6 +18,7 @@ public class ProcessService {
 
     private final UserRepository userRepository;
     private final GEDApplicationRepository gedApplicationRepository;
+    private final GeneralApplicationRepository generalApplicationRepository;
     private final GraduatedApplicationRepository graduatedApplicationRepository;
 
     private final AuthenticationFacade authenticationFacade;
@@ -37,25 +39,29 @@ public class ProcessService {
     private boolean checkType(User user) {
         if (user.isGED()) {
             return gedApplicationRepository.findById(user.getReceiptCode())
-                    .map(application -> (application.getGedPassDate() != null) && user.isFilledType())
+                    .map(application -> (application.getGedPassDate() != null) && isFilledType(user))
                     .orElse(false);
         }
 
         if (user.isGraduated()) {
             return graduatedApplicationRepository.findById(user.getReceiptCode())
-                    .map(application -> (application.getGraduatedDate() != null) && user.isFilledType())
+                    .map(application -> (application.getGraduatedDate() != null) && isFilledType(user))
                     .orElse(false);
         }
 
-        return user.isFilledType();
+        return this.isFilledType(user);
+    }
+
+    private boolean isFilledType(User user) {
+        return !user.isGradeTypeEmpty() && user.getApplyType() != null
+                && user.getAdditionalType() != null && !generalApplicationRepository.isUserApplicationEmpty(user);
     }
 
     private boolean checkInfo(User user) {
         if (!checkType(user)) return false;
 
         if (user.isUngraduated() || user.isGraduated()) {
-            GeneralApplication application = user.getGeneralApplication();
-
+            GeneralApplication application = generalApplicationRepository.findByUser(user);
             return application != null && application.isFilledStudentInfo() && user.isFilledInfo();
         }
 
@@ -70,8 +76,7 @@ public class ProcessService {
                     .map(application -> application.getGedAverageScore() != null)
                     .orElse(false);
         } else {
-            GeneralApplication application = user.getGeneralApplication();
-
+            GeneralApplication application = generalApplicationRepository.findByUser(user);
             return application != null && application.isFilledScore();
         }
     }
