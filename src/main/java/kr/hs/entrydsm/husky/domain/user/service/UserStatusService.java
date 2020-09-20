@@ -1,6 +1,6 @@
 package kr.hs.entrydsm.husky.domain.user.service;
 
-import kr.hs.entrydsm.husky.domain.process.service.ProcessService;
+import kr.hs.entrydsm.husky.domain.process.service.ProcessServiceImpl;
 import kr.hs.entrydsm.husky.domain.user.dto.UserStatusResponse;
 import kr.hs.entrydsm.husky.domain.user.exception.NotCompletedProcessException;
 import kr.hs.entrydsm.husky.domain.user.exception.UserNotFoundException;
@@ -21,7 +21,7 @@ public class UserStatusService {
     private final UserRepository userRepository;
     private final StatusRepository statusRepository;
 
-    private final ProcessService processService;
+    private final ProcessServiceImpl processService;
 
     public UserStatusResponse getStatus() {
         Integer receiptCode = authFacade.getReceiptCode();
