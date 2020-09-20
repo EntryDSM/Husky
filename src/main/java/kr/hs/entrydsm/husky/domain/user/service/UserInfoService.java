@@ -3,9 +3,8 @@ package kr.hs.entrydsm.husky.domain.user.service;
 import kr.hs.entrydsm.husky.domain.application.domain.GeneralApplication;
 import kr.hs.entrydsm.husky.domain.application.domain.adapter.GeneralApplicationAdapter;
 import kr.hs.entrydsm.husky.domain.application.domain.repositories.GeneralApplicationRepository;
-import kr.hs.entrydsm.husky.domain.application.domain.repositories.UnGraduatedApplicationRepository;
 import kr.hs.entrydsm.husky.domain.application.domain.repositories.async.GeneralApplicationAsyncRepository;
-import kr.hs.entrydsm.husky.domain.application.service.ApplicationService;
+import kr.hs.entrydsm.husky.domain.application.service.ApplicationServiceImpl;
 import kr.hs.entrydsm.husky.domain.image.service.ImageService;
 import kr.hs.entrydsm.husky.domain.school.domain.School;
 import kr.hs.entrydsm.husky.domain.school.domain.repositories.SchoolRepository;
@@ -34,7 +33,7 @@ public class UserInfoService {
     private final SchoolRepository schoolRepository;
 
     private final ImageService imageService;
-    private final ApplicationService applicationService;
+    private final ApplicationServiceImpl applicationService;
     private final AuthenticationFacade authenticationFacade;
 
     @Transactional
