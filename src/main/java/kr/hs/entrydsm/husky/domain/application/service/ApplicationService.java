@@ -133,12 +133,12 @@ public class ApplicationService {
         switch (gradeType) {
             case GRADUATED:
                 GraduatedApplication graduated = graduatedApplicationRepository.findById(receiptCode)
-                        .orElse(initGraduatedApplication(receiptCode));
+                        .orElseGet(() -> initGraduatedApplication(receiptCode));
                 return new GeneralApplicationAdapter(graduated);
 
             case UNGRADUATED:
-                UnGraduatedApplication unGraduated = unGraduatedApplicationRepository.findById(receiptCode)
-                        .orElse(initUnGraduatedApplication(receiptCode));
+                UnGraduatedApplication unGraduated = unGraduatedApplicationRepository.findByReceiptCode(receiptCode)
+                        .orElseGet(() -> initUnGraduatedApplication(receiptCode));
                 return new GeneralApplicationAdapter(unGraduated);
 
             default:
