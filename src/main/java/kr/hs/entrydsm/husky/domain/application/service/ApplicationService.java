@@ -12,6 +12,7 @@ import kr.hs.entrydsm.husky.domain.application.dto.*;
 import kr.hs.entrydsm.husky.domain.application.exception.ApplicationNotFoundException;
 import kr.hs.entrydsm.husky.domain.application.exception.ApplicationTypeUnmatchedException;
 import kr.hs.entrydsm.husky.domain.user.domain.User;
+import kr.hs.entrydsm.husky.domain.user.domain.enums.GradeType;
 import kr.hs.entrydsm.husky.domain.user.domain.repositories.UserRepository;
 import kr.hs.entrydsm.husky.domain.user.exception.GradeTypeRequiredException;
 import kr.hs.entrydsm.husky.domain.user.exception.UserNotFoundException;
@@ -96,7 +97,8 @@ public class ApplicationService {
         if (user.isGED())
             throw new ApplicationTypeUnmatchedException();
 
-        Optional.of(createGeneralApplicationAdapter(user))
+        GeneralApplicationAdapter adapter = createGeneralApplicationAdapter(receiptCode, user.getGradeType());
+        Optional.of(adapter)
                 .ifPresent(application -> {
                     application.update(dto);
                     generalApplicationAsyncRepository.save(application);
@@ -118,7 +120,7 @@ public class ApplicationService {
                     .orElseThrow(ApplicationNotFoundException::new);
         }
 
-        GeneralApplicationAdapter adapter = createGeneralApplicationAdapter(user);
+        GeneralApplicationAdapter adapter = createGeneralApplicationAdapter(receiptCode, user.getGradeType());
         return new ScoreResponse(adapter);
     }
 
@@ -127,10 +129,31 @@ public class ApplicationService {
         return Optional.of(gedApplicationRepository.save(application));
     }
 
-    private GeneralApplicationAdapter createGeneralApplicationAdapter(User user) {
-        Optional<GraduatedApplication> graduated = graduatedApplicationRepository.findById(user.getReceiptCode());
-        Optional<UnGraduatedApplication> unGraduated = unGraduatedApplicationRepository.findById(user.getReceiptCode());
-        return new GeneralApplicationAdapter(user, graduated, unGraduated);
+    public GeneralApplicationAdapter createGeneralApplicationAdapter(int receiptCode, GradeType gradeType) {
+        switch (gradeType) {
+            case GRADUATED:
+                GraduatedApplication graduated = graduatedApplicationRepository.findById(receiptCode)
+                        .orElse(initGraduatedApplication(receiptCode));
+                return new GeneralApplicationAdapter(graduated);
+
+            case UNGRADUATED:
+                UnGraduatedApplication unGraduated = unGraduatedApplicationRepository.findById(receiptCode)
+                        .orElse(initUnGraduatedApplication(receiptCode));
+                return new GeneralApplicationAdapter(unGraduated);
+
+            default:
+                return null;
+        }
+    }
+    
+    private GraduatedApplication initGraduatedApplication(int receiptCode) {
+        GraduatedApplication application = new GraduatedApplication(receiptCode);
+        return graduatedApplicationRepository.save(application);
+    }
+
+    private UnGraduatedApplication initUnGraduatedApplication(int receiptCode) {
+        UnGraduatedApplication application = new UnGraduatedApplication(receiptCode);
+        return unGraduatedApplicationRepository.save(application);
     }
 
 }
