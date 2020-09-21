@@ -29,7 +29,7 @@ public class UserStatusService {
                 .orElseThrow(UserNotFoundException::new);
 
         Status status = statusRepository.findById(receiptCode)
-                .orElseGet(() -> statusRepository.save(user.createStatus()));
+                .orElseGet(() -> statusRepository.save(new Status(receiptCode)));
 
         return UserStatusResponse.response(user, status);
     }
@@ -40,7 +40,7 @@ public class UserStatusService {
                 .orElseThrow(UserNotFoundException::new);
 
         Status status = statusRepository.findById(receiptCode)
-                .orElseGet(() -> statusRepository.save(user.createStatus()));
+                .orElseGet(() -> statusRepository.save(new Status(receiptCode)));
 
         if (!processService.AllCheck(user))
             throw new NotCompletedProcessException();

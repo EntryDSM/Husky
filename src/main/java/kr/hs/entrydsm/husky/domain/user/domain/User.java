@@ -184,15 +184,4 @@ public class User extends BaseTimeEntity {
         return !isCommonApplyType() && !isMeisterApplyType();
     }
 
-    public Status createStatus() {
-        return Status.builder()
-                .receiptCode(receiptCode)
-                .isFinalSubmit(false)
-                .isPaid(false)
-                .isPrintedApplicationArrived(false)
-                .isPassedFirstApply(false)
-                .isPassedInterview(false)
-                .build();
-    }
-
 }

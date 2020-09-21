@@ -51,4 +51,12 @@ public class Status {
         return !isFinalSubmit;
     }
 
+    public Status(int receiptCode) {
+        this.receiptCode = receiptCode;
+        this.isFinalSubmit = false;
+        this.isPaid = false;
+        this.isPassedFirstApply = false;
+        this.isPassedInterview = false;
+        this.isPrintedApplicationArrived = false;
+    }
 }
