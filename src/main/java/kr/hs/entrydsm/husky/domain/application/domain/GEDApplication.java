@@ -1,10 +1,13 @@
 package kr.hs.entrydsm.husky.domain.application.domain;
 
-import kr.hs.entrydsm.husky.domain.user.domain.User;
 import kr.hs.entrydsm.husky.domain.user.dto.SelectTypeRequest;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.validation.constraints.Digits;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -17,10 +20,6 @@ public class GEDApplication extends BaseTimeEntity {
     @Id
     @Column(name = "user_receipt_code")
     private Integer receiptCode;
-
-    @OneToOne
-    @PrimaryKeyJoinColumn
-    private User user;
 
     @Digits(integer = 3, fraction = 2)
     private BigDecimal gedAverageScore;

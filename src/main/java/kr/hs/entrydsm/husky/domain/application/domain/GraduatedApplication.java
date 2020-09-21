@@ -2,13 +2,13 @@ package kr.hs.entrydsm.husky.domain.application.domain;
 
 import kr.hs.entrydsm.husky.domain.application.dto.SetScoreRequest;
 import kr.hs.entrydsm.husky.domain.school.domain.School;
-import kr.hs.entrydsm.husky.domain.user.domain.User;
 import kr.hs.entrydsm.husky.domain.user.dto.SelectTypeRequest;
 import lombok.*;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.time.LocalDate;
-import java.util.function.Consumer;
 
 @Getter
 @Setter(AccessLevel.PRIVATE)
@@ -19,10 +19,6 @@ public class GraduatedApplication extends GeneralApplication {
     @Id
     @Column(name = "user_receipt_code")
     private Integer receiptCode;
-
-    @OneToOne
-    @PrimaryKeyJoinColumn
-    private User user;
 
     public GraduatedApplication update(SelectTypeRequest dto) {
         if (dto.getGraduatedDate() != null)
