@@ -88,29 +88,6 @@ public class User extends BaseTimeEntity {
     @Column(length = 1600)
     private String studyPlan;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Status status;
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private GEDApplication gedApplication;
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private GraduatedApplication graduatedApplication;
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private UnGraduatedApplication unGraduatedApplication;
-
-    public GeneralApplication getGeneralApplication() {
-        switch (gradeType) {
-            case GRADUATED:
-                return this.graduatedApplication;
-            case UNGRADUATED:
-                return this.unGraduatedApplication;
-            default:
-                return null;
-        }
-    }
-
     public void setPassword(String password) {
         this.password = password;
     }
@@ -167,20 +144,6 @@ public class User extends BaseTimeEntity {
                 userPhoto != null;
     }
 
-    public boolean isFilledType() {
-        return gradeType != null && applyType != null && additionalType != null && hasApplication();
-    }
-
-    private boolean hasApplication() {
-        if (gradeType == null)
-            return false;
-
-        if (gradeType.equals(GED))
-            return gedApplication != null;
-
-        return getGeneralApplication() != null;
-    }
-
     public boolean isMale() {
         return this.sex.equals(Sex.MALE);
     }
@@ -209,10 +172,6 @@ public class User extends BaseTimeEntity {
         return this.applyType == null;
     }
 
-    public boolean isGeneralApplicationEmpty() {
-        return this.getGeneralApplication() == null;
-    }
-
     public boolean isCommonApplyType() {
         return !isApplyTypeEmpty() && applyType.equals(COMMON);
     }
@@ -223,10 +182,6 @@ public class User extends BaseTimeEntity {
 
     public boolean isSocialMeritApplytype() {
         return !isCommonApplyType() && !isMeisterApplyType();
-    }
-
-    public boolean isFinalSubmitRequired() {
-        return status == null || !status.isFinalSubmit();
     }
 
 }

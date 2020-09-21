@@ -3,20 +3,21 @@ package kr.hs.entrydsm.husky.domain.grade.service;
 import kr.hs.entrydsm.husky.domain.application.domain.CalculatedScore;
 import kr.hs.entrydsm.husky.domain.application.domain.GeneralApplication;
 import kr.hs.entrydsm.husky.domain.application.domain.repositories.CalculatedScoreRepository;
+import kr.hs.entrydsm.husky.domain.application.domain.repositories.GEDApplicationRepository;
+import kr.hs.entrydsm.husky.domain.application.domain.repositories.GeneralApplicationRepository;
 import kr.hs.entrydsm.husky.domain.application.domain.value.GradeScore;
-import kr.hs.entrydsm.husky.domain.grade.exception.UserNotFoundException;
 import kr.hs.entrydsm.husky.domain.grade.util.GradeUtil;
 import kr.hs.entrydsm.husky.domain.grade.value.GradeMatrix;
 import kr.hs.entrydsm.husky.domain.user.domain.User;
 import kr.hs.entrydsm.husky.domain.user.domain.enums.ApplyType;
 import kr.hs.entrydsm.husky.domain.user.domain.enums.GradeType;
-import kr.hs.entrydsm.husky.domain.user.domain.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
-import static java.math.RoundingMode.*;
+import static java.math.RoundingMode.DOWN;
+import static java.math.RoundingMode.HALF_UP;
 import static kr.hs.entrydsm.husky.domain.grade.constant.BigDecimalConstants.SIX;
 import static kr.hs.entrydsm.husky.domain.grade.constant.Semester.*;
 
@@ -26,17 +27,19 @@ public class GradeCalcServiceImpl implements GradeCalcService {
 
     public static final int DEFAULT_ATTENDANCE_SCORE = 15;
 
-    private final UserRepository userRepository;
+    private final GEDApplicationRepository gedApplicationRepository;
     private final CalculatedScoreRepository calculatedScoreRepository;
+    private final GeneralApplicationRepository generalApplicationRepository;
 
     @Override
-    public CalculatedScore calcStudentGrade(int receiptCode) {
-        User user = userRepository.findById(receiptCode)
-                .orElseThrow(UserNotFoundException::new);
+    public CalculatedScore calcStudentGrade(User user) {
+        if (user.isGradeTypeEmpty())
+            return CalculatedScore.EMPTY(user);
 
-        int attendanceScore = calcAttendanceScore(user);
-        BigDecimal volunteerScore = calcVolunteerScore(user);
-        GradeScore gradeScore = calcGradeScore(user);
+        GeneralApplication generalApplication = generalApplicationRepository.findByUser(user);
+        int attendanceScore = calcAttendanceScore(user, generalApplication);
+        BigDecimal volunteerScore = calcVolunteerScore(user, generalApplication);
+        GradeScore gradeScore = calcGradeScore(user, generalApplication);
         BigDecimal finalScore = calcFinalScore(attendanceScore, volunteerScore, gradeScore);
 
         return calculatedScoreRepository.save(CalculatedScore.builder()
@@ -48,55 +51,69 @@ public class GradeCalcServiceImpl implements GradeCalcService {
                 .build());
     }
 
-    private Integer calcAttendanceScore(User user) {
-        if (user.isGED()) {
+    private Integer calcAttendanceScore(User user, GeneralApplication generalApplication) {
+        if (user.isGED())
             return DEFAULT_ATTENDANCE_SCORE;
+
+        if (generalApplication == null) {
+            return 0;
         }
 
-        GeneralApplication app = user.getGeneralApplication();
+        int odmission = generalApplication.getLateCount()
+                + generalApplication.getEarlyLeaveCount() + generalApplication.getPeriodCutCount();
 
-        int odmission = app.getLateCount() + app.getEarlyLeaveCount() + app.getPeriodCutCount();
         if (odmission != 0) odmission /= 3;
+        int conversionAbsence = generalApplication.getFullCutCount() + odmission;
 
-        int conversionAbsence = app.getFullCutCount() + odmission;
         return DEFAULT_ATTENDANCE_SCORE - conversionAbsence;
-
     }
 
-    private BigDecimal calcVolunteerScore(User user) {
+    private BigDecimal calcVolunteerScore(User user, GeneralApplication generalApplication) {
         if (user.isGED()) {
-            return user.getGedApplication().getGedAverageScore()
-                    .subtract(BigDecimal.valueOf(40))
-                    .divide(BigDecimal.valueOf(5), 3, HALF_UP)
-                    .add(BigDecimal.valueOf(3));
+            return gedApplicationRepository.findById(user.getReceiptCode())
+                    .map(gedApplication -> gedApplication.getGedAverageScore()
+                            .subtract(BigDecimal.valueOf(40))
+                            .divide(BigDecimal.valueOf(5), 3, HALF_UP)
+                            .add(BigDecimal.valueOf(3)))
+                    .orElse(BigDecimal.ZERO);
         }
 
-        GeneralApplication app = user.getGeneralApplication();
-        if (app.getVolunteerTime() >= 45) {
+        if (generalApplication == null) {
+            return BigDecimal.ZERO;
+        }
+
+        if (generalApplication.getVolunteerTime() >= 45) {
             return BigDecimal.valueOf(15);
         }
 
-        if (app.getVolunteerTime() <= 9) {
+        if (generalApplication.getVolunteerTime() <= 9) {
             return BigDecimal.valueOf(3);
         }
 
-        return BigDecimal.valueOf(app.getVolunteerTime())
+        return BigDecimal.valueOf(generalApplication.getVolunteerTime())
                 .subtract(BigDecimal.valueOf(9))
                 .divide(BigDecimal.valueOf(3), 4, DOWN)
                 .add(BigDecimal.valueOf(3))
                 .setScale(3, HALF_UP);
     }
 
-    private GradeScore calcGradeScore(User user) {
+    private GradeScore calcGradeScore(User user, GeneralApplication generalApplication) {
         GradeScore gradeScore;
 
         if (user.isGED()) {
-            BigDecimal conversionScore = calcGEDConversionScore(user.getGedApplication().getGedAverageScore());
-            gradeScore = new GradeScore(conversionScore);
+            gradeScore = gedApplicationRepository.findById(user.getReceiptCode())
+                    .map(gedApplication -> {
+                        BigDecimal conversionScore = calcGEDConversionScore(gedApplication.getGedAverageScore());
+                        return new GradeScore(conversionScore);
+                    })
+                    .orElse(GradeScore.EMPTY());
 
         } else {
-            gradeScore = this.calcGeneralApplication(user);
-            if (gradeScore.isEmpty()) return gradeScore;
+            gradeScore = this.calcGeneralApplication(user, generalApplication);
+        }
+
+        if (gradeScore.isEmpty()) {
+            return gradeScore;
         }
 
         if (user.getApplyType() != ApplyType.COMMON) {
@@ -126,9 +143,11 @@ public class GradeCalcServiceImpl implements GradeCalcService {
                 .add(gradeScore.getConversionScore());
     }
 
-    private GradeScore calcGeneralApplication(User user) {
-        GeneralApplication application = user.getGeneralApplication();
-        GradeMatrix matrix = new GradeMatrix(application);
+    private GradeScore calcGeneralApplication(User user, GeneralApplication generalApplication) {
+        if (generalApplication == null)
+            return GradeScore.EMPTY();
+
+        GradeMatrix matrix = new GradeMatrix(generalApplication);
         GradeUtil matrixUtil = new GradeUtil(user, matrix);
 
         BigDecimal firstGradeScore = null;

@@ -2,13 +2,14 @@ package kr.hs.entrydsm.husky.domain.application.domain;
 
 import kr.hs.entrydsm.husky.domain.application.dto.SetScoreRequest;
 import kr.hs.entrydsm.husky.domain.school.domain.School;
-import kr.hs.entrydsm.husky.domain.user.domain.User;
 import kr.hs.entrydsm.husky.domain.user.dto.SelectTypeRequest;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.time.LocalDate;
 
 @Getter
@@ -19,10 +20,6 @@ public class UnGraduatedApplication extends GeneralApplication {
     @Id
     @Column(name = "user_receipt_code")
     private Integer receiptCode;
-
-    @OneToOne
-    @PrimaryKeyJoinColumn
-    private User user;
 
     public UnGraduatedApplication update(SelectTypeRequest dto) {
         if (dto.getGedPassDate() != null)

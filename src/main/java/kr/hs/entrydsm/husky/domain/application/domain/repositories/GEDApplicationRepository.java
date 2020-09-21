@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface GEDApplicationRepository extends JpaRepository<GEDApplication, Integer> {
+    boolean existsByReceiptCode(int receiptCode);
 }

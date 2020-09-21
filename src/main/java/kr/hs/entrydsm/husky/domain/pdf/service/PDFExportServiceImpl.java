@@ -4,11 +4,13 @@ import kr.hs.entrydsm.husky.domain.application.domain.CalculatedScore;
 import kr.hs.entrydsm.husky.domain.grade.exception.UserNotFoundException;
 import kr.hs.entrydsm.husky.domain.grade.service.GradeCalcService;
 import kr.hs.entrydsm.husky.domain.image.service.ImageService;
+import kr.hs.entrydsm.husky.domain.pdf.converter.ApplicationInfoConverter;
 import kr.hs.entrydsm.husky.domain.pdf.exception.FinalSubmitRequiredException;
 import kr.hs.entrydsm.husky.domain.pdf.exception.UnprocessableEntityException;
 import kr.hs.entrydsm.husky.domain.pdf.util.FontLoader;
+import kr.hs.entrydsm.husky.domain.user.domain.Status;
 import kr.hs.entrydsm.husky.domain.user.domain.User;
-import kr.hs.entrydsm.husky.domain.user.domain.enums.ApplyType;
+import kr.hs.entrydsm.husky.domain.user.domain.repositories.StatusRepository;
 import kr.hs.entrydsm.husky.domain.user.domain.repositories.UserRepository;
 import kr.hs.entrydsm.husky.global.config.security.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
@@ -33,8 +35,6 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
-import static kr.hs.entrydsm.husky.domain.pdf.converter.ApplicationInfoConverter.applicationToInfo;
-
 @Service
 @RequiredArgsConstructor
 public class PDFExportServiceImpl implements PDFExportService {
@@ -43,13 +43,15 @@ public class PDFExportServiceImpl implements PDFExportService {
 
     private final AuthenticationFacade authFacade;
     private final UserRepository userRepository;
+    private final StatusRepository statusRepository;
     private final GradeCalcService gradeCalcService;
     private final ImageService imageService;
+    private final ApplicationInfoConverter applicationInfoConverter;
 
     @Override
     public byte[] getPDFApplicationPreview() {
         return userRepository.findById(authFacade.getReceiptCode())
-                .map(user -> generatePDFApplication(user, gradeCalcService.calcStudentGrade(user.getReceiptCode()), true))
+                .map(user -> generatePDFApplication(user, true))
                 .orElseThrow(UserNotFoundException::new);
     }
 
@@ -57,14 +59,15 @@ public class PDFExportServiceImpl implements PDFExportService {
     public byte[] getFinalPDFApplication() {
         return userRepository.findById(authFacade.getReceiptCode())
                 .map(user -> {
-                    if (user.isFinalSubmitRequired())
-                        throw new FinalSubmitRequiredException();
-                    return generatePDFApplication(user, gradeCalcService.calcStudentGrade(user.getReceiptCode()), false);
+                    statusRepository.findById(user.getReceiptCode())
+                            .filter(Status::isFinalSubmitRequired)
+                            .ifPresent(status -> { throw new FinalSubmitRequiredException(); });
+                    return generatePDFApplication(user, false);
                 })
                 .orElseThrow(UserNotFoundException::new);
     }
 
-    private byte[] generatePDFApplication(User user, CalculatedScore calculatedScore, boolean isPreview) {
+    private byte[] generatePDFApplication(User user, boolean isPreview) {
         String templateFileName = setTemplateFileName(user, isPreview);
 
         try {
@@ -74,7 +77,8 @@ public class PDFExportServiceImpl implements PDFExportService {
             VariablePrepare.prepare(mlPackage);
 
             insertUserProfileImage(user, mlPackage);
-            Map<String, String> templateVariables = applicationToInfo(user, calculatedScore);
+            CalculatedScore calculatedScore = gradeCalcService.calcStudentGrade(user);
+            Map<String, String> templateVariables = applicationInfoConverter.applicationToInfo(user, calculatedScore);
             documentPart.variableReplace(templateVariables);
             mlPackage.setFontMapper(fontMapper);
 
