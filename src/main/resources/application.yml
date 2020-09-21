@@ -1,6 +1,4 @@
 spring:
-  jpa:
-    generate-ddl: true
   datasource:
     url: ${MYSQL_URL}
 
