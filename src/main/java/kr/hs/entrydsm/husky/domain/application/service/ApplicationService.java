@@ -137,7 +137,7 @@ public class ApplicationService {
                 return new GeneralApplicationAdapter(graduated);
 
             case UNGRADUATED:
-                UnGraduatedApplication unGraduated = unGraduatedApplicationRepository.findByReceiptCode(receiptCode)
+                UnGraduatedApplication unGraduated = unGraduatedApplicationRepository.findById(receiptCode)
                         .orElseGet(() -> initUnGraduatedApplication(receiptCode));
                 return new GeneralApplicationAdapter(unGraduated);
 
