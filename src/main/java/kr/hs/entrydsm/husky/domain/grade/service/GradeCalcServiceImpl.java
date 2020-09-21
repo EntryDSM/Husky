@@ -59,13 +59,17 @@ public class GradeCalcServiceImpl implements GradeCalcService {
             return 0;
         }
 
-        int odmission = generalApplication.getLateCount()
-                + generalApplication.getEarlyLeaveCount() + generalApplication.getPeriodCutCount();
+        try {
+            int odmission = generalApplication.getLateCount()
+                    + generalApplication.getEarlyLeaveCount() + generalApplication.getPeriodCutCount();
 
-        if (odmission != 0) odmission /= 3;
-        int conversionAbsence = generalApplication.getFullCutCount() + odmission;
+            if (odmission != 0) odmission /= 3;
+            int conversionAbsence = generalApplication.getFullCutCount() + odmission;
+            return DEFAULT_ATTENDANCE_SCORE - conversionAbsence;
 
-        return DEFAULT_ATTENDANCE_SCORE - conversionAbsence;
+        } catch (NullPointerException e) {
+            return 0;
+        }
     }
 
     private BigDecimal calcVolunteerScore(User user, GeneralApplication generalApplication) {

@@ -34,6 +34,18 @@ public class GraduatedApplication extends GeneralApplication {
 
     public GraduatedApplication(Integer receiptCode) {
         this.receiptCode = receiptCode;
+        this.setVolunteerTime(0);
+        this.setEarlyLeaveCount(0);
+        this.setLateCount(0);
+        this.setFullCutCount(0);
+        this.setPeriodCutCount(0);
+        this.setKorean("XXXXXX");
+        this.setSocial("XXXXXX");
+        this.setHistory("XXXXXX");
+        this.setMath("XXXXXX");
+        this.setScience("XXXXXX");
+        this.setTechAndHome("XXXXXX");
+        this.setEnglish("XXXXXX");
     }
 
     @Builder(builderMethodName = "graduatedApplicationBuilder")
