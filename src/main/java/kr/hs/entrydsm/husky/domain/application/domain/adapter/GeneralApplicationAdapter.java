@@ -3,15 +3,11 @@ package kr.hs.entrydsm.husky.domain.application.domain.adapter;
 import kr.hs.entrydsm.husky.domain.application.domain.GeneralApplication;
 import kr.hs.entrydsm.husky.domain.application.domain.GraduatedApplication;
 import kr.hs.entrydsm.husky.domain.application.domain.UnGraduatedApplication;
-import kr.hs.entrydsm.husky.domain.application.domain.repositories.GeneralApplicationRepository;
 import kr.hs.entrydsm.husky.domain.application.dto.SetScoreRequest;
 import kr.hs.entrydsm.husky.domain.school.domain.School;
-import kr.hs.entrydsm.husky.domain.user.domain.User;
 import kr.hs.entrydsm.husky.domain.user.domain.enums.GradeType;
 import kr.hs.entrydsm.husky.domain.user.dto.SetUserInfoRequest;
 import lombok.Getter;
-
-import java.util.Optional;
 
 import static kr.hs.entrydsm.husky.domain.user.domain.enums.GradeType.GRADUATED;
 import static kr.hs.entrydsm.husky.domain.user.domain.enums.GradeType.UNGRADUATED;
@@ -19,7 +15,7 @@ import static kr.hs.entrydsm.husky.domain.user.domain.enums.GradeType.UNGRADUATE
 @Getter
 public class GeneralApplicationAdapter {
 
-    private GradeType gradeType;
+    private final GradeType gradeType;
     private GraduatedApplication graduatedApplication;
     private UnGraduatedApplication unGraduatedApplication;
 
@@ -44,25 +40,14 @@ public class GeneralApplicationAdapter {
             graduatedApplication.update(dto);
     }
 
-    public GeneralApplicationAdapter(User user,
-                                     Optional<GraduatedApplication> graduated,
-                                     Optional<UnGraduatedApplication> ungraduated) {
-        if (user.getGradeType() != null) {
-            this.gradeType = user.getGradeType();
-            if (user.isGraduated())
-                setGraduatedApplication(user, graduated);
-
-            else if (user.isUngraduated())
-                setUnGraduatedApplication(user, ungraduated);
-        }
+    public GeneralApplicationAdapter(GraduatedApplication application) {
+        this.gradeType = GRADUATED;
+        this.graduatedApplication = application;
     }
 
-    private void setUnGraduatedApplication(User user, Optional<UnGraduatedApplication> ungraduated) {
-        this.unGraduatedApplication = ungraduated.orElseGet(() -> new UnGraduatedApplication(user.getReceiptCode()));
-    }
-
-    private void setGraduatedApplication(User user, Optional<GraduatedApplication> graduated) {
-        this.graduatedApplication = graduated.orElseGet(() -> new GraduatedApplication(user.getReceiptCode()));
+    public GeneralApplicationAdapter(UnGraduatedApplication application) {
+        this.gradeType = UNGRADUATED;
+        this.unGraduatedApplication = application;
     }
 
     public String getStudentNumber() {
