@@ -1,4 +1,4 @@
-package kr.hs.entrydsm.husky.domain.user.service;
+package kr.hs.entrydsm.husky.domain.user.service.info;
 
 import kr.hs.entrydsm.husky.domain.application.domain.GeneralApplication;
 import kr.hs.entrydsm.husky.domain.application.domain.adapter.GeneralApplicationAdapter;
@@ -24,7 +24,7 @@ import java.net.MalformedURLException;
 
 @RequiredArgsConstructor
 @Service
-public class UserInfoService {
+public class UserInfoServiceImpl implements UserInfoService {
 
     private final UserRepository userRepository;
     private final UserAsyncRepository userAsyncRepository;
@@ -36,6 +36,7 @@ public class UserInfoService {
     private final ApplicationServiceImpl applicationService;
     private final AuthenticationFacade authenticationFacade;
 
+    @Override
     @Transactional
     public UserInfoResponse setUserInfo(SetUserInfoRequest request) throws MalformedURLException {
         Integer receiptCode = authenticationFacade.getReceiptCode();
@@ -74,6 +75,7 @@ public class UserInfoService {
         return (!user.isPhotoEmpty()) ? imageService.generateObjectUrl(user.getUserPhoto()) : null;
     }
 
+    @Override
     public UserInfoResponse getUserInfo() throws MalformedURLException {
         Integer receiptCode = authenticationFacade.getReceiptCode();
         User user = userRepository.findById(receiptCode)
