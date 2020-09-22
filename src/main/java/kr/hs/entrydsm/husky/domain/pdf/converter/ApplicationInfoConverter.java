@@ -70,9 +70,20 @@ public class ApplicationInfoConverter {
         if (!user.isGradeTypeEmpty() && !user.isGED() && generalApplication != null) {
             values.put("schoolCode", setBlankIfNull(generalApplication.getSchoolCode()));
             values.put("schoolClass", setBlankIfNull(generalApplication.getSchoolClass()));
-            values.put("schoolTel", setBlankIfNull(toFormattedPhoneNumber(generalApplication.getSchoolTel())));
+            values.put("schoolTel", toFormattedPhoneNumber(generalApplication.getSchoolTel()));
             values.put("schoolName", setBlankIfNull(generalApplication.getSchoolName()));
+        } else {
+            values.putAll(emptySchoolInfo());
         }
+    }
+
+    private Map<String, String> emptySchoolInfo() {
+        return Map.of(
+                "schoolCode", "",
+                "schoolClass", "",
+                "schoolTel", "",
+                "schoolName", ""
+        );
     }
 
     private void setPhoneNumber(Map<String, String> values, User user) {
