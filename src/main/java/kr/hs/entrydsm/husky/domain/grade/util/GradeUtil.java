@@ -2,6 +2,7 @@ package kr.hs.entrydsm.husky.domain.grade.util;
 
 import kr.hs.entrydsm.husky.domain.grade.value.GradeMatrix;
 import kr.hs.entrydsm.husky.domain.user.domain.User;
+import kr.hs.entrydsm.husky.domain.user.domain.enums.GradeType;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -28,6 +29,19 @@ public class GradeUtil {
 
     public boolean isSecondGradeEmpty() {
         return isEmptyGrade(SEMESTER_2_1, SEMESTER_2_2);
+    }
+
+    public boolean isThirdGradeEmpty(GradeType gradeType) {
+        switch (gradeType) {
+            case GRADUATED:
+                return isEmptyGrade(SEMESTER_3_1, SEMESTER_3_2);
+
+            case UNGRADUATED:
+                return isEmptyGrade(SEMESTER_3_1);
+
+            default:
+                return true;
+        }
     }
 
     public boolean isAllGradeEmpty() {
