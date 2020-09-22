@@ -45,6 +45,15 @@ public class GradeUtil {
         return sum == 0;
     }
 
+    private boolean isEmptyGrade(int semeseter) {
+        int sum = 0;
+        for (List<Integer> integers : gradeMatrix.getMatrix()) {
+            sum += integers.get(semeseter);
+        }
+
+        return sum == 0;
+    }
+
     public BigDecimal getAverageScoreIf3rdGradeLeft() {
         switch (user.getGradeType()) {
             case UNGRADUATED:
