@@ -1,22 +1,19 @@
 package kr.hs.entrydsm.husky.domain.pdf.converter;
 
 import kr.hs.entrydsm.husky.domain.application.domain.CalculatedScore;
-import kr.hs.entrydsm.husky.domain.application.domain.GEDApplication;
 import kr.hs.entrydsm.husky.domain.application.domain.GeneralApplication;
-import kr.hs.entrydsm.husky.domain.application.domain.GraduatedApplication;
 import kr.hs.entrydsm.husky.domain.application.domain.repositories.GEDApplicationRepository;
 import kr.hs.entrydsm.husky.domain.application.domain.repositories.GeneralApplicationRepository;
 import kr.hs.entrydsm.husky.domain.application.domain.repositories.GraduatedApplicationRepository;
+import kr.hs.entrydsm.husky.domain.application.domain.repositories.UnGraduatedApplicationRepository;
 import kr.hs.entrydsm.husky.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import static kr.hs.entrydsm.husky.domain.user.domain.enums.AdditionalType.NATIONAL_MERIT;
 import static kr.hs.entrydsm.husky.domain.user.domain.enums.AdditionalType.PRIVILEGED_ADMISSION;
@@ -28,6 +25,7 @@ public class ApplicationInfoConverter {
     private final GEDApplicationRepository gedApplicationRepository;
     private final GeneralApplicationRepository generalApplicationRepository;
     private final GraduatedApplicationRepository graduatedApplicationRepository;
+    private final UnGraduatedApplicationRepository unGraduatedApplicationRepository;
 
     public HashMap<String, String> applicationToInfo(User user, CalculatedScore calculatedScore) {
         HashMap<String, String> values = new HashMap<>();
@@ -39,7 +37,7 @@ public class ApplicationInfoConverter {
         setUserType(values, user);
         setGradeScore(values, user, calculatedScore);
         setLocalDate(values);
-        setIntroducement(values, user);
+        setIntroduction(values, user);
         setParentInfo(values, user);
 
         if (isRecommendationsRequired(user))
@@ -72,45 +70,68 @@ public class ApplicationInfoConverter {
         if (!user.isGradeTypeEmpty() && !user.isGED() && generalApplication != null) {
             values.put("schoolCode", setBlankIfNull(generalApplication.getSchoolCode()));
             values.put("schoolClass", setBlankIfNull(generalApplication.getSchoolClass()));
-            values.put("schoolTel", setBlankIfNull(generalApplication.getSchoolTel()));
+            values.put("schoolTel", toFormattedPhoneNumber(generalApplication.getSchoolTel()));
             values.put("schoolName", setBlankIfNull(generalApplication.getSchoolName()));
+        } else {
+            values.putAll(emptySchoolInfo());
         }
+    }
+
+    private Map<String, String> emptySchoolInfo() {
+        return Map.of(
+                "schoolCode", "",
+                "schoolClass", "",
+                "schoolTel", "",
+                "schoolName", ""
+        );
     }
 
     private void setPhoneNumber(Map<String, String> values, User user) {
         values.put("applicantTel", toFormattedPhoneNumber(user.getApplicantTel()));
         values.put("parentTel", toFormattedPhoneNumber(user.getParentTel()));
         String homeTel = (user.isHomeTelEmpty()) ? "없음" : toFormattedPhoneNumber(user.getHomeTel());
-        values.put("homeTel", homeTel);
+        values.put("homeTel", toFormattedPhoneNumber(homeTel));
     }
 
     private void setGraduationClassification(HashMap<String, String> values, User user) {
-        String graduatedYear = "";
-        String graduatedMonth = "";
-        String gedPassedYear = "";
-        String gedPassedMonth = "";
+        values.putAll(emptyGraduationClassification());
 
-        if (user.isGraduated()) {
-            Optional<GraduatedApplication> graduatedApplication = graduatedApplicationRepository.findById(user.getReceiptCode());
-            if (graduatedApplication.isPresent()) {
-                LocalDate graduatedDate = graduatedApplication.get().getGraduatedDate();
-                graduatedYear = (graduatedDate != null) ? String.valueOf(graduatedDate.getYear()) : "";
-                graduatedMonth = (graduatedDate != null) ? String.valueOf(graduatedDate.getMonth()) : "";
-            }
+        switch (user.getGradeType()) {
+            case GED:
+                gedApplicationRepository.findById(user.getReceiptCode())
+                        .filter(ged -> ged.getGedPassDate() != null)
+                        .ifPresent(ged -> {
+                            values.put("gedPassedYear", String.valueOf(ged.getGedPassDate().getYear()));
+                            values.put("gedPassedMonth", String.valueOf(ged.getGedPassDate().getMonthValue()));
+                        });
+                break;
 
-        } else if (user.isGED()) {
-            Optional<GEDApplication> gedApplication = gedApplicationRepository.findById(user.getReceiptCode());
-            if (gedApplication.isPresent()) {
-                LocalDate gedPassedDate = gedApplication.get().getGedPassDate();
-                gedPassedYear = (gedPassedDate != null) ? String.valueOf(gedPassedDate.getYear()) : "";
-                gedPassedMonth = (gedPassedDate != null) ? String.valueOf(gedPassedDate.getMonth()) : "";
-            }
+            case GRADUATED:
+                graduatedApplicationRepository.findById(user.getReceiptCode())
+                        .filter(graduated -> graduated.getGraduatedDate() != null)
+                        .ifPresent(graduated -> {
+                            values.put("graduatedYear", String.valueOf(graduated.getGraduatedDate().getYear()));
+                            values.put("graduatedMonth", String.valueOf(graduated.getGraduatedDate().getMonthValue()));
+                        });
+                break;
+
+            case UNGRADUATED:
+                unGraduatedApplicationRepository.findById(user.getReceiptCode())
+                        .filter(unGraduated -> unGraduated.getGraduatedDate() != null)
+                        .ifPresent(unGraduated -> {
+                            values.put("unGraduatedMonth", String.valueOf(unGraduated.getGraduatedDate().getMonthValue()));
+                        });
         }
+    }
 
-        values.put("graduatedYear", graduatedYear);
-        values.put("graduatedMonth", graduatedMonth);
-        values.put("gedPassedYear", gedPassedYear);
-        values.put("gedPassedMonth", gedPassedMonth);
+    private Map<String, String> emptyGraduationClassification() {
+        return Map.of(
+                "gedPassedYear", "",
+                "gedPassedMonth", "",
+                "graduatedYear", "",
+                "graduatedMonth", "",
+                "unGraduatedMonth", ""
+        );
     }
 
     private void setUserType(Map<String, String> values, User user) {
@@ -142,9 +163,13 @@ public class ApplicationInfoConverter {
         values.put("day", String.valueOf(now.getDayOfMonth()));
     }
 
-    private void setIntroducement(HashMap<String, String> values, User user) {
-        values.put("selfIntroduction", (user.getSelfIntroduction() == null) ? "" : user.getSelfIntroduction());
-        values.put("studyPlan", (user.getStudyPlan() == null) ? "" : user.getStudyPlan());
+    private void setIntroduction(HashMap<String, String> values, User user) {
+        values.put("selfIntroduction", setBlankIfNull(replaceNewlineToken(user.getSelfIntroduction())));
+        values.put("studyPlan", setBlankIfNull(replaceNewlineToken(user.getStudyPlan())));
+    }
+
+    private String replaceNewlineToken(String string) {
+        return (string != null) ? string.replace("\n", "¶") : null;
     }
 
     private void setParentInfo(HashMap<String, String> values, User user) {
