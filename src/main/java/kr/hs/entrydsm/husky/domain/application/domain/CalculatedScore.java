@@ -64,4 +64,14 @@ public class CalculatedScore {
         this.modifiedAt = LocalDateTime.now();
     }
 
+    public static CalculatedScore EMPTY(User user) {
+        return CalculatedScore.builder()
+                .user(user)
+                .volunteerScore(BigDecimal.ZERO)
+                .attendanceScore(0)
+                .gradeScore(GradeScore.EMPTY())
+                .finalScore(BigDecimal.ZERO)
+                .build();
+    }
+
 }

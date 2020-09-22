@@ -19,7 +19,7 @@ import java.time.LocalDate;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class SetUserInfoRequest {
 
-    private static final String PHONE_REGEX = "(^\\+82[.-][1-9]\\d?[.-]|^\\(?0[1-9]\\d?\\)?[.-]?)?[1-9]\\d{2,3}[.-]\\d{4}$";
+    private static final String PHONE_REGEX = "(^\\+82[.-][1-9]\\d?[.-]|^\\(?0[0-9]\\d?\\)?[.-]?)?[0-9]\\d{2,3}[.-]\\d{4}$";
 
     @Size(max = 15)
     private String name;

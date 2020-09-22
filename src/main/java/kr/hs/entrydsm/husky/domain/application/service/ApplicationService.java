@@ -1,13 +1,18 @@
 package kr.hs.entrydsm.husky.domain.application.service;
 
 import kr.hs.entrydsm.husky.domain.application.domain.GEDApplication;
+import kr.hs.entrydsm.husky.domain.application.domain.GraduatedApplication;
+import kr.hs.entrydsm.husky.domain.application.domain.UnGraduatedApplication;
 import kr.hs.entrydsm.husky.domain.application.domain.adapter.GeneralApplicationAdapter;
 import kr.hs.entrydsm.husky.domain.application.domain.repositories.GEDApplicationRepository;
-import kr.hs.entrydsm.husky.domain.application.domain.repositories.generalapplication.GeneralApplicationAsyncRepositoryImpl;
+import kr.hs.entrydsm.husky.domain.application.domain.repositories.GraduatedApplicationRepository;
+import kr.hs.entrydsm.husky.domain.application.domain.repositories.UnGraduatedApplicationRepository;
+import kr.hs.entrydsm.husky.domain.application.domain.repositories.async.GeneralApplicationAsyncRepositoryImpl;
 import kr.hs.entrydsm.husky.domain.application.dto.*;
 import kr.hs.entrydsm.husky.domain.application.exception.ApplicationNotFoundException;
 import kr.hs.entrydsm.husky.domain.application.exception.ApplicationTypeUnmatchedException;
 import kr.hs.entrydsm.husky.domain.user.domain.User;
+import kr.hs.entrydsm.husky.domain.user.domain.enums.GradeType;
 import kr.hs.entrydsm.husky.domain.user.domain.repositories.UserRepository;
 import kr.hs.entrydsm.husky.domain.user.exception.GradeTypeRequiredException;
 import kr.hs.entrydsm.husky.domain.user.exception.UserNotFoundException;
@@ -23,6 +28,8 @@ public class ApplicationService {
 
     private final UserRepository userRepository;
     private final GEDApplicationRepository gedApplicationRepository;
+    private final GraduatedApplicationRepository graduatedApplicationRepository;
+    private final UnGraduatedApplicationRepository unGraduatedApplicationRepository;
     private final GeneralApplicationAsyncRepositoryImpl generalApplicationAsyncRepository;
 
     private final AuthenticationFacade authenticationFacade;
@@ -90,7 +97,8 @@ public class ApplicationService {
         if (user.isGED())
             throw new ApplicationTypeUnmatchedException();
 
-        Optional.of(new GeneralApplicationAdapter(user))
+        GeneralApplicationAdapter adapter = createGeneralApplicationAdapter(receiptCode, user.getGradeType());
+        Optional.of(adapter)
                 .ifPresent(application -> {
                     application.update(dto);
                     generalApplicationAsyncRepository.save(application);
@@ -112,13 +120,40 @@ public class ApplicationService {
                     .orElseThrow(ApplicationNotFoundException::new);
         }
 
-        GeneralApplicationAdapter adapter = new GeneralApplicationAdapter(user);
+        GeneralApplicationAdapter adapter = createGeneralApplicationAdapter(receiptCode, user.getGradeType());
         return new ScoreResponse(adapter);
     }
 
     private Optional<GEDApplication> createGEDApplication(int receiptCode) {
         GEDApplication application = new GEDApplication(receiptCode);
         return Optional.of(gedApplicationRepository.save(application));
+    }
+
+    public GeneralApplicationAdapter createGeneralApplicationAdapter(int receiptCode, GradeType gradeType) {
+        switch (gradeType) {
+            case GRADUATED:
+                GraduatedApplication graduated = graduatedApplicationRepository.findById(receiptCode)
+                        .orElseGet(() -> initGraduatedApplication(receiptCode));
+                return new GeneralApplicationAdapter(graduated);
+
+            case UNGRADUATED:
+                UnGraduatedApplication unGraduated = unGraduatedApplicationRepository.findById(receiptCode)
+                        .orElseGet(() -> initUnGraduatedApplication(receiptCode));
+                return new GeneralApplicationAdapter(unGraduated);
+
+            default:
+                return null;
+        }
+    }
+    
+    private GraduatedApplication initGraduatedApplication(int receiptCode) {
+        GraduatedApplication application = new GraduatedApplication(receiptCode);
+        return graduatedApplicationRepository.save(application);
+    }
+
+    private UnGraduatedApplication initUnGraduatedApplication(int receiptCode) {
+        UnGraduatedApplication application = new UnGraduatedApplication(receiptCode);
+        return unGraduatedApplicationRepository.save(application);
     }
 
 }

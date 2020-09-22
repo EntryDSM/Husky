@@ -1,9 +1,11 @@
 package kr.hs.entrydsm.husky.domain.user.service;
 
 import kr.hs.entrydsm.husky.domain.application.domain.GEDApplication;
+import kr.hs.entrydsm.husky.domain.application.domain.GeneralApplication;
 import kr.hs.entrydsm.husky.domain.application.domain.GraduatedApplication;
 import kr.hs.entrydsm.husky.domain.application.domain.UnGraduatedApplication;
 import kr.hs.entrydsm.husky.domain.application.domain.repositories.GEDApplicationRepository;
+import kr.hs.entrydsm.husky.domain.application.domain.repositories.GeneralApplicationRepository;
 import kr.hs.entrydsm.husky.domain.application.domain.repositories.GraduatedApplicationRepository;
 import kr.hs.entrydsm.husky.domain.application.domain.repositories.UnGraduatedApplicationRepository;
 import kr.hs.entrydsm.husky.domain.application.domain.repositories.async.ApplicationAsyncRepository;
@@ -32,6 +34,7 @@ public class UserTypeService {
     private final GraduatedApplicationRepository graduatedRepository;
     private final ApplicationAsyncRepository applicationAsyncRepository;
     private final UnGraduatedApplicationRepository unGraduatedRepository;
+    private final GeneralApplicationRepository generalApplicationRepository;
 
     private final AuthenticationFacade authenticationFacade;
 
@@ -58,6 +61,7 @@ public class UserTypeService {
         } else if (user.isUngraduated()) {
             unGraduatedRepository.findById(user.getReceiptCode())
                     .or(() -> Optional.of(new UnGraduatedApplication(user.getReceiptCode())))
+                    .map(unGraduated -> unGraduated.update(dto))
                     .ifPresent(applicationAsyncRepository::save);
         }
     }
@@ -80,10 +84,11 @@ public class UserTypeService {
                 break;
 
             case GRADUATED:
-                GraduatedApplication graduatedApplication = graduatedRepository.findById(user.getReceiptCode())
-                        .orElseThrow(ApplicationNotFoundException::new);
-                graduatedDate = graduatedApplication.getGraduatedDate();
-                break;
+            case UNGRADUATED:
+                GeneralApplication generalApplication = generalApplicationRepository.findByUser(user);
+                if (generalApplication == null)
+                    return UserTypeResponse.response(user, null, null);
+                graduatedDate = generalApplication.getGraduatedDate();
         }
 
         return UserTypeResponse.response(user, graduatedDate, gedPassDate);

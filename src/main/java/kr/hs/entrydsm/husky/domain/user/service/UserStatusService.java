@@ -16,50 +16,39 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserStatusService {
 
+    private final AuthenticationFacade authFacade;
+
     private final UserRepository userRepository;
     private final StatusRepository statusRepository;
-
-    private final AuthenticationFacade authenticationFacade;
 
     private final ProcessService processService;
 
     public UserStatusResponse getStatus() {
-        Integer receiptCode = authenticationFacade.getReceiptCode();
+        Integer receiptCode = authFacade.getReceiptCode();
         User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
-        Status status = user.getStatus();
-        if (status == null) status = createStatus(user);
+        Status status = statusRepository.findById(receiptCode)
+                .orElseGet(() -> statusRepository.save(new Status(receiptCode)));
 
         return UserStatusResponse.response(user, status);
     }
 
     public UserStatusResponse finalSubmit() {
-        Integer receiptCode = authenticationFacade.getReceiptCode();
+        Integer receiptCode = authFacade.getReceiptCode();
         User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
-        Status status = user.getStatus();
-        if (status == null) status = createStatus(user);
+        Status status = statusRepository.findById(receiptCode)
+                .orElseGet(() -> statusRepository.save(new Status(receiptCode)));
 
-        if (!processService.AllCheck(user)) throw new NotCompletedProcessException();
+        if (!processService.AllCheck(user))
+            throw new NotCompletedProcessException();
+
         status.finalSubmit();
         statusRepository.save(status);
 
         return UserStatusResponse.response(user, status);
-    }
-
-    private Status createStatus(User user) {
-        Status status = Status.builder()
-                .receiptCode(user.getReceiptCode())
-                .isFinalSubmit(false)
-                .isPaid(false)
-                .isPrintedApplicationArrived(false)
-                .isPassedFirstApply(false)
-                .isPassedInterview(false)
-                .build();
-
-        return statusRepository.save(status);
     }
 
 }

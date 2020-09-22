@@ -2,7 +2,10 @@ package kr.hs.entrydsm.husky.domain.user.service;
 
 import kr.hs.entrydsm.husky.domain.application.domain.GeneralApplication;
 import kr.hs.entrydsm.husky.domain.application.domain.adapter.GeneralApplicationAdapter;
-import kr.hs.entrydsm.husky.domain.application.domain.repositories.generalapplication.GeneralApplicationAsyncRepository;
+import kr.hs.entrydsm.husky.domain.application.domain.repositories.GeneralApplicationRepository;
+import kr.hs.entrydsm.husky.domain.application.domain.repositories.UnGraduatedApplicationRepository;
+import kr.hs.entrydsm.husky.domain.application.domain.repositories.async.GeneralApplicationAsyncRepository;
+import kr.hs.entrydsm.husky.domain.application.service.ApplicationService;
 import kr.hs.entrydsm.husky.domain.image.service.ImageService;
 import kr.hs.entrydsm.husky.domain.school.domain.School;
 import kr.hs.entrydsm.husky.domain.school.domain.repositories.SchoolRepository;
@@ -26,10 +29,12 @@ public class UserInfoService {
 
     private final UserRepository userRepository;
     private final UserAsyncRepository userAsyncRepository;
+    private final GeneralApplicationRepository generalApplicationRepository;
     private final GeneralApplicationAsyncRepository generalApplicationAsyncRepository;
     private final SchoolRepository schoolRepository;
 
     private final ImageService imageService;
+    private final ApplicationService applicationService;
     private final AuthenticationFacade authenticationFacade;
 
     @Transactional
@@ -46,7 +51,7 @@ public class UserInfoService {
                     .user(user).photo(getImageUrl(user)).build();
         }
 
-        GeneralApplicationAdapter application = new GeneralApplicationAdapter(user);
+        GeneralApplicationAdapter application = applicationService.createGeneralApplicationAdapter(receiptCode, user.getGradeType());
         if (!isSchoolCodeEmpty(request)) {
             School school = schoolRepository.findById(request.getSchoolCode())
                     .orElseThrow(SchoolNotFoundException::new);
@@ -75,12 +80,12 @@ public class UserInfoService {
         User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
-        if (user.isGradeTypeEmpty() || user.isGED() || isGeneralApplicationEmpty(user)) {
+        if (user.isGradeTypeEmpty() || user.isGED() || !generalApplicationRepository.existsByUser(user)) {
             return UserInfoResponse.builder()
                     .user(user).photo(getImageUrl(user)).build();
         }
 
-        GeneralApplication application = user.getGeneralApplication();
+        GeneralApplication application = generalApplicationRepository.findByUser(user);
         return UserInfoResponse.builder()
                 .user(user)
                 .studentNumber(application.getStudentNumber())
@@ -93,10 +98,6 @@ public class UserInfoService {
 
     private boolean isSchoolCodeEmpty(SetUserInfoRequest request) {
         return request.getSchoolCode() == null;
-    }
-
-    private boolean isGeneralApplicationEmpty(User user) {
-        return user.getGeneralApplication() == null;
     }
 
 }

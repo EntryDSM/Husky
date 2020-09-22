@@ -7,6 +7,7 @@ import kr.hs.entrydsm.husky.domain.user.domain.enums.GradeType;
 import kr.hs.entrydsm.husky.domain.user.domain.enums.Sex;
 import kr.hs.entrydsm.husky.domain.user.dto.SelectTypeRequest;
 import kr.hs.entrydsm.husky.domain.user.dto.SetUserInfoRequest;
+import kr.hs.entrydsm.husky.global.util.Validator;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,6 +17,7 @@ import java.util.function.Consumer;
 import static kr.hs.entrydsm.husky.domain.user.domain.enums.ApplyType.COMMON;
 import static kr.hs.entrydsm.husky.domain.user.domain.enums.ApplyType.MEISTER;
 import static kr.hs.entrydsm.husky.domain.user.domain.enums.GradeType.*;
+import static kr.hs.entrydsm.husky.global.util.Validator.isBlank;
 
 @Getter
 @Setter
@@ -86,29 +88,6 @@ public class User extends BaseTimeEntity {
     @Column(length = 1600)
     private String studyPlan;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Status status;
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private GEDApplication gedApplication;
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private GraduatedApplication graduatedApplication;
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private UnGraduatedApplication unGraduatedApplication;
-
-    public GeneralApplication getGeneralApplication() {
-        switch (gradeType) {
-            case GRADUATED:
-                return this.graduatedApplication;
-            case UNGRADUATED:
-                return this.unGraduatedApplication;
-            default:
-                return null;
-        }
-    }
-
     public void setPassword(String password) {
         this.password = password;
     }
@@ -127,7 +106,7 @@ public class User extends BaseTimeEntity {
         setIfNotNull(this::setParentName, dto.getParentName());
         setIfNotNull(this::setParentTel, dto.getParentTel());
         setIfNotNull(this::setApplicantTel, dto.getApplicantTel());
-        setIfNotNull(this::setHomeTel, dto.getHomeTel());
+        this.homeTel = dto.getHomeTel();
         setIfNotNull(this::setAddress, dto.getAddress());
         setIfNotNull(this::setDetailAddress, dto.getDetailAddress());
         setIfNotNull(this::setPostCode, dto.getPostCode());
@@ -160,22 +139,9 @@ public class User extends BaseTimeEntity {
     }
 
     public boolean isFilledInfo() {
-        return name != null && sex != null && birthDate != null && applicantTel != null && parentTel != null &&
-                parentName != null && address != null && detailAddress != null && postCode != null && userPhoto != null;
-    }
-
-    public boolean isFilledType() {
-        return gradeType != null && applyType != null && additionalType != null && hasApplication();
-    }
-
-    private boolean hasApplication() {
-        if (gradeType == null)
-            return false;
-
-        if (gradeType.equals(GED))
-            return gedApplication != null;
-
-        return getGeneralApplication() != null;
+        return isBlank(name) && sex != null && birthDate != null && applicantTel != null && parentTel != null &&
+                isBlank(parentName) && isBlank(address) && isBlank(detailAddress) && isBlank(postCode) &&
+                userPhoto != null;
     }
 
     public boolean isMale() {
@@ -206,10 +172,6 @@ public class User extends BaseTimeEntity {
         return this.applyType == null;
     }
 
-    public boolean isGeneralApplicationEmpty() {
-        return this.getGeneralApplication() == null;
-    }
-
     public boolean isCommonApplyType() {
         return !isApplyTypeEmpty() && applyType.equals(COMMON);
     }
@@ -220,10 +182,6 @@ public class User extends BaseTimeEntity {
 
     public boolean isSocialMeritApplytype() {
         return !isCommonApplyType() && !isMeisterApplyType();
-    }
-
-    public boolean isFinalSubmitRequired() {
-        return status == null || !status.isFinalSubmit();
     }
 
 }

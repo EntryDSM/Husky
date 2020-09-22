@@ -1,7 +1,6 @@
-package kr.hs.entrydsm.husky.domain.application.domain.repositories.generalapplication;
+package kr.hs.entrydsm.husky.domain.application.domain.repositories.async;
 
 import kr.hs.entrydsm.husky.domain.application.domain.adapter.GeneralApplicationAdapter;
-import kr.hs.entrydsm.husky.domain.application.domain.repositories.async.ApplicationAsyncRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -15,11 +14,15 @@ public class GeneralApplicationAsyncRepositoryImpl implements GeneralApplication
     private final ApplicationAsyncRepository applicationAsyncRepository;
 
     @Override
-    public void save(GeneralApplicationAdapter application) {
-        if (application.getGradeType().equals(UNGRADUATED))
-            applicationAsyncRepository.save(application.getUnGraduatedApplication());
-        else if (application.getGradeType().equals(GRADUATED))
-            applicationAsyncRepository.save(application.getGraduatedApplication());
+    public void save(GeneralApplicationAdapter adapter) {
+        switch (adapter.getGradeType()) {
+            case UNGRADUATED:
+                applicationAsyncRepository.save(adapter.getUnGraduatedApplication());
+                break;
+
+            case GRADUATED:
+                applicationAsyncRepository.save(adapter.getGraduatedApplication());
+        }
     }
 
 }
