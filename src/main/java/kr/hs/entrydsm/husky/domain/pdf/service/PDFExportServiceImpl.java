@@ -30,6 +30,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import javax.xml.bind.JAXBException;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.List;
@@ -80,6 +81,7 @@ public class PDFExportServiceImpl implements PDFExportService {
             CalculatedScore calculatedScore = gradeCalcService.calcStudentGrade(user);
             Map<String, String> templateVariables = applicationInfoConverter.applicationToInfo(user, calculatedScore);
             documentPart.variableReplace(templateVariables);
+            insertNewline(mlPackage);
             mlPackage.setFontMapper(fontMapper);
 
             FOSettings settings = new FOSettings();
@@ -139,6 +141,14 @@ public class PDFExportServiceImpl implements PDFExportService {
         run.getContent().add(drawing);
         drawing.getAnchorOrInline().add(inline);
         return run;
+    }
+
+    private void insertNewline(WordprocessingMLPackage mlPackage) throws JAXBException {
+        MainDocumentPart part = mlPackage.getMainDocumentPart();
+        String xml = XmlUtils.marshaltoString(part.getJaxbElement());
+        xml = xml.replaceAll("¶", "</w:t><w:br/><w:t>");
+        Object obj = XmlUtils.unmarshalString(xml);
+        part.setJaxbElement((Document) obj);
     }
 
     @PostConstruct
