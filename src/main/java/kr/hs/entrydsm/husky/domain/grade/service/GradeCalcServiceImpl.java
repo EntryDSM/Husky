@@ -158,7 +158,7 @@ public class GradeCalcServiceImpl implements GradeCalcService {
         BigDecimal secondGradeScore = null;
         BigDecimal thirdGradeScore;
 
-        if (matrixUtil.isAllGradeEmpty())
+        if (matrixUtil.isAllGradeEmpty() || matrixUtil.isThirdGradeEmpty(user.getGradeType()))
             return GradeScore.EMPTY();
 
         boolean isFirstGradeEmpty = matrixUtil.isFirstGradeEmpty();

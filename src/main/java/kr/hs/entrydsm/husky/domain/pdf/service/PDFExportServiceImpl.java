@@ -104,6 +104,7 @@ public class PDFExportServiceImpl implements PDFExportService {
 
         if (user.isGED())
             fileName.append("ged_");
+
         else if (user.isCommonApplyType())
             fileName.append("common_");
 
