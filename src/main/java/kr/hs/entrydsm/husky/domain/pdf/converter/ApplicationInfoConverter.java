@@ -70,7 +70,7 @@ public class ApplicationInfoConverter {
         if (!user.isGradeTypeEmpty() && !user.isGED() && generalApplication != null) {
             values.put("schoolCode", setBlankIfNull(generalApplication.getSchoolCode()));
             values.put("schoolClass", setBlankIfNull(generalApplication.getSchoolClass()));
-            values.put("schoolTel", setBlankIfNull(generalApplication.getSchoolTel()));
+            values.put("schoolTel", setBlankIfNull(toFormattedPhoneNumber(generalApplication.getSchoolTel())));
             values.put("schoolName", setBlankIfNull(generalApplication.getSchoolName()));
         }
     }
