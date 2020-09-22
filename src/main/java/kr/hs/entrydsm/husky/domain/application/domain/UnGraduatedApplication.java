@@ -22,7 +22,7 @@ public class UnGraduatedApplication extends GeneralApplication {
     private Integer receiptCode;
 
     public UnGraduatedApplication update(SelectTypeRequest dto) {
-        if (dto.getGedPassDate() != null)
+        if (dto.getGraduatedDate() != null)
             super.updateGraduatedDate(dto.getGraduatedDate().atDay(1));
         return this;
     }
