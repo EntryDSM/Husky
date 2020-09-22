@@ -81,7 +81,7 @@ public class ApplicationInfoConverter {
         values.put("applicantTel", toFormattedPhoneNumber(user.getApplicantTel()));
         values.put("parentTel", toFormattedPhoneNumber(user.getParentTel()));
         String homeTel = (user.isHomeTelEmpty()) ? "없음" : toFormattedPhoneNumber(user.getHomeTel());
-        values.put("homeTel", homeTel);
+        values.put("homeTel", toFormattedPhoneNumber(homeTel));
     }
 
     private void setGraduationClassification(HashMap<String, String> values, User user) {
