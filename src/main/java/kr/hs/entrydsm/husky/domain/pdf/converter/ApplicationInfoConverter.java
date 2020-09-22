@@ -37,7 +37,7 @@ public class ApplicationInfoConverter {
         setUserType(values, user);
         setGradeScore(values, user, calculatedScore);
         setLocalDate(values);
-        setIntroducement(values, user);
+        setIntroduction(values, user);
         setParentInfo(values, user);
 
         if (isRecommendationsRequired(user))
@@ -152,9 +152,13 @@ public class ApplicationInfoConverter {
         values.put("day", String.valueOf(now.getDayOfMonth()));
     }
 
-    private void setIntroducement(HashMap<String, String> values, User user) {
-        values.put("selfIntroduction", (user.getSelfIntroduction() == null) ? "" : user.getSelfIntroduction());
-        values.put("studyPlan", (user.getStudyPlan() == null) ? "" : user.getStudyPlan());
+    private void setIntroduction(HashMap<String, String> values, User user) {
+        values.put("selfIntroduction", setBlankIfNull(replaceNewlineToken(user.getSelfIntroduction())));
+        values.put("studyPlan", setBlankIfNull(replaceNewlineToken(user.getStudyPlan())));
+    }
+
+    private String replaceNewlineToken(String string) {
+        return (string != null) ? string.replace("\n", "¶") : null;
     }
 
     private void setParentInfo(HashMap<String, String> values, User user) {
