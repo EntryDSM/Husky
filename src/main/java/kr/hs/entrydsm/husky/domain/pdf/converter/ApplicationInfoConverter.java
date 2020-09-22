@@ -91,7 +91,7 @@ public class ApplicationInfoConverter {
                         .filter(ged -> ged.getGedPassDate() != null)
                         .ifPresent(ged -> {
                             values.put("gedPassedYear", String.valueOf(ged.getGedPassDate().getYear()));
-                            values.put("gedPassedMonth", String.valueOf(ged.getGedPassDate().getMonth()));
+                            values.put("gedPassedMonth", String.valueOf(ged.getGedPassDate().getMonthValue()));
                         });
                 break;
 
@@ -100,7 +100,7 @@ public class ApplicationInfoConverter {
                         .filter(graduated -> graduated.getGraduatedDate() != null)
                         .ifPresent(graduated -> {
                             values.put("graduatedYear", String.valueOf(graduated.getGraduatedDate().getYear()));
-                            values.put("graduatedMonth", String.valueOf(graduated.getGraduatedDate().getMonth()));
+                            values.put("graduatedMonth", String.valueOf(graduated.getGraduatedDate().getMonthValue()));
                         });
                 break;
 
@@ -108,7 +108,7 @@ public class ApplicationInfoConverter {
                 unGraduatedApplicationRepository.findById(user.getReceiptCode())
                         .filter(unGraduated -> unGraduated.getGraduatedDate() != null)
                         .ifPresent(unGraduated -> {
-                            values.put("unGraduatedMonth", String.valueOf(unGraduated.getGraduatedDate().getMonth()));
+                            values.put("unGraduatedMonth", String.valueOf(unGraduated.getGraduatedDate().getMonthValue()));
                         });
         }
     }
