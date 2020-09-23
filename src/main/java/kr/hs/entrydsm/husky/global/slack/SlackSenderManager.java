@@ -36,7 +36,7 @@ public class SlackSenderManager {
     }
 
     public void send(HttpServletRequest request, Exception exception) {
-        SlackMessageRequest.Attachments attachments = this.toAttachments(request, exception);
+        SlackMessageRequest attachments = this.toAttachments(request, exception);
         restTemplate.postForEntity(webHookUrl, writeValueAsString(attachments), String.class);
     }
 
@@ -56,25 +56,25 @@ public class SlackSenderManager {
         return Arrays.toString(headers.entrySet().toArray());
     }
 
-    private SlackMessageRequest.Attachments toAttachments(HttpServletRequest request, Exception exception) {
-        return SlackMessageRequest.Attachments.builder()
+    private SlackMessageRequest toAttachments(HttpServletRequest request, Exception exception) {
+        return SlackMessageRequest.builder()
                 .attachments(List.of(
-                        SlackMessageRequest.Attachment.builder()
+                        Attachment.builder()
                                 .color("#FF0000")
                                 .pretext("[ERROR] An error has occurred below.")
                                 .authorName("Bug Reporter")
                                 .title(exception.getLocalizedMessage())
                                 .text(getStackTrace(exception))
                                 .fields(List.of(
-                                        SlackMessageRequest.Field.builder()
+                                        Field.builder()
                                                 .title("Request URI")
                                                 .value(request.getRequestURI())
                                                 .build(),
-                                        SlackMessageRequest.Field.builder()
+                                        Field.builder()
                                                 .title("Request Header")
                                                 .value(getHeader(request))
                                                 .build(),
-                                        SlackMessageRequest.Field.builder()
+                                        Field.builder()
                                                 .title("Request Body")
                                                 .value(getBody(request))
                                                 .build()
