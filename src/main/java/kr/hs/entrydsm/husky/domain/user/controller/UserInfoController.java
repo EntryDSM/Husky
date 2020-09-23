@@ -2,9 +2,9 @@ package kr.hs.entrydsm.husky.domain.user.controller;
 
 import kr.hs.entrydsm.husky.domain.image.service.ImageService;
 import kr.hs.entrydsm.husky.domain.user.dto.*;
-import kr.hs.entrydsm.husky.domain.user.service.UserInfoService;
-import kr.hs.entrydsm.husky.domain.user.service.UserStatusService;
-import kr.hs.entrydsm.husky.domain.user.service.UserTypeService;
+import kr.hs.entrydsm.husky.domain.user.service.info.UserInfoService;
+import kr.hs.entrydsm.husky.domain.user.service.status.UserStatusService;
+import kr.hs.entrydsm.husky.domain.user.service.type.UserTypeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

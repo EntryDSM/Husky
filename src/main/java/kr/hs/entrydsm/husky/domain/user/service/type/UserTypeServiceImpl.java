@@ -1,4 +1,4 @@
-package kr.hs.entrydsm.husky.domain.user.service;
+package kr.hs.entrydsm.husky.domain.user.service.type;
 
 import kr.hs.entrydsm.husky.domain.application.domain.GEDApplication;
 import kr.hs.entrydsm.husky.domain.application.domain.GeneralApplication;
@@ -26,7 +26,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class UserTypeService {
+public class UserTypeServiceImpl implements UserTypeService {
 
     private final UserRepository userRepository;
     private final UserAsyncRepository userAsyncRepository;
@@ -38,6 +38,7 @@ public class UserTypeService {
 
     private final AuthenticationFacade authenticationFacade;
 
+    @Override
     @Transactional
     public void updateUserType(SelectTypeRequest dto) {
         User user = userRepository.findById(authenticationFacade.getReceiptCode())
@@ -66,6 +67,7 @@ public class UserTypeService {
         }
     }
 
+    @Override
     public UserTypeResponse getUserType() {
         Integer receiptCode = authenticationFacade.getReceiptCode();
         User user = userRepository.findById(receiptCode)
