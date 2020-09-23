@@ -13,6 +13,7 @@ import kr.hs.entrydsm.husky.domain.user.domain.User;
 import kr.hs.entrydsm.husky.domain.user.domain.repositories.StatusRepository;
 import kr.hs.entrydsm.husky.domain.user.domain.repositories.UserRepository;
 import kr.hs.entrydsm.husky.global.config.security.AuthenticationFacade;
+import kr.hs.entrydsm.husky.global.slack.SlackSenderManager;
 import lombok.RequiredArgsConstructor;
 import org.docx4j.Docx4J;
 import org.docx4j.XmlUtils;
@@ -48,6 +49,7 @@ public class PDFExportServiceImpl implements PDFExportService {
     private final GradeCalcService gradeCalcService;
     private final ImageService imageService;
     private final ApplicationInfoConverter applicationInfoConverter;
+    private final SlackSenderManager slackSenderManager;
 
     @Override
     public byte[] getPDFApplicationPreview() {
@@ -93,7 +95,7 @@ public class PDFExportServiceImpl implements PDFExportService {
             return result.toByteArray();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            slackSenderManager.send(e);
             throw new UnprocessableEntityException();
         }
     }
