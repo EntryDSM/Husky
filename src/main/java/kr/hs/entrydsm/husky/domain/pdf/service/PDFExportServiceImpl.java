@@ -91,7 +91,6 @@ public class PDFExportServiceImpl implements PDFExportService {
 
             ByteArrayOutputStream result = new ByteArrayOutputStream();
             Docx4J.toFO(settings, result, Docx4J.FLAG_EXPORT_PREFER_NONXSL);
-
             return result.toByteArray();
 
         } catch (Exception e) {
