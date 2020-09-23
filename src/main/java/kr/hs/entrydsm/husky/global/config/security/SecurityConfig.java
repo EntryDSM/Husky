@@ -1,5 +1,6 @@
 package kr.hs.entrydsm.husky.global.config.security;
 
+import kr.hs.entrydsm.husky.global.slack.SlackSenderManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final SlackSenderManager slackSenderManager;
 
     @Bean
     @Override
@@ -44,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/schedules").permitAll()
                     .anyRequest().authenticated().and()
                 .apply(new JwtConfigurer(jwtTokenProvider)).and()
-                .apply(new ExceptionConfigurer());
+                .apply(new ExceptionConfigurer(slackSenderManager));
     }
 
     @Bean
