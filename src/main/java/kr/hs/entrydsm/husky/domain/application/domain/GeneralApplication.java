@@ -3,6 +3,7 @@ package kr.hs.entrydsm.husky.domain.application.domain;
 import kr.hs.entrydsm.husky.domain.application.dto.SetScoreRequest;
 import kr.hs.entrydsm.husky.domain.school.domain.School;
 import kr.hs.entrydsm.husky.domain.user.dto.SetUserInfoRequest;
+import kr.hs.entrydsm.husky.global.util.Validator;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,6 +14,8 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToOne;
 import java.time.LocalDate;
 import java.util.function.Consumer;
+
+import static kr.hs.entrydsm.husky.global.util.Validator.isExist;
 
 @Getter
 @Setter(AccessLevel.PROTECTED)
@@ -127,7 +130,7 @@ public abstract class GeneralApplication extends BaseTimeEntity {
     }
 
     public String getSchoolClass() {
-        return (studentNumber != null) ? studentNumber.substring(1, 3).replace("0", "") : null;
+        return (isExist(studentNumber)) ? studentNumber.substring(1, 3).replace("0", "") : null;
     }
 
     protected GeneralApplication() {}

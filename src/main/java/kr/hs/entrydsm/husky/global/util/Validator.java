@@ -6,8 +6,8 @@ public class Validator {
     }
 
     public static boolean isExist(String target) {
-        if(target == null) return false;
+        if (target == null) return false;
         return !target.isBlank();
     }
-    
+
 }
