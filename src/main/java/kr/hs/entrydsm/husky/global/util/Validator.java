@@ -9,4 +9,5 @@ public class Validator {
         if(target == null) return false;
         return !target.isBlank();
     }
+    
 }
