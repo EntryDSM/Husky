@@ -14,6 +14,8 @@ import javax.persistence.OneToOne;
 import java.time.LocalDate;
 import java.util.function.Consumer;
 
+import static kr.hs.entrydsm.husky.global.util.Validator.isExists;
+
 @Getter
 @Setter(AccessLevel.PROTECTED)
 @MappedSuperclass
@@ -127,7 +129,7 @@ public abstract class GeneralApplication extends BaseTimeEntity {
     }
 
     public String getSchoolClass() {
-        return (studentNumber != null) ? studentNumber.substring(1, 3).replace("0", "") : null;
+        return (isExists(studentNumber)) ? studentNumber.substring(1, 3).replace("0", "") : null;
     }
 
     protected GeneralApplication() {}
