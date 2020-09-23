@@ -3,6 +3,8 @@ package kr.hs.entrydsm.husky.global.slack;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import kr.hs.entrydsm.husky.global.slack.dto.Attachment;
+import kr.hs.entrydsm.husky.global.slack.dto.Field;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
