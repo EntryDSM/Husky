@@ -1,10 +1,10 @@
 package kr.hs.entrydsm.husky.domain.user.controller;
 
-import kr.hs.entrydsm.husky.domain.image.service.S3ImageServiceImpl;
+import kr.hs.entrydsm.husky.domain.image.service.ImageService;
 import kr.hs.entrydsm.husky.domain.user.dto.*;
-import kr.hs.entrydsm.husky.domain.user.service.info.UserInfoServiceImpl;
-import kr.hs.entrydsm.husky.domain.user.service.status.UserStatusServiceImpl;
-import kr.hs.entrydsm.husky.domain.user.service.type.UserTypeServiceImpl;
+import kr.hs.entrydsm.husky.domain.user.service.info.UserInfoService;
+import kr.hs.entrydsm.husky.domain.user.service.status.UserStatusService;
+import kr.hs.entrydsm.husky.domain.user.service.type.UserTypeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -18,10 +18,10 @@ import java.net.MalformedURLException;
 @RestController
 public class UserInfoController {
 
-    private final UserTypeServiceImpl userTypeService;
-    private final UserInfoServiceImpl userInfoService;
-    private final UserStatusServiceImpl userStatusService;
-    private final S3ImageServiceImpl imageService;
+    private final UserTypeService userTypeService;
+    private final UserInfoService userInfoService;
+    private final UserStatusService userStatusService;
+    private final ImageService imageService;
 
     @PatchMapping("/type")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)

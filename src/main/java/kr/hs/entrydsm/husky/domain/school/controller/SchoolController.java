@@ -1,6 +1,6 @@
 package kr.hs.entrydsm.husky.domain.school.controller;
 
-import kr.hs.entrydsm.husky.domain.school.service.SchoolServiceImpl;
+import kr.hs.entrydsm.husky.domain.school.service.SchoolService;
 import kr.hs.entrydsm.husky.domain.school.exception.AppError;
 import kr.hs.entrydsm.husky.domain.school.domain.School;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ import javax.validation.constraints.NotBlank;
 @RestController
 public class SchoolController {
 
-    private final SchoolServiceImpl schoolService;
+    private final SchoolService schoolService;
 
     @GetMapping("/schools")
     public Page<School> search(@RequestParam @NotBlank String eduOffice,
