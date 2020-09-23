@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -26,8 +27,8 @@ public class SlackSenderManager {
     @Value("${slack.webhook.url}")
     private String webHookUrl;
 
-    private final RestTemplate restTemplate;
-    private final ObjectMapper objectMapper;
+    private RestTemplate restTemplate;
+    private ObjectMapper objectMapper;
 
     public void send(Exception exception) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
@@ -99,6 +100,12 @@ public class SlackSenderManager {
             log.error(String.format("JsonProcessingException occurred: %s", e));
             throw new IllegalArgumentException(e.getMessage());
         }
+    }
+
+    @PostConstruct
+    public void initialize() {
+        this.objectMapper = new ObjectMapper();
+        this.restTemplate = new RestTemplate();
     }
 
 }
