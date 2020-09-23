@@ -5,7 +5,7 @@ public class Validator {
         return target == null || target.isBlank();
     }
 
-    public static boolean isExist(String target) {
+    public static boolean isExists(String target) {
         if (target == null) return false;
         return !target.isBlank();
     }

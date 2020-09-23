@@ -16,7 +16,7 @@ import java.util.function.Consumer;
 import static kr.hs.entrydsm.husky.domain.user.domain.enums.ApplyType.COMMON;
 import static kr.hs.entrydsm.husky.domain.user.domain.enums.ApplyType.MEISTER;
 import static kr.hs.entrydsm.husky.domain.user.domain.enums.GradeType.*;
-import static kr.hs.entrydsm.husky.global.util.Validator.isExist;
+import static kr.hs.entrydsm.husky.global.util.Validator.isExists;
 
 @Getter
 @Setter
@@ -138,8 +138,8 @@ public class User extends BaseTimeEntity {
     }
 
     public boolean isFilledInfo() {
-        return isExist(name) && sex != null && birthDate != null && isExist(applicantTel) && isExist(parentTel) &&
-                isExist(parentName) && isExist(address) && isExist(detailAddress) && isExist(postCode) &&
+        return isExists(name) && sex != null && birthDate != null && isExists(applicantTel) && isExists(parentTel) &&
+                isExists(parentName) && isExists(address) && isExists(detailAddress) && isExists(postCode) &&
                 userPhoto != null;
     }
 
