@@ -24,7 +24,7 @@ public class AuthController {
     }
 
     @PostMapping("/email/verify")
-    public void sendEmail(@RequestBody EmailRequest emailRequest) {
+    public void sendEmail(@RequestBody @Valid EmailRequest emailRequest) {
         userService.sendSignUpEmail(emailRequest);
     }
 
@@ -34,7 +34,7 @@ public class AuthController {
     }
 
     @PostMapping("/email/password/verify")
-    public void sendPasswordChangeEmail(@RequestBody EmailRequest emailRequest) {
+    public void sendPasswordChangeEmail(@RequestBody @Valid EmailRequest emailRequest) {
         userService.sendPasswordChangeEmail(emailRequest);
     }
 
