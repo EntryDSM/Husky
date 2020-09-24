@@ -23,7 +23,7 @@ aws:
     secret_key: ${AWS_SES_SECRET_KEY:secret_key}
   cloudfront:
     domain: ${AWS_CLOUDFRONT_DOMAIN:image.entrydsm.hs.kr}
-    key_id: ${AWS_CLOUDFRONT_KEY_ID}
+    key_id: ${AWS_CLOUDFRONT_KEY_ID:}
     exp: ${AWS_CLOUDFRONT_EXP:15}
 
 
