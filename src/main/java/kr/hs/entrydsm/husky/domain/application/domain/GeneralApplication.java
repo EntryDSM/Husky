@@ -113,7 +113,7 @@ public abstract class GeneralApplication extends BaseTimeEntity {
     }
 
     public boolean isFilledStudentInfo() {
-        return studentNumber != null && school != null && schoolTel != null;
+        return isExists(studentNumber) && school != null && isExists(schoolTel);
     }
 
     public boolean isSchoolEmpty() {

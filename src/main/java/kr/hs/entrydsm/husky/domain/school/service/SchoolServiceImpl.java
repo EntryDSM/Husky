@@ -14,8 +14,8 @@ public class SchoolServiceImpl implements SchoolService {
     private final SchoolRepository schoolRepository;
 
     @Override
-    public Page<School> search(String eduOffice, String name, Pageable pageable) {
-        return schoolRepository.findBySchoolFullNameContainsAndSchoolNameContains(eduOffice, name, pageable);
+    public Page<School> search(String name, Pageable pageable) {
+        return schoolRepository.findBySchoolFullNameContains(name, pageable);
     }
 
 }

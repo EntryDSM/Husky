@@ -19,10 +19,9 @@ public class SchoolController {
     private final SchoolService schoolService;
 
     @GetMapping("/schools")
-    public Page<School> search(@RequestParam @NotBlank String eduOffice,
-                               @RequestParam @NotBlank String name,
+    public Page<School> search(@RequestParam @NotBlank String name,
                                Pageable pageable) {
-        return schoolService.search(eduOffice, name, pageable);
+        return schoolService.search(name, pageable);
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)

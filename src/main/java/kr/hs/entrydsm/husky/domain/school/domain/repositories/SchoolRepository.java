@@ -6,5 +6,5 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SchoolRepository extends JpaRepository<School, String> {
-    Page<School> findBySchoolFullNameContainsAndSchoolNameContains(String region, String name, Pageable pageable);
+    Page<School> findBySchoolFullNameContains(String name, Pageable pageable);
 }

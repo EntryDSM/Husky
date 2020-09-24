@@ -24,6 +24,8 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.text.ParseException;
 
+import static kr.hs.entrydsm.husky.global.util.Validator.isExists;
+
 @RequiredArgsConstructor
 @Service
 public class UserInfoServiceImpl implements UserInfoService {
@@ -45,6 +47,9 @@ public class UserInfoServiceImpl implements UserInfoService {
         Integer receiptCode = authenticationFacade.getReceiptCode();
         User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
+
+        if (!user.isPhotoEmpty() && isExists(request.getPhoto()))
+            imageService.delete(user.getUserPhoto());
 
         user.updateInfo(request);
         userAsyncRepository.save(user);
