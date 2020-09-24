@@ -21,6 +21,9 @@ import java.util.TimeZone;
 public class ImageUrlServiceImpl implements ImageUrlService {
 
     private final String privateKeyFilePath = this.getClass().getResource("/secrets/secret.der").getPath();
+
+    private static final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+
     @Value("${aws.cloudfront.domain}")
     private String distributionDomain;
     @Value("${aws.cloudfront.key_id}")
@@ -38,7 +41,6 @@ public class ImageUrlServiceImpl implements ImageUrlService {
 
         String policyResourcePath = "https://" + distributionDomain + "/" + objectName;
 
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         df.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         return CloudFrontService.signUrlCanned(
