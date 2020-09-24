@@ -5,6 +5,7 @@ import kr.hs.entrydsm.husky.domain.application.domain.adapter.GeneralApplication
 import kr.hs.entrydsm.husky.domain.application.domain.repositories.GeneralApplicationRepository;
 import kr.hs.entrydsm.husky.domain.application.domain.repositories.async.GeneralApplicationAsyncRepository;
 import kr.hs.entrydsm.husky.domain.application.service.ApplicationServiceImpl;
+import kr.hs.entrydsm.husky.domain.image.service.ImageService;
 import kr.hs.entrydsm.husky.domain.image.service.ImageUrlService;
 import kr.hs.entrydsm.husky.domain.school.domain.School;
 import kr.hs.entrydsm.husky.domain.school.domain.repositories.SchoolRepository;
@@ -36,6 +37,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     private final GeneralApplicationAsyncRepository generalApplicationAsyncRepository;
     private final SchoolRepository schoolRepository;
 
+    private final ImageService imageService;
     private final ImageUrlService imageUrlService;
     private final ApplicationServiceImpl applicationService;
     private final AuthenticationFacade authenticationFacade;
