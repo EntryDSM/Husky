@@ -41,12 +41,13 @@ public class ImageUrlServiceImpl implements ImageUrlService {
         String policyResourcePath = "https://" + distributionDomain + "/" + objectName;
 
         df.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String dateString = df.format(DateUtils.addMinutes(new Date(), exp));
 
         return CloudFrontService.signUrlCanned(
                 policyResourcePath,
                 keyPairId,
                 derPrivateKey,
-                ServiceUtils.parseIso8601Date(df.format(DateUtils.addMinutes(new Date(), exp)))
+                ServiceUtils.parseIso8601Date(dateString)
         );
     }
 
