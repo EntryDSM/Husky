@@ -17,6 +17,7 @@ import kr.hs.entrydsm.husky.global.config.security.AuthenticationFacade;
 import kr.hs.entrydsm.husky.domain.auth.service.email.EmailService;
 import kr.hs.entrydsm.husky.global.config.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +37,9 @@ public class UserServiceImpl implements UserService {
 
     private final AuthenticationFacade authenticationFacade;
     private final PasswordEncoder passwordEncoder;
+
+    @Value("${auth.email.limit}")
+    private int limit;
 
     @Override
     public void signUp(AccountRequest accountRequest) {
@@ -135,7 +139,7 @@ public class UserServiceImpl implements UserService {
     private boolean isUnderRequestLimit(String email) {
         return emailLimiterRepository.findById(email)
                 .or(() -> Optional.of(new EmailLimiter(email, 0L)))
-                .map(limiter -> emailLimiterRepository.save(limiter.update()))
+                .map(limiter -> emailLimiterRepository.save(limiter.update(limit)))
                 .map(EmailLimiter::isBelowLimit)
                 .get();
     }

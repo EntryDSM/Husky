@@ -2,6 +2,7 @@ package kr.hs.entrydsm.husky.domain.auth.domain.emaillimit;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
@@ -17,9 +18,9 @@ public class EmailLimiter {
     @TimeToLive
     private Long count;
 
-    public EmailLimiter update() {
+    public EmailLimiter update(int limit) {
         if (isBelowLimit()) {
-            count += 6;
+            count += limit;
         }
         return this;
     }
