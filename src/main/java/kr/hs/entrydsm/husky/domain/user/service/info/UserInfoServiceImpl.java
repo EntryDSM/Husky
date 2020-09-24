@@ -43,6 +43,8 @@ public class UserInfoServiceImpl implements UserInfoService {
         User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
+        if(!user.getUserPhoto().isEmpty() && request.getPhoto() != null) deleteLastPhoto(user);
+
         user.updateInfo(request);
         userAsyncRepository.save(user);
 
@@ -73,6 +75,10 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     private String getImageUrl(User user) throws MalformedURLException {
         return (!user.isPhotoEmpty()) ? imageService.generateObjectUrl(user.getUserPhoto()) : null;
+    }
+
+    private void deleteLastPhoto(User user) {
+        imageService.delete(user.getUserPhoto());
     }
 
     @Override
