@@ -36,9 +36,9 @@ public class S3ImageServiceImpl extends AWS4Signer implements ImageService {
 
     private static final Integer EXPIRES = 900;
 
-    private SimpleDateFormat dateTimeFormat = new SimpleDateFormat(ISO8601BasicFormat);
+    private final SimpleDateFormat dateTimeFormat = new SimpleDateFormat(ISO8601BasicFormat);
 
-    private SimpleDateFormat dateStampFormat = new SimpleDateFormat("yyyyMMdd");
+    private final SimpleDateFormat dateStampFormat = new SimpleDateFormat("yyyyMMdd");
 
     private final AmazonS3 s3;
 
@@ -68,6 +68,11 @@ public class S3ImageServiceImpl extends AWS4Signer implements ImageService {
                 .withCannedAcl(CannedAccessControlList.AuthenticatedRead));
 
         return filename;
+    }
+
+    @Override
+    public void delete(String objectName) {
+        s3.deleteObject(bucket, objectName);
     }
 
     @Override
