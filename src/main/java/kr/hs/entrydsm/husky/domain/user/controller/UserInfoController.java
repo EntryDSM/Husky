@@ -6,12 +6,15 @@ import kr.hs.entrydsm.husky.domain.user.service.info.UserInfoService;
 import kr.hs.entrydsm.husky.domain.user.service.status.UserStatusService;
 import kr.hs.entrydsm.husky.domain.user.service.type.UserTypeService;
 import lombok.RequiredArgsConstructor;
+import org.jets3t.service.CloudFrontServiceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.net.MalformedURLException;
+import java.text.ParseException;
 
 @RequiredArgsConstructor
 @RequestMapping("/users/me")
@@ -36,18 +39,20 @@ public class UserInfoController {
 
     @PatchMapping
     @ResponseStatus(value = HttpStatus.OK)
-    public UserInfoResponse setUserInfo(@RequestBody @Valid SetUserInfoRequest request) throws MalformedURLException {
+    public UserInfoResponse setUserInfo(@RequestBody @Valid SetUserInfoRequest request)
+            throws IOException, ParseException, CloudFrontServiceException {
         return userInfoService.setUserInfo(request);
     }
 
     @PatchMapping("/ged")
     @ResponseStatus(value = HttpStatus.OK)
-    public UserInfoResponse setGEDUserInfo(@RequestBody @Valid SetUserInfoRequest request) throws MalformedURLException {
+    public UserInfoResponse setGEDUserInfo(@RequestBody @Valid SetUserInfoRequest request)
+            throws IOException, ParseException, CloudFrontServiceException {
         return userInfoService.setUserInfo(request);
     }
 
     @GetMapping
-    public UserInfoResponse getUserInfo() throws MalformedURLException {
+    public UserInfoResponse getUserInfo() throws IOException, ParseException, CloudFrontServiceException {
         return userInfoService.getUserInfo();
     }
 
