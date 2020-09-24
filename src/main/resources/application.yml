@@ -37,6 +37,8 @@ auth:
     prefix: ${JWT_PREFIX:prefix}
   maintenance:
     key: ${MAINTENANCE_KEY:dGVzdA==}
+  email:
+    limit: ${EMAIL_REQUEST_LIMIT:6}
 
 logging:
   level:
