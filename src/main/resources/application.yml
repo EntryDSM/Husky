@@ -21,6 +21,10 @@ aws:
     region: ${AWS_SES_REGION:us-east-1}
     access_key: ${AWS_SES_ACCESS_KEY:access_key}
     secret_key: ${AWS_SES_SECRET_KEY:secret_key}
+  cloudfront:
+    domain: ${AWS_CLOUDFRONT_DOMAIN:image.entrydsm.hs.kr}
+    key_id: ${AWS_CLOUDFRONT_KEY_ID:APKAIQJ6SISVJWCWUM3Q}
+    exp: ${AWS_CLOUDFRONT_EXP:15}
 
 
 auth:
