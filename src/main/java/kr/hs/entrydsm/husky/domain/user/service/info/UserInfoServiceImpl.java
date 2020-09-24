@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.net.MalformedURLException;
 
+import static kr.hs.entrydsm.husky.global.util.Validator.isExists;
+
 @RequiredArgsConstructor
 @Service
 public class UserInfoServiceImpl implements UserInfoService {
@@ -43,7 +45,8 @@ public class UserInfoServiceImpl implements UserInfoService {
         User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
-        if(!user.getUserPhoto().isEmpty() && request.getPhoto() != null) deleteLastPhoto(user);
+        if (!user.isPhotoEmpty() && isExists(request.getPhoto()))
+            imageService.delete(user.getUserPhoto());
 
         user.updateInfo(request);
         userAsyncRepository.save(user);
@@ -75,10 +78,6 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     private String getImageUrl(User user) throws MalformedURLException {
         return (!user.isPhotoEmpty()) ? imageService.generateObjectUrl(user.getUserPhoto()) : null;
-    }
-
-    private void deleteLastPhoto(User user) {
-        imageService.delete(user.getUserPhoto());
     }
 
     @Override
