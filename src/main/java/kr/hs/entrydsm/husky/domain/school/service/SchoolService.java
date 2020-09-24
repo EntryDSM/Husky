@@ -6,6 +6,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface SchoolService {
 
-    Page<School> search(String eduOffice, String name, Pageable pageable);
+    Page<School> search(String name, Pageable pageable);
 
 }
