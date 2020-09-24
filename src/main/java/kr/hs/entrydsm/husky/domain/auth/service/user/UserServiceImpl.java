@@ -1,5 +1,7 @@
 package kr.hs.entrydsm.husky.domain.auth.service.user;
 
+import kr.hs.entrydsm.husky.domain.auth.domain.emaillimit.EmailLimiter;
+import kr.hs.entrydsm.husky.domain.auth.domain.emaillimit.EmailLimiterRepository;
 import kr.hs.entrydsm.husky.domain.auth.dto.request.AccountRequest;
 import kr.hs.entrydsm.husky.domain.auth.dto.request.ChangePasswordRequest;
 import kr.hs.entrydsm.husky.domain.auth.dto.request.EmailRequest;
@@ -7,10 +9,7 @@ import kr.hs.entrydsm.husky.domain.auth.dto.request.VerifyCodeRequest;
 import kr.hs.entrydsm.husky.domain.auth.domain.verification.EmailVerification;
 import kr.hs.entrydsm.husky.domain.auth.domain.verification.EmailVerificationRepository;
 import kr.hs.entrydsm.husky.domain.auth.domain.verification.EmailVerificationStatus;
-import kr.hs.entrydsm.husky.domain.auth.exceptions.ExpiredAuthCodeException;
-import kr.hs.entrydsm.husky.domain.auth.exceptions.InvalidAuthCodeException;
-import kr.hs.entrydsm.husky.domain.auth.exceptions.InvalidAuthEmailException;
-import kr.hs.entrydsm.husky.domain.auth.exceptions.UserAlreadyExistsException;
+import kr.hs.entrydsm.husky.domain.auth.exceptions.*;
 import kr.hs.entrydsm.husky.domain.user.domain.User;
 import kr.hs.entrydsm.husky.domain.user.domain.repositories.UserRepository;
 import kr.hs.entrydsm.husky.global.error.exception.UserNotFoundException;
@@ -29,6 +28,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final EmailVerificationRepository emailVerificationRepository;
+    private final EmailLimiterRepository emailLimiterRepository;
 
     private final EmailService emailService;
     private final JwtTokenProvider jwtTokenProvider;
@@ -60,6 +60,9 @@ public class UserServiceImpl implements UserService {
                 .ifPresent(user -> {
                     throw new UserAlreadyExistsException();
                 });
+
+        if (!isPossibleEmail(email))
+            throw new TooManyEmailRequestException();
 
         String code = randomCode();
         emailService.sendEmail(email, code);
@@ -126,6 +129,14 @@ public class UserServiceImpl implements UserService {
             result.append(codes[new Random().nextInt(codes.length)]);
         }
         return result.toString();
+    }
+
+    private boolean isPossibleEmail(String email) {
+        EmailLimiter limiter = emailLimiterRepository.findById(email)
+                .orElseGet(() -> new EmailLimiter(email, 0L));
+        emailLimiterRepository.save(limiter.update());
+
+        return limiter.getTtl() <= 60;
     }
 
 }

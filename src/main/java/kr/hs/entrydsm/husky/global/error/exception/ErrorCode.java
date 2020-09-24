@@ -21,6 +21,7 @@ public enum ErrorCode {
     EXPIRED_TOKEN(401, "A401-1", "Expired Token"),
     UNAUTHORIZED(401, "A401-2", "Authentication is required and has failed or has not yet been provided."),
     USER_DUPLICATION(409, "A409-0", "User is Already Exists"),
+    TOO_MANY_REQUEST(429, "A429-0", "Too Many Request"),
 
     //Info
     NOT_ADMIN_FORBIDDEN(403, "I403-0", "The server understood the request but refuses to authorize it."),
