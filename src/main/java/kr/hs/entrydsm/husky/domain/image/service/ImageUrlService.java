@@ -7,6 +7,6 @@ import java.text.ParseException;
 
 public interface ImageUrlService {
 
-    String generateObjectUrl(String objectName) throws ParseException, CloudFrontServiceException, IOException;
+    String generateObjectUrl(String objectName) throws ParseException, CloudFrontServiceException;
 
 }
