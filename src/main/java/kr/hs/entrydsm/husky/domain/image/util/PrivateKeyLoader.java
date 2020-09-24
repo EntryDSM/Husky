@@ -1,16 +1,14 @@
 package kr.hs.entrydsm.husky.domain.image.util;
 
 import org.jets3t.service.utils.ServiceUtils;
+import org.springframework.core.io.ClassPathResource;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 
 public class PrivateKeyLoader {
 
-    private final String privateKeyFilePath = this.getClass().getResource("/secrets/secret.der").getPath();
-
     public byte[] loadPrivateKey() throws IOException {
-        return ServiceUtils.readInputStreamToBytes(new FileInputStream(privateKeyFilePath));
+        return ServiceUtils.readInputStreamToBytes(new ClassPathResource("/secrets/secret.der").getInputStream());
     }
 
 }
