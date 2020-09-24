@@ -15,11 +15,17 @@ public class EmailLimiter {
     private final String email;
 
     @TimeToLive
-    private Long ttl;
+    private Long count;
 
     public EmailLimiter update() {
-        ttl += 6;
+        if (isBelowLimit()) {
+            count += 6;
+        }
         return this;
+    }
+
+    public boolean isBelowLimit() {
+        return count <= 60;
     }
 
 }

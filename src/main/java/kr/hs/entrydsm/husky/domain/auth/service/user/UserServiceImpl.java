@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -61,7 +62,7 @@ public class UserServiceImpl implements UserService {
                     throw new UserAlreadyExistsException();
                 });
 
-        if (!isPossibleEmail(email))
+        if (!isUnderRequestLimit(email))
             throw new TooManyEmailRequestException();
 
         String code = randomCode();
@@ -131,12 +132,12 @@ public class UserServiceImpl implements UserService {
         return result.toString();
     }
 
-    private boolean isPossibleEmail(String email) {
-        EmailLimiter limiter = emailLimiterRepository.findById(email)
-                .orElseGet(() -> new EmailLimiter(email, 0L));
-        emailLimiterRepository.save(limiter.update());
-
-        return limiter.getTtl() <= 60;
+    private boolean isUnderRequestLimit(String email) {
+        return emailLimiterRepository.findById(email)
+                .or(() -> Optional.of(new EmailLimiter(email, 0L)))
+                .map(limiter -> emailLimiterRepository.save(limiter.update()))
+                .map(EmailLimiter::isBelowLimit)
+                .get();
     }
 
 }
