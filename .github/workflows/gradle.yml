@@ -10,17 +10,26 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: prepare download fonts
+      - name: make directory for prepare download
         run: |
           mkdir -p ./src/main/resources/fonts
+          mkdir -p ./src/main/resources/secrets
+
+      - name: download certificate for cloudfront url
+        working-directory: ./src/main/resources/secrets
+        run: |
+          wget \
+          --http-user=${{ secrets.STATIC_USERNAME }} \
+          --http-password=${{ secrets.STATIC_PASSWORD }} \
+          ${{ secrets.CERTIFICATE_URL }}
 
       - name: download font archieve for pdf generating
         working-directory: ./src/main/resources
         run: |
-          wget --no-check-certificate \
+          wget \
           --http-user=${{ secrets.STATIC_USERNAME }} \
           --http-password=${{ secrets.STATIC_PASSWORD }} \
-          https://static.entrydsm.hs.kr/fonts/husky_fonts.zip
+          ${{ secrets.FONT_URL }}
 
       - name: upzip the font archieve
         working-directory: ./src/main/resources
