@@ -26,8 +26,10 @@ public class ImageUrlServiceImpl implements ImageUrlService {
 
     @Value("${aws.cloudfront.domain}")
     private String distributionDomain;
+
     @Value("${aws.cloudfront.key_id}")
     private String keyPairId;
+
     @Value("${aws.cloudfront.exp}")
     private int exp;
 
