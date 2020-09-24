@@ -2,6 +2,7 @@ package kr.hs.entrydsm.husky.domain.auth.service.user;
 
 import kr.hs.entrydsm.husky.domain.auth.dto.request.AccountRequest;
 import kr.hs.entrydsm.husky.domain.auth.dto.request.ChangePasswordRequest;
+import kr.hs.entrydsm.husky.domain.auth.dto.request.EmailRequest;
 import kr.hs.entrydsm.husky.domain.auth.dto.request.VerifyCodeRequest;
 import kr.hs.entrydsm.husky.domain.auth.domain.verification.EmailVerification;
 import kr.hs.entrydsm.husky.domain.auth.domain.verification.EmailVerificationRepository;
@@ -53,7 +54,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void sendSignUpEmail(String email) {
+    public void sendSignUpEmail(EmailRequest emailRequest) {
+        String email = emailRequest.getEmail();
         userRepository.findByEmail(email)
                 .ifPresent(user -> {
                     throw new UserAlreadyExistsException();
@@ -85,7 +87,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void sendPasswordChangeEmail(String email) {
+    public void sendPasswordChangeEmail(EmailRequest emailRequest) {
+        String email = emailRequest.getEmail();
         userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
 

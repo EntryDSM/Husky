@@ -1,6 +1,7 @@
 package kr.hs.entrydsm.husky.domain.auth.controllers;
 
 import kr.hs.entrydsm.husky.domain.auth.dto.request.AccountRequest;
+import kr.hs.entrydsm.husky.domain.auth.dto.request.EmailRequest;
 import kr.hs.entrydsm.husky.domain.auth.dto.request.VerifyCodeRequest;
 import kr.hs.entrydsm.husky.domain.auth.dto.request.ChangePasswordRequest;
 import kr.hs.entrydsm.husky.domain.auth.service.user.UserServiceImpl;
@@ -23,8 +24,8 @@ public class AuthController {
     }
 
     @PostMapping("/email/verify")
-    public void sendEmail(@RequestParam("email") @Email String email) {
-        userService.sendSignUpEmail(email);
+    public void sendEmail(@RequestBody @Valid EmailRequest emailRequest) {
+        userService.sendSignUpEmail(emailRequest);
     }
 
     @PutMapping("/email/verify")
@@ -33,8 +34,8 @@ public class AuthController {
     }
 
     @PostMapping("/email/password/verify")
-    public void sendPasswordChangeEmail(@RequestParam("email") @Email String email) {
-        userService.sendPasswordChangeEmail(email);
+    public void sendPasswordChangeEmail(@RequestBody @Valid EmailRequest emailRequest) {
+        userService.sendPasswordChangeEmail(emailRequest);
     }
 
     @PutMapping("/password")
