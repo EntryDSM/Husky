@@ -12,6 +12,8 @@ import kr.hs.entrydsm.husky.global.config.security.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import static kr.hs.entrydsm.husky.global.util.Validator.isExists;
+
 @RequiredArgsConstructor
 @Service
 public class ProcessServiceImpl implements ProcessService {
@@ -83,7 +85,7 @@ public class ProcessServiceImpl implements ProcessService {
     }
 
     private boolean checkDocs(User user) {
-        return user.getSelfIntroduction() != null && user.getStudyPlan() != null;
+        return isExists(user.getSelfIntroduction()) && isExists(user.getStudyPlan());
     }
 
     public boolean AllCheck(User user) {
