@@ -76,13 +76,21 @@ public class JwtTokenProvider {
     }
 
     public String getReceiptCode(String token) {
-        return  Jwts.parser().setSigningKey(secretKey)
-                .parseClaimsJws(token).getBody().getSubject();
+        try {
+            return Jwts.parser().setSigningKey(secretKey)
+                    .parseClaimsJws(token).getBody().getSubject();
+        } catch (Exception e) {
+            throw new InvalidTokenException();
+        }
     }
 
     public boolean isRefreshToken(String token) {
-        return Jwts.parser().setSigningKey(secretKey)
-                .parseClaimsJws(token).getBody().get("type").equals("refresh_token");
+        try {
+            return Jwts.parser().setSigningKey(secretKey)
+                    .parseClaimsJws(token).getBody().get("type").equals("refresh_token");
+        } catch (Exception e) {
+            throw new InvalidTokenException();
+        }
     }
 
 }
