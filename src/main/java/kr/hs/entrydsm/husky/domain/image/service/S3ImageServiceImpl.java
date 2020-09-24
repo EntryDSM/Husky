@@ -37,7 +37,6 @@ public class S3ImageServiceImpl extends AWS4Signer implements ImageService {
     private static final Integer EXPIRES = 900;
 
     private final SimpleDateFormat dateTimeFormat = new SimpleDateFormat(ISO8601BasicFormat);
-
     private final SimpleDateFormat dateStampFormat = new SimpleDateFormat("yyyyMMdd");
 
     private final AmazonS3 s3;
@@ -60,7 +59,7 @@ public class S3ImageServiceImpl extends AWS4Signer implements ImageService {
     @Override
     public String upload(MultipartFile file) throws IOException {
         String originalFilename = file.getOriginalFilename();
-        String ext = originalFilename.substring( originalFilename.lastIndexOf(".") + 1);
+        String ext = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
         String randomName = UUID.randomUUID().toString();
         String filename = randomName + "." + ext;
 
