@@ -50,7 +50,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         User user = userRepository.findById(receiptCode)
                 .orElseThrow(UserNotFoundException::new);
 
-        if (!user.isPhotoEmpty() && isExists(request.getPhoto()))
+        if (!user.isPhotoEmpty() && isExists(request.getPhoto()) && !user.getUserPhoto().equals(request.getPhoto()))
             imageService.delete(user.getUserPhoto());
 
         user.updateInfo(request);
