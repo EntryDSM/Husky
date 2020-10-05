@@ -105,15 +105,15 @@ public class ProcessServiceImpl implements ProcessService {
                     isZero(score.getFirstGradeScore()) &&
                     isZero(score.getSecondGradeScore()) &&
                     isZero(score.getThirdGradeScore()) &&
-                    isNotZero(score.getConversionScore());
+                    isPositive(score.getConversionScore());
         }
 
         return isGreaterThanOrEqualTo(score.getAttendanceScore(), 0) &&
                 isGreaterThanOrEqualTo(score.getVolunteerScore(), BigDecimal.valueOf(3)) &&
-                isNotZero(score.getFirstGradeScore()) &&
-                isNotZero(score.getSecondGradeScore()) &&
-                isNotZero(score.getThirdGradeScore()) &&
-                isNotZero(score.getConversionScore());
+                isPositive(score.getFirstGradeScore()) &&
+                isPositive(score.getSecondGradeScore()) &&
+                isPositive(score.getThirdGradeScore()) &&
+                isPositive(score.getConversionScore());
     }
 
     @Override

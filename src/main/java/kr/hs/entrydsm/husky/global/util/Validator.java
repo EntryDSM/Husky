@@ -19,8 +19,8 @@ public class Validator {
         return (target != null) && (target.equals(standard));
     }
 
-    public static boolean isNotZero(BigDecimal target) {
-        return (target != null) && (!target.equals(BigDecimal.ZERO));
+    public static boolean isPositive(BigDecimal target) {
+        return (target != null) && (target.compareTo(BigDecimal.ZERO) > 0);
     }
 
     public static boolean isZero(BigDecimal target) {
