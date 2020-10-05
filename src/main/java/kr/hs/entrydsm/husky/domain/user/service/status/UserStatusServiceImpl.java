@@ -1,5 +1,6 @@
 package kr.hs.entrydsm.husky.domain.user.service.status;
 
+import kr.hs.entrydsm.husky.domain.application.domain.CalculatedScore;
 import kr.hs.entrydsm.husky.domain.grade.service.GradeCalcService;
 import kr.hs.entrydsm.husky.domain.process.service.ProcessService;
 import kr.hs.entrydsm.husky.domain.user.dto.UserStatusResponse;
@@ -46,9 +47,9 @@ public class UserStatusServiceImpl implements UserStatusService {
         Status status = statusRepository.findById(receiptCode)
                 .orElseGet(() -> statusRepository.save(new Status(receiptCode)));
 
-        gradeCalcService.calcStudentGrade(user);
+        CalculatedScore score = gradeCalcService.calcStudentGrade(user);
 
-        if (!processService.AllCheck(user))
+        if (!processService.allCheck(user, score))
             throw new NotCompletedProcessException();
 
         status.finalSubmit();
