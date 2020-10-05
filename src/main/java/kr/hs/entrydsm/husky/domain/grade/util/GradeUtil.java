@@ -31,17 +31,8 @@ public class GradeUtil {
         return isEmptyGrade(SEMESTER_2_1, SEMESTER_2_2);
     }
 
-    public boolean isThirdGradeEmpty(GradeType gradeType) {
-        switch (gradeType) {
-            case GRADUATED:
-                return isEmptyGrade(SEMESTER_3_1, SEMESTER_3_2);
-
-            case UNGRADUATED:
-                return isEmptyGrade(SEMESTER_3_1);
-
-            default:
-                return true;
-        }
+    public boolean isThirdGradeEmpty() {
+        return isEmptyGrade(SEMESTER_3_1);
     }
 
     public boolean isAllGradeEmpty() {
