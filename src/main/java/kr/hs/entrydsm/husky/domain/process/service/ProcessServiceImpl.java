@@ -1,6 +1,8 @@
 package kr.hs.entrydsm.husky.domain.process.service;
 
+import kr.hs.entrydsm.husky.domain.application.domain.CalculatedScore;
 import kr.hs.entrydsm.husky.domain.application.domain.GeneralApplication;
+import kr.hs.entrydsm.husky.domain.application.domain.repositories.CalculatedScoreRepository;
 import kr.hs.entrydsm.husky.domain.application.domain.repositories.GeneralApplicationRepository;
 import kr.hs.entrydsm.husky.domain.process.dto.ProcessResponse;
 import kr.hs.entrydsm.husky.domain.user.exception.UserNotFoundException;
@@ -12,7 +14,9 @@ import kr.hs.entrydsm.husky.global.config.security.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import static kr.hs.entrydsm.husky.global.util.Validator.isExists;
+import java.math.BigDecimal;
+
+import static kr.hs.entrydsm.husky.global.util.Validator.*;
 
 @RequiredArgsConstructor
 @Service
@@ -22,6 +26,7 @@ public class ProcessServiceImpl implements ProcessService {
     private final GEDApplicationRepository gedApplicationRepository;
     private final GeneralApplicationRepository generalApplicationRepository;
     private final GraduatedApplicationRepository graduatedApplicationRepository;
+    private final CalculatedScoreRepository scoreRepository;
 
     private final AuthenticationFacade authenticationFacade;
 
@@ -73,6 +78,7 @@ public class ProcessServiceImpl implements ProcessService {
 
     private boolean checkScore(User user) {
         if (!checkType(user)) return false;
+        if (!checkConversionScore(user)) return false;
 
         if (user.isGED()) {
             return gedApplicationRepository.findById(user.getReceiptCode())
@@ -88,6 +94,21 @@ public class ProcessServiceImpl implements ProcessService {
         return isExists(user.getSelfIntroduction()) && isExists(user.getStudyPlan());
     }
 
+    private boolean checkConversionScore(User user) {
+        if(scoreRepository.findById(user.getReceiptCode()).isPresent()) {
+            CalculatedScore score = scoreRepository.findById(user.getReceiptCode()).get();
+
+            return isGreaterThanOrEqualTo(score.getAttendanceScore(), 0) &&
+                    isGreaterThanOrEqualTo(score.getVolunteerScore(), BigDecimal.valueOf(3)) &&
+                    isNotZero(score.getFirstGradeScore()) &&
+                    isNotZero(score.getSecondGradeScore()) &&
+                    isNotZero(score.getThirdGradeScore()) &&
+                    isNotZero(score.getConversionScore());
+        }
+        return false;
+    }
+
+    @Override
     public boolean AllCheck(User user) {
         return checkType(user) && checkDocs(user) && checkInfo(user) && checkScore(user);
     }
