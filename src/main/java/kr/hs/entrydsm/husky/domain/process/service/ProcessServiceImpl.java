@@ -95,17 +95,25 @@ public class ProcessServiceImpl implements ProcessService {
     }
 
     private boolean checkConversionScore(User user) {
-        if(scoreRepository.findById(user.getReceiptCode()).isPresent()) {
-            CalculatedScore score = scoreRepository.findById(user.getReceiptCode()).get();
+        if (scoreRepository.findById(user.getReceiptCode()).isEmpty()) return false;
 
-            return isGreaterThanOrEqualTo(score.getAttendanceScore(), 0) &&
+        CalculatedScore score = scoreRepository.findById(user.getReceiptCode()).get();
+
+        if (user.isGED()) {
+            return isEqualTo(score.getAttendanceScore(), 15) &&
                     isGreaterThanOrEqualTo(score.getVolunteerScore(), BigDecimal.valueOf(3)) &&
-                    isNotZero(score.getFirstGradeScore()) &&
-                    isNotZero(score.getSecondGradeScore()) &&
-                    isNotZero(score.getThirdGradeScore()) &&
+                    isZero(score.getFirstGradeScore()) &&
+                    isZero(score.getSecondGradeScore()) &&
+                    isZero(score.getThirdGradeScore()) &&
                     isNotZero(score.getConversionScore());
         }
-        return false;
+
+        return isGreaterThanOrEqualTo(score.getAttendanceScore(), 0) &&
+                isGreaterThanOrEqualTo(score.getVolunteerScore(), BigDecimal.valueOf(3)) &&
+                isNotZero(score.getFirstGradeScore()) &&
+                isNotZero(score.getSecondGradeScore()) &&
+                isNotZero(score.getThirdGradeScore()) &&
+                isNotZero(score.getConversionScore());
     }
 
     @Override
