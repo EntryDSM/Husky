@@ -1,6 +1,8 @@
 package kr.hs.entrydsm.husky.domain.process.service;
 
+import kr.hs.entrydsm.husky.domain.application.domain.CalculatedScore;
 import kr.hs.entrydsm.husky.domain.application.domain.GeneralApplication;
+import kr.hs.entrydsm.husky.domain.application.domain.repositories.CalculatedScoreRepository;
 import kr.hs.entrydsm.husky.domain.application.domain.repositories.GeneralApplicationRepository;
 import kr.hs.entrydsm.husky.domain.process.dto.ProcessResponse;
 import kr.hs.entrydsm.husky.domain.user.exception.UserNotFoundException;
@@ -12,7 +14,9 @@ import kr.hs.entrydsm.husky.global.config.security.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import static kr.hs.entrydsm.husky.global.util.Validator.isExists;
+import java.math.BigDecimal;
+
+import static kr.hs.entrydsm.husky.global.util.Validator.*;
 
 @RequiredArgsConstructor
 @Service
@@ -37,6 +41,12 @@ public class ProcessServiceImpl implements ProcessService {
                 .score(checkScore(user))
                 .document(checkDocs(user))
                 .build();
+    }
+
+    @Override
+    public boolean allCheck(User user, CalculatedScore score) {
+        return checkType(user) && checkDocs(user) && checkInfo(user) && checkScore(user) &&
+                checkConversionScore(user, score);
     }
 
     private boolean checkType(User user) {
@@ -88,8 +98,22 @@ public class ProcessServiceImpl implements ProcessService {
         return isExists(user.getSelfIntroduction()) && isExists(user.getStudyPlan());
     }
 
-    public boolean AllCheck(User user) {
-        return checkType(user) && checkDocs(user) && checkInfo(user) && checkScore(user);
+    private boolean checkConversionScore(User user, CalculatedScore score) {
+        if (user.isGED()) {
+            return isEqualTo(score.getAttendanceScore(), 15) &&
+                    isGreaterThanOrEqualTo(score.getVolunteerScore(), BigDecimal.valueOf(3)) &&
+                    isZero(score.getFirstGradeScore()) &&
+                    isZero(score.getSecondGradeScore()) &&
+                    isZero(score.getThirdGradeScore()) &&
+                    isPositive(score.getConversionScore());
+        }
+
+        return isGreaterThanOrEqualTo(score.getAttendanceScore(), 0) &&
+                isGreaterThanOrEqualTo(score.getVolunteerScore(), BigDecimal.valueOf(3)) &&
+                isPositive(score.getFirstGradeScore()) &&
+                isPositive(score.getSecondGradeScore()) &&
+                isPositive(score.getThirdGradeScore()) &&
+                isPositive(score.getConversionScore());
     }
 
 }

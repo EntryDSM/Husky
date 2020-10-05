@@ -1,6 +1,8 @@
 package kr.hs.entrydsm.husky.domain.user.service.status;
 
-import kr.hs.entrydsm.husky.domain.process.service.ProcessServiceImpl;
+import kr.hs.entrydsm.husky.domain.application.domain.CalculatedScore;
+import kr.hs.entrydsm.husky.domain.grade.service.GradeCalcService;
+import kr.hs.entrydsm.husky.domain.process.service.ProcessService;
 import kr.hs.entrydsm.husky.domain.user.dto.UserStatusResponse;
 import kr.hs.entrydsm.husky.domain.user.exception.NotCompletedProcessException;
 import kr.hs.entrydsm.husky.domain.user.exception.UserNotFoundException;
@@ -21,7 +23,8 @@ public class UserStatusServiceImpl implements UserStatusService {
     private final UserRepository userRepository;
     private final StatusRepository statusRepository;
 
-    private final ProcessServiceImpl processService;
+    private final ProcessService processService;
+    private final GradeCalcService gradeCalcService;
 
     @Override
     public UserStatusResponse getStatus() {
@@ -44,7 +47,9 @@ public class UserStatusServiceImpl implements UserStatusService {
         Status status = statusRepository.findById(receiptCode)
                 .orElseGet(() -> statusRepository.save(new Status(receiptCode)));
 
-        if (!processService.AllCheck(user))
+        CalculatedScore score = gradeCalcService.calcStudentGrade(user);
+
+        if (!processService.allCheck(user, score))
             throw new NotCompletedProcessException();
 
         status.finalSubmit();

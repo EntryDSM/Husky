@@ -33,15 +33,16 @@ public class GradeUtil {
 
     public boolean isThirdGradeEmpty(GradeType gradeType) {
         switch (gradeType) {
-            case GRADUATED:
-                return isEmptyGrade(SEMESTER_3_1, SEMESTER_3_2);
-
             case UNGRADUATED:
                 return isEmptyGrade(SEMESTER_3_1);
+
+            case GRADUATED:
+                return isEmptyGrade(SEMESTER_3_1, SEMESTER_3_2);
 
             default:
                 return true;
         }
+
     }
 
     public boolean isAllGradeEmpty() {
