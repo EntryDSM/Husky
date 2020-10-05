@@ -26,7 +26,6 @@ public class ProcessServiceImpl implements ProcessService {
     private final GEDApplicationRepository gedApplicationRepository;
     private final GeneralApplicationRepository generalApplicationRepository;
     private final GraduatedApplicationRepository graduatedApplicationRepository;
-    private final CalculatedScoreRepository scoreRepository;
 
     private final AuthenticationFacade authenticationFacade;
 
@@ -100,8 +99,6 @@ public class ProcessServiceImpl implements ProcessService {
     }
 
     private boolean checkConversionScore(User user, CalculatedScore score) {
-        if (scoreRepository.findById(user.getReceiptCode()).isEmpty()) return false;
-
         if (user.isGED()) {
             return isEqualTo(score.getAttendanceScore(), 15) &&
                     isGreaterThanOrEqualTo(score.getVolunteerScore(), BigDecimal.valueOf(3)) &&
