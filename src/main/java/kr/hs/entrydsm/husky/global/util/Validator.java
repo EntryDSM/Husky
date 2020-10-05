@@ -15,8 +15,16 @@ public class Validator {
         return (target != null) && (target.compareTo(standard) >= 0);
     }
 
+    public static boolean isEqualTo(Integer target, Integer standard) {
+        return (target != null) && (target.equals(standard));
+    }
+
     public static boolean isNotZero(BigDecimal target) {
         return (target != null) && (!target.equals(BigDecimal.ZERO));
+    }
+
+    public static boolean isZero(BigDecimal target) {
+        return (target != null) && (target.equals(BigDecimal.ZERO));
     }
 
 }
