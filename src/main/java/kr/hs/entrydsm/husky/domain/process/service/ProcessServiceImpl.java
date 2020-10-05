@@ -44,6 +44,12 @@ public class ProcessServiceImpl implements ProcessService {
                 .build();
     }
 
+    @Override
+    public boolean allCheck(User user, CalculatedScore score) {
+        return checkType(user) && checkDocs(user) && checkInfo(user) && checkScore(user) &&
+                checkConversionScore(user, score);
+    }
+
     private boolean checkType(User user) {
         if (user.isGED()) {
             return gedApplicationRepository.findById(user.getReceiptCode())
@@ -78,7 +84,6 @@ public class ProcessServiceImpl implements ProcessService {
 
     private boolean checkScore(User user) {
         if (!checkType(user)) return false;
-        if (!checkConversionScore(user)) return false;
 
         if (user.isGED()) {
             return gedApplicationRepository.findById(user.getReceiptCode())
@@ -94,10 +99,8 @@ public class ProcessServiceImpl implements ProcessService {
         return isExists(user.getSelfIntroduction()) && isExists(user.getStudyPlan());
     }
 
-    private boolean checkConversionScore(User user) {
+    private boolean checkConversionScore(User user, CalculatedScore score) {
         if (scoreRepository.findById(user.getReceiptCode()).isEmpty()) return false;
-
-        CalculatedScore score = scoreRepository.findById(user.getReceiptCode()).get();
 
         if (user.isGED()) {
             return isEqualTo(score.getAttendanceScore(), 15) &&
@@ -114,11 +117,6 @@ public class ProcessServiceImpl implements ProcessService {
                 isPositive(score.getSecondGradeScore()) &&
                 isPositive(score.getThirdGradeScore()) &&
                 isPositive(score.getConversionScore());
-    }
-
-    @Override
-    public boolean AllCheck(User user) {
-        return checkType(user) && checkDocs(user) && checkInfo(user) && checkScore(user);
     }
 
 }
