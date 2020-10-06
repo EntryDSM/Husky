@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
@@ -29,8 +30,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
-                .formLogin().disable()
                 .headers()
                     .frameOptions()
                     .disable().and()
@@ -45,6 +44,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/actuator/health").permitAll()
                     .antMatchers("/schedules").permitAll()
                     .anyRequest().authenticated().and()
+                .csrf()
+                    .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and()
+                .formLogin()
+                    .disable()
                 .apply(new JwtConfigurer(jwtTokenProvider)).and()
                 .apply(new ExceptionConfigurer(slackSenderManager));
     }
