@@ -65,6 +65,9 @@ public class UserInfoController {
         return userStatusService.finalSubmit();
     }
 
+    @GetMapping("/status/pass")
+    public UserPassResponse getUserPassStatus() { return userStatusService.isPassed(); }
+
     @PostMapping("/photo")
     @ResponseStatus(value = HttpStatus.CREATED)
     public String uploadPhoto(@RequestPart MultipartFile file) throws Exception {

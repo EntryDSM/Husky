@@ -3,6 +3,7 @@ package kr.hs.entrydsm.husky.domain.user.service.status;
 import kr.hs.entrydsm.husky.domain.application.domain.CalculatedScore;
 import kr.hs.entrydsm.husky.domain.grade.service.GradeCalcService;
 import kr.hs.entrydsm.husky.domain.process.service.ProcessService;
+import kr.hs.entrydsm.husky.domain.user.dto.UserPassResponse;
 import kr.hs.entrydsm.husky.domain.user.dto.UserStatusResponse;
 import kr.hs.entrydsm.husky.domain.user.exception.NotCompletedProcessException;
 import kr.hs.entrydsm.husky.domain.user.exception.UserNotFoundException;
@@ -56,6 +57,19 @@ public class UserStatusServiceImpl implements UserStatusService {
         statusRepository.save(status);
 
         return UserStatusResponse.response(user, status);
+    }
+
+    @Override
+    public UserPassResponse isPassed() {
+        Integer receiptCode = authFacade.getReceiptCode();
+
+        Status status = statusRepository.findById(receiptCode)
+                .orElseGet(() -> statusRepository.save(new Status(receiptCode)));
+
+        return UserPassResponse.builder()
+                .isPassedFirstApply(status.isPassedFirstApply())
+                .isPassedInterview(status.isPassedInterview())
+                .build();
     }
 
 }
