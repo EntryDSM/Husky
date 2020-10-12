@@ -21,8 +21,6 @@ public class UserStatusResponse {
     private boolean isFinalSubmit;
     private boolean isPaid;
     private boolean isPrintedApplicationArrived;
-    private boolean isPassedFirstApply;
-    private boolean isPassedInterview;
     private LocalDateTime submittedAt;
 
     public static UserStatusResponse response(User user, Status status) {
@@ -32,8 +30,6 @@ public class UserStatusResponse {
                 .isFinalSubmit(status.isFinalSubmit())
                 .isPaid(status.isPaid())
                 .isPrintedApplicationArrived(status.isPrintedApplicationArrived())
-                .isPassedFirstApply(status.isPassedFirstApply())
-                .isPassedInterview(status.isPassedInterview())
                 .submittedAt(status.getSubmittedAt())
                 .build();
     }
