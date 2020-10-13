@@ -34,7 +34,9 @@ public class PdfConfig {
     public static ConverterProperties createConverterProperties() {
         ConverterProperties properties = new ConverterProperties();
         FontProvider fontProvider = new DefaultFontProvider(false, false, false);
-        List.of("/fonts/KoPubWorld_Dotum_Light.ttf",
+
+        List.of(
+                "/fonts/KoPubWorld_Dotum_Light.ttf",
                 "/fonts/KoPubWorld_Dotum_Bold.ttf",
                 "/fonts/KoPubWorld_Dotum_Medium.ttf",
                 "/fonts/DejaVuSans.ttf")
@@ -46,6 +48,7 @@ public class PdfConfig {
                         e.printStackTrace();
                     }
                 });
+
         properties.setFontProvider(fontProvider);
         return properties;
     }
