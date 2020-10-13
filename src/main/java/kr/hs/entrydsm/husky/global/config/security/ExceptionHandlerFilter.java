@@ -25,6 +25,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
         } catch (BusinessException e) {
             this.setErrorResponse(response, e.getErrorCode());
         } catch (Exception e) {
+            e.printStackTrace();
             slackSenderManager.send(request, e);
         }
     }
