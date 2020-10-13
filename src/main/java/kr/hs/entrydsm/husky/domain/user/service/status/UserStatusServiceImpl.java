@@ -25,6 +25,9 @@ import java.time.LocalDateTime;
 @Service
 public class UserStatusServiceImpl implements UserStatusService {
 
+    private static final String FIRST = "first_notice";
+    private static final String FINAL = "notice";
+
     private final AuthenticationFacade authFacade;
 
     private final UserRepository userRepository;
@@ -70,7 +73,7 @@ public class UserStatusServiceImpl implements UserStatusService {
     public UserPassResponse isPassedFirst() {
         Integer receiptCode = authFacade.getReceiptCode();
 
-        checkSchedule("first_notice");
+        checkSchedule(FIRST);
 
         Status status = statusRepository.findById(receiptCode)
                 .orElseGet(() -> statusRepository.save(new Status(receiptCode)));
@@ -84,7 +87,7 @@ public class UserStatusServiceImpl implements UserStatusService {
     public UserPassResponse isPassedFinal() {
         Integer receiptCode = authFacade.getReceiptCode();
 
-        checkSchedule("notice");
+        checkSchedule(FINAL);
 
         Status status = statusRepository.findById(receiptCode)
                 .orElseGet(() -> statusRepository.save(new Status(receiptCode)));
