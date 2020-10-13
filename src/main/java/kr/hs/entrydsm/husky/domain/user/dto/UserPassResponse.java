@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserPassResponse {
 
-    private boolean isPassedFirstApply;
-    private boolean isPassedInterview;
+    private boolean isPassed;
 
 }
