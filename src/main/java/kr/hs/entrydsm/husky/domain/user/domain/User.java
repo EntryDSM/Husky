@@ -179,7 +179,7 @@ public class User extends BaseTimeEntity {
         return !isApplyTypeEmpty() && applyType.equals(MEISTER);
     }
 
-    public boolean isSocialMeritApplytype() {
+    public boolean isSocialMeritApplyType() {
         return !isCommonApplyType() && !isMeisterApplyType();
     }
 

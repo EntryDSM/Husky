@@ -168,7 +168,7 @@ public class ApplicationInfoConverter {
         values.put("isPrivilegedAdmission", toBallotBox(user.isAdditionalTypeEquals(PRIVILEGED_ADMISSION)));
         values.put("isCommon", toBallotBox(user.isCommonApplyType()));
         values.put("isMeister", toBallotBox(user.isMeisterApplyType()));
-        values.put("isSocialMerit", toBallotBox(user.isSocialMeritApplytype()));
+        values.put("isSocialMerit", toBallotBox(user.isSocialMeritApplyType()));
     }
 
     private void setGradeScore(Map<String, Object> values, User user, CalculatedScore calculatedScore) {
@@ -199,9 +199,9 @@ public class ApplicationInfoConverter {
 
     private void setRecommendations(Map<String, Object> values, User user) {
         values.put("isDaejeonAndMeister", markOIfTrue(user.getIsDaejeon() && user.isMeisterApplyType()));
-        values.put("isDaejeonAndSocialMerit", markOIfTrue(user.getIsDaejeon() && user.isSocialMeritApplytype()));
+        values.put("isDaejeonAndSocialMerit", markOIfTrue(user.getIsDaejeon() && user.isSocialMeritApplyType()));
         values.put("isNotDaejeonAndMeister", markOIfTrue(!user.getIsDaejeon() && user.isMeisterApplyType()));
-        values.put("isNotDaejeonAndSocialMerit", markOIfTrue(!user.getIsDaejeon() && user.isMeisterApplyType()));
+        values.put("isNotDaejeonAndSocialMerit", markOIfTrue(!user.getIsDaejeon() && user.isSocialMeritApplyType()));
     }
 
     private String markOIfTrue(boolean isTrue) {
