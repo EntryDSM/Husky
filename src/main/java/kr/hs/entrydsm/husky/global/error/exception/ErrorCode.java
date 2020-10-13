@@ -26,11 +26,11 @@ public enum ErrorCode {
     //Info
     NOT_ADMIN_FORBIDDEN(403, "I403-0", "The server understood the request but refuses to authorize it."),
     APPLICATION_TYPE_UNMATCHED(403, "I403-1", "Application Type is unmatched"),
-    NOT_STARTED_SCHEDULE(403, "I403-2", "Schedule did not start."),
+    SCHEDULE_NOT_STARTED(403, "I403-2", "Schedule did not start."),
     APPLICATION_NOT_FOUND(404, "I404-0", "Application Not Found"),
     SCHEDULE_NOT_FOUND(404, "I404-1", "Schedule Not Found"),
     GRADE_TYPE_REQUIRED(406, "I406-0", "Grade type is not set."),
-    NOT_COMPLETED_PROCESS(406, "I406-1", "Apply process did not complete yet."),
+    PROCESS_NOT_COMPLETED(406, "I406-1", "Apply process did not complete yet."),
 
     //School
     SCHOOL_NOT_FOUND(404, "S404-0", "School Not Found."),

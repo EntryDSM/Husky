@@ -5,6 +5,6 @@ import kr.hs.entrydsm.husky.global.error.exception.ErrorCode;
 
 public class ProcessNotCompletedException extends BusinessException {
     public ProcessNotCompletedException() {
-        super(ErrorCode.NOT_COMPLETED_PROCESS);
+        super(ErrorCode.PROCESS_NOT_COMPLETED);
     }
 }

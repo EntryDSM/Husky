@@ -4,5 +4,5 @@ import kr.hs.entrydsm.husky.global.error.exception.BusinessException;
 import kr.hs.entrydsm.husky.global.error.exception.ErrorCode;
 
 public class ScheduleNotStartedException extends BusinessException {
-    public ScheduleNotStartedException() { super(ErrorCode.NOT_STARTED_SCHEDULE); }
+    public ScheduleNotStartedException() { super(ErrorCode.SCHEDULE_NOT_STARTED); }
 }
