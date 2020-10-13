@@ -65,8 +65,11 @@ public class UserInfoController {
         return userStatusService.finalSubmit();
     }
 
-    @GetMapping("/status/pass")
-    public UserPassResponse getUserPassStatus() { return userStatusService.isPassed(); }
+    @GetMapping("/pass/first")
+    public UserPassResponse isPassedFirst() { return userStatusService.isPassedFirst(); }
+
+    @GetMapping("/pass/final")
+    public UserPassResponse isPassedFinal() { return userStatusService.isPassedFinal(); }
 
     @PostMapping("/photo")
     @ResponseStatus(value = HttpStatus.CREATED)
