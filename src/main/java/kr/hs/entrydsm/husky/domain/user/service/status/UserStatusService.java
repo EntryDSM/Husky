@@ -7,6 +7,7 @@ public interface UserStatusService {
 
     UserStatusResponse getStatus();
     UserStatusResponse finalSubmit();
-    UserPassResponse isPassed();
+    UserPassResponse isPassedFirst();
+    UserPassResponse isPassedFinal();
 
 }
