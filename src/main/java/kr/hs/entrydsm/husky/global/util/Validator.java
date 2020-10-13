@@ -24,7 +24,7 @@ public class Validator {
     }
 
     public static boolean isZero(BigDecimal target) {
-        return (target != null) && (target.equals(BigDecimal.ZERO));
+        return (target != null) && (target.compareTo(BigDecimal.ZERO) == 0);
     }
 
 }
