@@ -3,6 +3,7 @@ package kr.hs.entrydsm.husky.domain.pdf.service;
 import kr.hs.entrydsm.husky.domain.application.domain.CalculatedScore;
 import kr.hs.entrydsm.husky.domain.grade.exception.UserNotFoundException;
 import kr.hs.entrydsm.husky.domain.grade.service.GradeCalcService;
+import kr.hs.entrydsm.husky.domain.pdf.constant.TemplateFileName;
 import kr.hs.entrydsm.husky.domain.pdf.converter.ApplicationInfoConverter;
 import kr.hs.entrydsm.husky.domain.pdf.converter.HtmlConverter;
 import kr.hs.entrydsm.husky.domain.pdf.exception.FinalSubmitRequiredException;
@@ -64,13 +65,13 @@ public class PDFExportServiceImpl implements PDFExportService {
             Map<String, Object> data = applicationInfoConverter.applicationToInfo(user, calculatedScore);
 
             List<String> templates = new LinkedList<>(List.of(
-                    "/application_for_admission",
-                    "/introduction",
-                    "/nonsmoking",
-                    "/admission_agreement"));
+                    TemplateFileName.APPLICATION_FOR_ADMISSION,
+                    TemplateFileName.INTRODUCTION,
+                    TemplateFileName.NON_SMOKING,
+                    TemplateFileName.ADMISSION_AGREEMENT));
 
             if (!user.isGED() && !user.isCommonApplyType())
-                templates.add(2, "/recommendation");
+                templates.add(2, TemplateFileName.RECOMMENDATION);
 
             ByteArrayOutputStream result = templates.parallelStream()
                     .map(template -> templateProcessor.process(template, data))

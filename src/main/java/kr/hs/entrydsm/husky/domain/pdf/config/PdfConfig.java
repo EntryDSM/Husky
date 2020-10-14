@@ -5,6 +5,7 @@ import com.itextpdf.html2pdf.resolver.font.DefaultFontProvider;
 import com.itextpdf.io.font.FontProgram;
 import com.itextpdf.io.font.FontProgramFactory;
 import com.itextpdf.layout.font.FontProvider;
+import kr.hs.entrydsm.husky.domain.pdf.constant.Font;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,10 +37,10 @@ public class PdfConfig {
         FontProvider fontProvider = new DefaultFontProvider(false, false, false);
 
         List.of(
-                "/fonts/KoPubWorld_Dotum_Light.ttf",
-                "/fonts/KoPubWorld_Dotum_Bold.ttf",
-                "/fonts/KoPubWorld_Dotum_Medium.ttf",
-                "/fonts/DejaVuSans.ttf")
+                Font.KO_PUB_WORLD_DOTUM_LIGHT,
+                Font.KO_PUB_WORLD_DOTUM_BOLD,
+                Font.KO_PUB_WORLD_DOTUM_MEDIUM,
+                Font.DEJA_VU_SANS)
                 .forEach(font -> {
                     try {
                         FontProgram fontProgram = FontProgramFactory.createFont(font);
