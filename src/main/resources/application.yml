@@ -46,6 +46,8 @@ logging:
       docx4j: OFF
       apache:
         fop: OFF
+  file:
+    name: log
 
 slack:
   webhook:
