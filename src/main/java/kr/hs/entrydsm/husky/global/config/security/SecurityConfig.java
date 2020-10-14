@@ -47,7 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .anyRequest().authenticated().and()
                 .apply(new JwtConfigurer(jwtTokenProvider)).and()
                 .apply(new ExceptionConfigurer(slackSenderManager)).and()
-                .apply(new RequestLogFilterConfigurer()).and()
+                .apply(new RequestLogConfigurer()).and()
                 .apply(new CorsConfigurer());
     }
 

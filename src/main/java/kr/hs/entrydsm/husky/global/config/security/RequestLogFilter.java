@@ -30,6 +30,7 @@ public class RequestLogFilter extends OncePerRequestFilter {
         Map<String, String> headers = Collections.list(request.getHeaderNames()).stream()
                 .collect(Collectors.toMap(header -> header, request::getHeader));
         String headerString = Arrays.toString(headers.entrySet().toArray());
+        String paramString = Arrays.toString(getParams(request).entrySet().toArray());
 
         return List.of(
                 request.getMethod(),
@@ -37,7 +38,7 @@ public class RequestLogFilter extends OncePerRequestFilter {
                 response.getStatus(),
                 headerString,
                 getBody(request),
-                getParams(request)
+                paramString
         ).toString();
 
     }
@@ -52,7 +53,7 @@ public class RequestLogFilter extends OncePerRequestFilter {
         return "{}";
     }
 
-    private HashMap<String, String> getParams(HttpServletRequest request) {
+    private Map<String, String> getParams(HttpServletRequest request) {
         HashMap<String, String> map = new HashMap<>();
         Enumeration<String> params = request.getParameterNames();
         while (params.hasMoreElements()) {
