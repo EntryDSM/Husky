@@ -47,7 +47,7 @@ logging:
       apache:
         fop: OFF
   file:
-    name: log
+    name: ${LOG_FILE_NAME:husky.log}
 
 slack:
   webhook:
