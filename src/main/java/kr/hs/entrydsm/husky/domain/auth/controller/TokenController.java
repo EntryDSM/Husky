@@ -1,4 +1,4 @@
-package kr.hs.entrydsm.husky.domain.auth.controllers;
+package kr.hs.entrydsm.husky.domain.auth.controller;
 
 import kr.hs.entrydsm.husky.domain.auth.dto.request.SignInRequest;
 import kr.hs.entrydsm.husky.domain.auth.dto.response.TokenResponse;

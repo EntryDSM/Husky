@@ -1,4 +1,4 @@
-package kr.hs.entrydsm.husky.domain.auth.controllers;
+package kr.hs.entrydsm.husky.domain.auth.controller;
 
 import kr.hs.entrydsm.husky.domain.auth.dto.request.AccountRequest;
 import kr.hs.entrydsm.husky.domain.auth.dto.request.EmailRequest;
@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Email;
 
 @RestController
 @RequestMapping("/users")
