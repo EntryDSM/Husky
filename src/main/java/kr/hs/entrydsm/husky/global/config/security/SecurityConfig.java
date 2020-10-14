@@ -46,7 +46,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/schedules").permitAll()
                     .anyRequest().authenticated().and()
                 .apply(new JwtConfigurer(jwtTokenProvider)).and()
-                .apply(new ExceptionConfigurer(slackSenderManager));
+                .apply(new ExceptionConfigurer(slackSenderManager)).and()
+                .apply(new RequestLogFilterConfigurer()).and()
+                .apply(new CorsConfigurer());
     }
 
     @Bean
