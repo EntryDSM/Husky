@@ -63,8 +63,8 @@ public class LoggerAspect {
         }
     }
 
-    private static Map getParams(HttpServletRequest request) {
-        HashMap map = new HashMap<>();
+    private static HashMap<String, String> getParams(HttpServletRequest request) {
+        HashMap<String, String> map = new HashMap<>();
         Enumeration<String> params = request.getParameterNames();
         while (params.hasMoreElements()) {
             String param = params.nextElement();
