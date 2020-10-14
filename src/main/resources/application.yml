@@ -49,6 +49,8 @@ logging:
       docx4j: OFF
       apache:
         fop: OFF
+  file:
+    name: ${LOG_FILE_NAME:husky.log}
 
 slack:
   webhook:
