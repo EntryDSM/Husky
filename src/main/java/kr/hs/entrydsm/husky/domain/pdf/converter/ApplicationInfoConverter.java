@@ -191,6 +191,7 @@ public class ApplicationInfoConverter {
     private void setIntroduction(Map<String, Object> values, User user) {
         values.put("selfIntroduction", setBlankIfNull(user.getSelfIntroduction()));
         values.put("studyPlan", setBlankIfNull(user.getStudyPlan()));
+        values.put("newLineChar", "\n");
     }
 
     private void setParentInfo(Map<String, Object> values, User user) {
