@@ -45,7 +45,10 @@ public class RequestLogFilter extends OncePerRequestFilter {
 
     private String getBody(HttpServletRequest request) {
         try {
-            return request.getReader().lines().collect(Collectors.joining());
+            String body = request.getReader().lines().collect(Collectors.joining());
+            if (body.length() < 2)
+                body = "{}";
+            return body;
         } catch (IOException e) {
             e.printStackTrace();
         }
