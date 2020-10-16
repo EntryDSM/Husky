@@ -35,6 +35,7 @@ public class RequestLogFilter extends OncePerRequestFilter {
         return List.of(
                 request.getMethod(),
                 request.getRequestURI(),
+                request.getHeader("x-real-ip"),
                 response.getStatus(),
                 headerString,
                 getBody(request),
