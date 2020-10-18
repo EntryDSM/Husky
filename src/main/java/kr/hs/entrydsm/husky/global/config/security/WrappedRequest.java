@@ -105,6 +105,9 @@ public class WrappedRequest extends HttpServletRequestWrapper {
 
         ObjectMapper objectMapper = new ObjectMapper();
         try {
+            if (body.isEmpty() || body.isBlank())
+                return "{}";
+
             Map bodyMap = objectMapper.readValue(body, Map.class);
             if (bodyMap.get("password") != null)
                 bodyMap.put("password", "SECURED");
