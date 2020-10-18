@@ -148,11 +148,11 @@ public class User extends BaseTimeEntity {
     }
 
     public boolean isMale() {
-        return this.sex.equals(Sex.MALE);
+        return isGenderExists() && this.sex.equals(Sex.MALE);
     }
 
     public boolean isFemale() {
-        return this.sex.equals(Sex.FEMALE);
+        return isGenderExists() && this.sex.equals(Sex.FEMALE);
     }
 
     public boolean isGradeTypeEmpty() {
