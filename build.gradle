@@ -24,26 +24,30 @@ repositories {
 
 dependencies {
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
-    implementation 'com.amazonaws:aws-java-sdk-ses:1.11.852'
-    implementation 'org.docx4j:docx4j:6.1.2'
-    implementation 'org.docx4j:docx4j-export-fo:6.1.0'
-    implementation 'javax.xml.bind:jaxb-api:2.3.1'
-    implementation 'javax.activation:activation:1.1.1'
-    implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.2'
-    implementation 'com.amazonaws:aws-java-sdk-cloudfront:1.11.867'
+
+    implementation 'com.itextpdf:itext7-core:7.1.9'
+    implementation 'com.itextpdf:html2pdf:3.0.1'
+
     implementation 'net.java.dev.jets3t:jets3t:0.9.4'
     implementation 'org.bouncycastle:bcprov-jdk16:1.46'
-    implementation 'com.amazonaws:aws-java-sdk-s3control:1.11.852'
     implementation 'it.ozimov:embedded-redis:0.7.3'
+
+    implementation 'com.amazonaws:aws-java-sdk-ses:1.11.852'
+    implementation 'com.amazonaws:aws-java-sdk-s3control:1.11.852'
+    implementation 'com.amazonaws:aws-java-sdk-cloudfront:1.11.867'
+
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
     compileOnly 'org.projectlombok:lombok'
-    runtimeOnly 'mysql:mysql-connector-java'
     annotationProcessor 'org.projectlombok:lombok'
+
+    runtimeOnly 'mysql:mysql-connector-java'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
@@ -58,4 +62,3 @@ test {
         includeTags 'Second'
     }
 }
-

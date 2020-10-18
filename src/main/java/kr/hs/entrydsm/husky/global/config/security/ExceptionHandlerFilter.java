@@ -5,6 +5,7 @@ import kr.hs.entrydsm.husky.global.error.exception.BusinessException;
 import kr.hs.entrydsm.husky.global.error.exception.ErrorCode;
 import kr.hs.entrydsm.husky.global.slack.SlackSenderManager;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Slf4j
 @RequiredArgsConstructor
 public class ExceptionHandlerFilter extends OncePerRequestFilter {
 
@@ -25,7 +27,9 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
         } catch (BusinessException e) {
             this.setErrorResponse(response, e.getErrorCode());
         } catch (Exception e) {
+            e.printStackTrace();
             slackSenderManager.send(request, e);
+            e.printStackTrace();
         }
     }
 

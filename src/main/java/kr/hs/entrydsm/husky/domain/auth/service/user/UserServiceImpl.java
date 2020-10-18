@@ -57,6 +57,7 @@ public class UserServiceImpl implements UserService {
                 });
 
         User user = userRepository.save(
+
             User.builder()
                 .email(email)
                 .password(password)

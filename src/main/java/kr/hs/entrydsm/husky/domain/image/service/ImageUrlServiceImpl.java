@@ -2,7 +2,6 @@ package kr.hs.entrydsm.husky.domain.image.service;
 
 import kr.hs.entrydsm.husky.domain.image.util.PrivateKeyLoader;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.time.DateUtils;
 import org.jets3t.service.CloudFrontService;
 import org.jets3t.service.CloudFrontServiceException;
 import org.jets3t.service.utils.ServiceUtils;
@@ -13,15 +12,15 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.security.Security;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
 public class ImageUrlServiceImpl implements ImageUrlService {
 
-    private static final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+    private static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
     @Value("${aws.cloudfront.domain}")
     private String distributionDomain;
@@ -40,8 +39,8 @@ public class ImageUrlServiceImpl implements ImageUrlService {
 
         String policyResourcePath = "https://" + distributionDomain + "/" + objectName;
 
-        df.setTimeZone(TimeZone.getTimeZone("UTC"));
-        String dateString = df.format(DateUtils.addMinutes(new Date(), exp));
+        ZonedDateTime nowUTC = ZonedDateTime.now(ZoneId.of("UTC")).plusMinutes(exp);
+        String dateString = dateFormat.format(nowUTC);
 
         return CloudFrontService.signUrlCanned(
                 policyResourcePath,

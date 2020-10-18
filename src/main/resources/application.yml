@@ -10,6 +10,9 @@ spring:
   jackson:
     property-naming-strategy: SNAKE_CASE
 
+  thymeleaf:
+    prefix: classpath:/templates
+
 aws:
   s3:
     bucket: ${AWS_S3_BUCKET:default}
@@ -46,6 +49,8 @@ logging:
       docx4j: OFF
       apache:
         fop: OFF
+  file:
+    name: ${LOG_FILE_NAME:husky.log}
 
 slack:
   webhook:
