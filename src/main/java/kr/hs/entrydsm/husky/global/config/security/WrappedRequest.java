@@ -33,8 +33,8 @@ public class WrappedRequest extends HttpServletRequestWrapper {
         try {
             InputStream is = request.getInputStream();
             this.rawData = IOUtils.toByteArray(is);
-        } catch (Exception ignored) {
-
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
