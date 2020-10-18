@@ -37,6 +37,7 @@ public class ApplicationInfoConverter {
         Map<String, Object> values = new HashMap<>();
         setReceiptCode(values, user);
         setPersonalInfo(values, user);
+        setGenderInfo(values, user);
         setSchoolInfo(values, user);
         setPhoneNumber(values, user);
         setGraduationClassification(values, user);
@@ -72,19 +73,14 @@ public class ApplicationInfoConverter {
             birthDate = user.getBirthDate().format(formatter);
         }
         values.put("birthDate", birthDate);
+    }
 
-        String gender;
-        switch (user.getSex()) {
-            case FEMALE:
-                gender = "여";
-                break;
-
-            case MALE:
-                gender = "남";
-                break;
-
-            default:
-                gender = null;
+    private void setGenderInfo(Map<String, Object> values, User user) {
+        String gender = null;
+        if (user.isFemale()) {
+            gender = "여";
+        } else if (user.isMale()) {
+            gender = "남";
         }
         values.put("gender", setBlankIfNull(gender));
     }
