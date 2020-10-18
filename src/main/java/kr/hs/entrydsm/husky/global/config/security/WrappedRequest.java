@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micrometer.core.instrument.util.StringUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.entity.ContentType;
 
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
@@ -17,7 +16,6 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class WrappedRequest extends HttpServletRequestWrapper {
 
