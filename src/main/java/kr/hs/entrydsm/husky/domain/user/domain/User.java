@@ -143,6 +143,10 @@ public class User extends BaseTimeEntity {
                 userPhoto != null;
     }
 
+    public boolean isGenderExists() {
+        return this.sex != null;
+    }
+
     public boolean isMale() {
         return this.sex.equals(Sex.MALE);
     }
