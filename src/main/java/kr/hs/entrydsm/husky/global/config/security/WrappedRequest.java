@@ -1,8 +1,9 @@
 package kr.hs.entrydsm.husky.global.config.security;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micrometer.core.instrument.util.StringUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.entity.ContentType;
 
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
@@ -15,7 +16,6 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class WrappedRequest extends HttpServletRequestWrapper {
 
@@ -101,7 +101,20 @@ public class WrappedRequest extends HttpServletRequestWrapper {
     }
 
     public String getBody() {
-        return new String(rawData).replaceAll("\r\n", "");
+        String body = new String(rawData).replaceAll("\r\n", "");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            Map bodyMap = objectMapper.readValue(body, Map.class);
+            if (bodyMap.get("password") != null)
+                bodyMap.put("password", "SECURED");
+
+            body = objectMapper.writeValueAsString(bodyMap);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return body;
     }
 
 }
