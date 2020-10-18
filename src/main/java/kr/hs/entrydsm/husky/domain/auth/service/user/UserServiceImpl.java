@@ -52,6 +52,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(ExpiredAuthCodeException::new);
 
         User user = userRepository.save(
+
             User.builder()
                 .email(email)
                 .password(password)
