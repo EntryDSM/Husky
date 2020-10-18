@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
@@ -207,7 +208,7 @@ public class ApplicationInfoConverter {
 
     private void setBase64Image(Map<String, Object> values, User user) throws IOException {
         byte[] image = imageService.getObject(user.getUserPhoto());
-        String base64EncodedImage = new String(Base64.getEncoder().encode(image), "UTF-8");
+        String base64EncodedImage = new String(Base64.getEncoder().encode(image), StandardCharsets.UTF_8);
         values.put("base64Image", base64EncodedImage);
     }
 
