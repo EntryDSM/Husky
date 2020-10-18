@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
@@ -37,6 +38,7 @@ public class ApplicationInfoConverter {
         Map<String, Object> values = new HashMap<>();
         setReceiptCode(values, user);
         setPersonalInfo(values, user);
+        setGenderInfo(values, user);
         setSchoolInfo(values, user);
         setPhoneNumber(values, user);
         setGraduationClassification(values, user);
@@ -72,19 +74,14 @@ public class ApplicationInfoConverter {
             birthDate = user.getBirthDate().format(formatter);
         }
         values.put("birthDate", birthDate);
+    }
 
-        String gender;
-        switch (user.getSex()) {
-            case FEMALE:
-                gender = "여";
-                break;
-
-            case MALE:
-                gender = "남";
-                break;
-
-            default:
-                gender = null;
+    private void setGenderInfo(Map<String, Object> values, User user) {
+        String gender = null;
+        if (user.isFemale()) {
+            gender = "여";
+        } else if (user.isMale()) {
+            gender = "남";
         }
         values.put("gender", setBlankIfNull(gender));
     }
@@ -211,7 +208,7 @@ public class ApplicationInfoConverter {
 
     private void setBase64Image(Map<String, Object> values, User user) throws IOException {
         byte[] image = imageService.getObject(user.getUserPhoto());
-        String base64EncodedImage = new String(Base64.getEncoder().encode(image), "UTF-8");
+        String base64EncodedImage = new String(Base64.getEncoder().encode(image), StandardCharsets.UTF_8);
         values.put("base64Image", base64EncodedImage);
     }
 
