@@ -1,17 +1,13 @@
 package kr.hs.entrydsm.husky.global.config.security;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.filter.GenericFilterBean;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -25,17 +21,19 @@ public class RequestLogFilter extends OncePerRequestFilter {
         log.info(logContent(wrappedRequest, response));
     }
 
-    private String logContent(HttpServletRequest request, HttpServletResponse response) {
+    private String logContent(WrappedRequest request, HttpServletResponse response) {
 
         Map<String, String> headers = Collections.list(request.getHeaderNames()).stream()
                 .collect(Collectors.toMap(header -> header, request::getHeader));
+        String requestIp = Optional.ofNullable(request.getHeader("x-real-ip"))
+                .orElse("127.0.0.1");
         String headerString = Arrays.toString(headers.entrySet().toArray());
         String paramString = Arrays.toString(getParams(request).entrySet().toArray());
 
         return List.of(
                 request.getMethod(),
                 request.getRequestURI(),
-                request.getHeader("x-real-ip"),
+                requestIp,
                 response.getStatus(),
                 headerString,
                 getBody(request),
@@ -44,13 +42,13 @@ public class RequestLogFilter extends OncePerRequestFilter {
 
     }
 
-    private String getBody(HttpServletRequest request) {
+    private String getBody(WrappedRequest request) {
         try {
-            String body = request.getReader().lines().collect(Collectors.joining());
+            String body = request.getBody();
             if (body.length() < 2)
                 body = "{}";
             return body;
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
