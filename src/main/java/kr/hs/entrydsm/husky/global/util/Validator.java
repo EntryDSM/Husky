@@ -3,6 +3,7 @@ package kr.hs.entrydsm.husky.global.util;
 import java.math.BigDecimal;
 
 public class Validator {
+
     public static boolean isExists(String target) {
         return (target != null) && (!target.isBlank());
     }
