@@ -10,7 +10,9 @@ import kr.hs.entrydsm.husky.domain.auth.domain.verification.EmailVerification;
 import kr.hs.entrydsm.husky.domain.auth.domain.verification.EmailVerificationRepository;
 import kr.hs.entrydsm.husky.domain.auth.domain.verification.EmailVerificationStatus;
 import kr.hs.entrydsm.husky.domain.auth.exceptions.*;
+import kr.hs.entrydsm.husky.domain.user.domain.Status;
 import kr.hs.entrydsm.husky.domain.user.domain.User;
+import kr.hs.entrydsm.husky.domain.user.domain.repositories.StatusRepository;
 import kr.hs.entrydsm.husky.domain.user.domain.repositories.UserRepository;
 import kr.hs.entrydsm.husky.global.error.exception.UserNotFoundException;
 import kr.hs.entrydsm.husky.global.config.security.AuthenticationFacade;
@@ -29,13 +31,12 @@ import java.util.Random;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final StatusRepository statusRepository;
     private final EmailVerificationRepository emailVerificationRepository;
     private final EmailLimiterRepository emailLimiterRepository;
 
     private final EmailService emailService;
-    private final JwtTokenProvider jwtTokenProvider;
 
-    private final AuthenticationFacade authenticationFacade;
     private final PasswordEncoder passwordEncoder;
 
     @Value("${auth.email.limit}")
@@ -50,12 +51,15 @@ public class UserServiceImpl implements UserService {
                 .filter(EmailVerification::isVerified)
                 .orElseThrow(ExpiredAuthCodeException::new);
 
-        userRepository.save(
+        User user = userRepository.save(
             User.builder()
                 .email(email)
                 .password(password)
                 .build()
         );
+
+        statusRepository.save(new Status(user.getReceiptCode()));
+
     }
 
     @Override
