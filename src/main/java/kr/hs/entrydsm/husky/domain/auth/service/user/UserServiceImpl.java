@@ -51,6 +51,11 @@ public class UserServiceImpl implements UserService {
                 .filter(EmailVerification::isVerified)
                 .orElseThrow(ExpiredAuthCodeException::new);
 
+        userRepository.findByEmail(email)
+                .ifPresent(user -> {
+                    throw new UserAlreadyExistsException();
+                });
+
         User user = userRepository.save(
             User.builder()
                 .email(email)
