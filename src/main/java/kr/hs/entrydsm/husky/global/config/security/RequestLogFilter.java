@@ -21,7 +21,7 @@ public class RequestLogFilter extends OncePerRequestFilter {
         log.info(logContent(wrappedRequest, response));
     }
 
-    private String logContent(HttpServletRequest request, HttpServletResponse response) {
+    private String logContent(WrappedRequest request, HttpServletResponse response) {
 
         Map<String, String> headers = Collections.list(request.getHeaderNames()).stream()
                 .collect(Collectors.toMap(header -> header, request::getHeader));
@@ -42,13 +42,13 @@ public class RequestLogFilter extends OncePerRequestFilter {
 
     }
 
-    private String getBody(HttpServletRequest request) {
+    private String getBody(WrappedRequest request) {
         try {
-            String body = request.getReader().lines().collect(Collectors.joining());
+            String body = request.getBody();
             if (body.length() < 2)
                 body = "{}";
             return body;
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
