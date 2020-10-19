@@ -67,8 +67,9 @@ public class PDFExportServiceImpl implements PDFExportService {
             List<String> templates = new LinkedList<>(List.of(
                     TemplateFileName.APPLICATION_FOR_ADMISSION,
                     TemplateFileName.INTRODUCTION,
-                    TemplateFileName.NON_SMOKING,
-                    TemplateFileName.ADMISSION_AGREEMENT));
+                    TemplateFileName.NON_SMOKING
+//                    TemplateFileName.ADMISSION_AGREEMENT));
+                    ));
 
             if (!user.isGED() && !user.isCommonApplyType())
                 templates.add(2, TemplateFileName.RECOMMENDATION);
