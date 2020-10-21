@@ -129,7 +129,13 @@ public abstract class GeneralApplication extends BaseTimeEntity {
     }
 
     public String getSchoolClass() {
-        return (isExists(studentNumber)) ? studentNumber.substring(1, 3).replace("0", "") : null;
+        if (isExists(studentNumber)) {
+            String includeZero = studentNumber.substring(1, 3);
+            int classNumber = Integer.parseInt(includeZero);
+            return Integer.toString(classNumber);
+        } else {
+            return null;
+        }
     }
 
     protected GeneralApplication() {}
