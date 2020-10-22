@@ -136,8 +136,7 @@ public class GradeCalcServiceImpl implements GradeCalcService {
     private BigDecimal calcGEDConversionScore(BigDecimal averageScore) {
         return averageScore
                 .subtract(BigDecimal.valueOf(50))
-                .divide(BigDecimal.valueOf(50), 3, DOWN)
-                .multiply(BigDecimal.valueOf(150))
+                .multiply(BigDecimal.valueOf(3))
                 .setScale(3, HALF_UP);
     }
 
